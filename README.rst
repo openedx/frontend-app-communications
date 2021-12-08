@@ -1,76 +1,51 @@
-|Build Status| |Codecov| |license|
+|Build Status| |Codecov| |license| |semantic-release| ## As many of these as you'd like to include, or others if you wish!
 
 frontend-app-communications
-=================================
+==============================
 
-Please tag **@edx/fedx-team** on any PRs or issues.  Thanks.
+Please tag **@edx/aperture-eng** on any PRs or issues.  Thanks!
 
 Introduction
 ------------
 
-This repository is a template for Open edX micro-frontend applications. It is flagged as a Template Repository, meaning it can be used as a basis for new GitHub repositories by clicking the green "Use this template" button above.  The rest of this document describes how to work with your new micro-frontend after you've created a new repository from the template.
+A tool used by course teams to communicate with thier learners. The interface for anything related to instructor to learner communications. Instructor bulk email, for example.
 
-After Copying The Template
---------------------------
 
-You'll want to do a find-and-replace to replace all instances of ``frontend-app-communications`` with the name of your new repository.  Also edit index.html to replace "Application Template" with a friendly name for this application that users will see in their browser tab.
+Getting started
+------------
 
-**Prerequisite**
+For now, this repo is not intergrated with devstack. You'll be running the app locally and not through docker. This does make setup a little easier.
 
-`Devstack <https://edx.readthedocs.io/projects/edx-installing-configuring-and-running/en/latest/installation/index.html>`_.  If you start Devstack with ``make dev.up.ecommerce`` that should give you everything you need as a companion to this frontend.
+1. Clone the repo into your usual workspace
 
-**Installation and Startup**
+   .. code-block::
 
-In the following steps, replace "frontend-app-communications' with the name of the repo you created when copying this template above.
+      mkdir -p ~/workspace/
+      cd ~/workspace/
+      git clone https://github.com/edx/devstack.git
 
-1. Clone your new repo:
+2. Install frontend dependencies
 
-  ``git clone https://github.com/edx/frontend-app-communications.git``
+   .. code-block::
 
-2. Use node v12.x.
+      npm i
 
-   The micro-frontend build scripts support node 12.  Using other major versions of node *may* work, but is unsupported.  For convenience, this repository includes an .nvmrc file to help in setting the correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
+3. start the devserver. The app will be running at `localhost:8080`, or whatever port you change it too.
 
-3. Install npm dependencies:
+   .. code-block::
 
-  ``cd frontend-app-communications && npm install``
+      npm i
 
-4. Update the application port to use for local development:
+Environment Variables/Setup Notes
+---------------------------------
 
-   Default port is 8080. If this does not work for you, update the line `PORT=8080` to your port in all .env.* files
+TBD
 
-5. Start the dev server:
+Running Tests
+---------------------------
 
-  ``npm start``
+tests use jest as usual. To run all the tests for this repo:
 
-The dev server is running at `http://localhost:8080 <http://localhost:8080>`_ or whatever port you setup.
+   .. code-block::
 
-Making Your New Project's README File
--------------------------------------
-
-Move the file ``README-template-frontend-app.rst`` to your project's ``README.rst`` file. Please fill out all
-the sections - this helps out all developers understand your MFE, how to install it, and how to use it.
-
-Project Structure
------------------
-
-The source for this project is organized into nested submodules according to the ADR `Feature-based Application Organization <https://github.com/edx/frontend-app-communications/blob/master/docs/decisions/0002-feature-based-application-organization.rst>`_.
-
-Build Process Notes
--------------------
-
-**Production Build**
-
-The production build is created with ``npm run build``.
-
-Internationalization
---------------------
-
-Please see `edx/frontend-platform's i18n module <https://edx.github.io/frontend-platform/module-Internationalization.html>`_ for documentation on internationalization.  The documentation explains how to use it, and the `How To <https://github.com/edx/frontend-i18n/blob/master/docs/how_tos/i18n.rst>`_ has more detail.
-
-.. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-communications.svg?branch=master
-   :target: https://travis-ci.com/edx/frontend-app-communications
-.. |Codecov| image:: https://codecov.io/gh/edx/frontend-app-communications/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/edx/frontend-app-communications
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-communications.svg
-   :target: @edx/frontend-app-communications
+      npm test
