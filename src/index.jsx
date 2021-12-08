@@ -13,11 +13,13 @@ import Footer, { messages as footerMessages } from '@edx/frontend-component-foot
 import appMessages from './i18n';
 
 import './index.scss';
+import BulkEmailTool from './components/bulk-email-tool';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
       <Header />
+      <BulkEmailTool />
       <Footer />
     </AppProvider>,
     document.getElementById('root'),
