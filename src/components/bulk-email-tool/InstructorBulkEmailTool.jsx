@@ -5,7 +5,7 @@ import BulkEmailRecepient from './BulkEmailRecepient';
 import BulkEmailBody from './BulkEmailBody';
 import BulkEmailTaskManager from './BulkEmailTaskManager';
 
-export default function BulkEmailTool(props) {
+export default function BulkEmailTool() {
   return (
     <div>
       <Container>

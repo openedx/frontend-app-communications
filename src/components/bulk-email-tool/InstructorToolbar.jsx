@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function InstructorToolbar(props) {
+export default function InstructorToolbar() {
   return <div />;
 }

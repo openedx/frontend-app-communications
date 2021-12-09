@@ -3,7 +3,7 @@
 frontend-app-communications
 ==============================
 
-Please tag **@edx/aperture-eng** on any PRs or issues.  Thanks!
+Please tag **edx-aperture** on any PRs or issues.  Thanks!
 
 Introduction
 ------------
@@ -30,7 +30,7 @@ For now, this repo is not intergrated with devstack. You'll be running the app l
 
       npm i
 
-3. start the devserver. The app will be running at `localhost:8080`, or whatever port you change it too.
+3. start the devserver. The app will be running at `localhost:8585`, or whatever port you change it too.
 
    .. code-block::
 

@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function BulkEmailBody(props) {
+export default function BulkEmailBody() {
   return <div />;
 }
