@@ -4,12 +4,13 @@ import 'regenerator-runtime/runtime';
 import {
   APP_INIT_ERROR, APP_READY, subscribe, initialize,
 } from '@edx/frontend-platform';
-import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+import { AppProvider, ErrorPage, PageRoute } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 
 import Header, { messages as headerMessages } from '@edx/frontend-component-header';
 import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 
+import { Switch } from 'react-router-dom';
 import appMessages from './i18n';
 
 import './index.scss';
@@ -19,7 +20,9 @@ subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
       <Header />
-      <BulkEmailTool />
+      <Switch>
+        <PageRoute path="/courses/:courseId/Instructor/bulk_email" component={BulkEmailTool} />
+      </Switch>
       <Footer />
     </AppProvider>,
     document.getElementById('root'),
