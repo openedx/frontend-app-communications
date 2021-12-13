@@ -21,7 +21,7 @@ subscribe(APP_READY, () => {
     <AppProvider>
       <Header />
       <Switch>
-        <PageRoute path="/courses/:courseId/Instructor/bulk_email" component={BulkEmailTool} />
+        <PageRoute path="/courses/:courseId/instructor/bulk_email" component={BulkEmailTool} />
       </Switch>
       <Footer />
     </AppProvider>,
