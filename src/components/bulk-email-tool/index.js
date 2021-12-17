@@ -1,1 +1,1 @@
-export { default } from './InstructorBulkEmailTool';
+export { default } from './BulkEmailTool';
