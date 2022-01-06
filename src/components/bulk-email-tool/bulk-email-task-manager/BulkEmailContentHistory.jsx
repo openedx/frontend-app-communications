@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { getSentEmailHistory } from './api';
 
 export default function BulkEmailContentHistory() {
+  const { courseId } = useParams();
+
+  const [emailHistoryData, setEmailHistoryData] = useState(); // eslint-disable-line no-unused-vars
+
+  useEffect(() => {
+    async function fetchSentEmailHistoryData() {
+      const data = await getSentEmailHistory(courseId);
+      const { emails } = data;
+      setEmailHistoryData(emails);
+    }
+    fetchSentEmailHistoryData();
+  }, []);
+
   return (
     <div>
       <div>

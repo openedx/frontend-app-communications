@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { getInstructorTasks } from './api';
 
 export default function BulkEmailPendingTasks() {
+  const { courseId } = useParams();
+
+  const [instructorTaskData, setInstructorTaskData] = useState(); // eslint-disable-line no-unused-vars
+
+  useEffect(() => {
+    async function fetchPendingInstructorTasksData() {
+      const data = await getInstructorTasks(courseId);
+      const { tasks } = data;
+      setInstructorTaskData(tasks);
+    }
+    fetchPendingInstructorTasksData();
+  }, []);
+
   return (
     <div>
       <p>

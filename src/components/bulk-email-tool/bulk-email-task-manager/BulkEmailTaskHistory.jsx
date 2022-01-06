@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { getEmailTaskHistory } from './api';
 
 export default function BulkEmailTaskHistory() {
+  const { courseId } = useParams();
+
+  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState(); // eslint-disable-line no-unused-vars
+
+  useEffect(() => {
+    async function fetchEmailTaskHistoryData() {
+      const data = await getEmailTaskHistory(courseId);
+      const { tasks } = data;
+      setEmailTaskHistoryData(tasks);
+    }
+    fetchEmailTaskHistoryData();
+  }, []);
+
   return (
     <div>
       <div>
