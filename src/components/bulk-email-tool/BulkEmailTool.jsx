@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classnames from 'classnames';
 
 import { useParams } from 'react-router-dom';
 import { Spinner } from '@edx/paragon';
@@ -8,15 +9,26 @@ import BulkEmailBody from './BulkEmailBody';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import Navigationtabs from '../navigation-tabs/NavigationTabs';
 import { getCourseHomeCourseMetadata } from './api';
+import useMobileResponsive from '../../utils/useMobileResponsive';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
 
   const [courseMetadata, setCourseMetadata] = useState();
+  const isMobile = useMobileResponsive();
 
   useEffect(() => {
     async function fetchTabData() {
-      const data = await getCourseHomeCourseMetadata(courseId);
+      let data;
+      try {
+        data = await getCourseHomeCourseMetadata(courseId);
+      } catch (e) {
+        setCourseMetadata({
+          isStaff: false,
+          tabs: [],
+        });
+        return;
+      }
       const { tabs, is_staff: isStaff } = data;
       setCourseMetadata({
         isStaff,
@@ -31,7 +43,7 @@ export default function BulkEmailTool() {
       courseMetadata.isStaff ? (
         <div>
           <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
-          <div className="border border-primary-200">
+          <div className={classnames({ 'border border-primary-200': !isMobile })}>
             <div className="row">
               <BulkEmailRecepient courseId={courseId} />
             </div>
