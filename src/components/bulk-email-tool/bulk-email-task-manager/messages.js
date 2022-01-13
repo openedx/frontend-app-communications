@@ -2,13 +2,13 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   /* BulkEmailContentHistory.jsx Messages */
-  errorFetchingData: {
+  errorFetchingEmailHistoryData: {
     id: 'bulk.email.content.history.table.alert.errorFetchingData',
     defaultMessage: 'An error occurred retrieving email history data for this course. Please try again later.',
   },
   noEmailData: {
     id: 'bulk.email.content.history.table.alert.noEmailData',
-    defaultMessage: 'There is no email history for this course',
+    defaultMessage: 'There is no email history for this course.',
   },
   buttonViewMessage: {
     id: 'bulk.email.content.history.table.button.viewMessage',
@@ -71,8 +71,81 @@ const messages = defineMessages({
     defaultMessage: 'Show Sent Email History',
   },
   /* BulkEmailTaskManager.jsx messages */
+  pendingTasksHeader: {
+    id: 'bulk.email.pending.tasks.header',
+    defaultMessage: 'Pending Tasks',
+  },
+  emailTaskHistoryHeader: {
+    id: 'bulk.email.email.task.history.header',
+    defaultMessage: 'Email Task History',
+  },
   /* BulkEmailPendingTasks.jsx messages */
+  pendingTaskSectionInfo: {
+    id: 'bulk.email.pending.tasks.section.info',
+    defaultMessage: 'Email actions run in the background. The status for any active tasks - including email tasks - appears in the table below.',
+  },
+  errorFetchingPendingTaskData: {
+    id: 'bulk.email.pending.tasks.table.alert.errorFetchingData',
+    defaultMessage: 'Error fetching Instructor Task data. This request will be retried automatically.',
+  },
+  noPendingTaskData: {
+    id: 'bulk.email.pending.tasks.table.alert.noTaskData',
+    defaultMessage: 'No tasks currently running.',
+  },
   /* BulkEmailTaskHistory.jsx messages */
+  emailTaskHistoryTableSectionButtonHeader: {
+    id: 'bulk.email.task.history.table.button.header',
+    defaultMessage: 'To see the status for all email tasks submitted for this course, click this button:',
+  },
+  emailTaskHistoryTableSectionButton: {
+    id: 'bulk.email.task.history.table.button',
+    defaultMessage: 'Show Email Task History',
+  },
+  errorFetchingTaskHistoryData: {
+    id: 'bulk.email.task.history.table.alert.errorFetchingData',
+    defaultMessage: 'Error fetching email task history data for this course. Please try again later.',
+  },
+  noTaskHistoryData: {
+    id: 'bulk.email.task.history.table.alert.noTaskData',
+    defaultMessage: 'There is no email task history for this course.',
+  },
+  /* Common Messages */
+  taskHistoryTableColumnHeaderTaskType: {
+    id: 'bulk.email.task.history.table.column.header.taskType',
+    defaultMessage: 'Task Type',
+  },
+  taskHistoryTableColumnHeaderTaskInputs: {
+    id: 'bulk.email.task.history.table.column.header.taskInputs',
+    defaultMessage: 'Task Inputs',
+  },
+  taskHistoryTableColumnHeaderTaskId: {
+    id: 'bulk.email.task.history.table.column.header.taskId',
+    defaultMessage: 'Task Id',
+  },
+  taskHistoryTableColumnHeaderTaskRequester: {
+    id: 'bulk.email.task.history.table.column.header.taskRequester',
+    defaultMessage: 'Requester',
+  },
+  taskHistoryTableColumnHeaderTaskSubmittedDate: {
+    id: 'bulk.email.task.history.table.column.header.taskSubmittedDate',
+    defaultMessage: 'Submitted',
+  },
+  taskHistoryTableColumnHeaderTaskDuration: {
+    id: 'bulk.email.task.history.table.column.header.taskDuration',
+    defaultMessage: 'Duration (seconds)',
+  },
+  taskHistoryTableColumnHeaderTaskState: {
+    id: 'bulk.email.task.history.table.column.header.taskState',
+    defaultMessage: 'State',
+  },
+  taskHistoryTableColumnHeaderTaskStatus: {
+    id: 'bulk.email.task.history.table.column.header.taskStatus',
+    defaultMessage: 'Status',
+  },
+  taskHistoryTableColumnHeaderTaskProgress: {
+    id: 'bulk.email.task.history.table.column.header.taskProgress',
+    defaultMessage: 'Task Progress',
+  },
 });
 
 export default messages;
