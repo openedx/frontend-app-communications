@@ -46,9 +46,7 @@
     "@fortawesome/free-regular-svg-icons": "5.15.4",
     "@fortawesome/free-solid-svg-icons": "5.15.4",
     "@fortawesome/react-fontawesome": "0.1.16",
-    "@testing-library/react": "^12.1.2",
     "@tinymce/tinymce-react": "^3.13.0",
-    "axios-mock-adapter": "^1.20.0",
     "classnames": "^2.3.1",
     "core-js": "3.15.2",
     "prop-types": "15.7.2",
@@ -59,16 +57,20 @@
     "react-router-dom": "5.3.0",
     "redux": "4.1.2",
     "regenerator-runtime": "0.13.9",
-    "tinymce": "^5.10.2",
-    "tinymce-language-selector": "^1.0.4"
+    "tinymce": "^5.10.2"
   },
   "devDependencies": {
     "@edx/frontend-build": "8.1.6",
+    "axios-mock-adapter": "^1.20.0",
     "codecov": "3.8.3",
     "es-check": "6.1.1",
     "glob": "7.2.0",
     "husky": "7.0.4",
     "jest": "27.3.1",
-    "reactifex": "1.1.1"
+    "prettier": "^2.5.1",
+    "reactifex": "1.1.1",
+    "rosie": "^2.1.0",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2"
   }
 }
