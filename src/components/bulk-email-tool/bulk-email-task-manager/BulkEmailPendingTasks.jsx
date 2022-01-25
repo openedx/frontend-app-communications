@@ -1,32 +1,91 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getInstructorTasks } from './api';
+import messages from './messages';
+import useInterval from '../../../utils/useInterval';
+import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-export default function BulkEmailPendingTasks() {
+export function BulkEmailPendingTasks({ intl }) {
   const { courseId } = useParams();
 
-  const [instructorTaskData, setInstructorTaskData] = useState(); // eslint-disable-line no-unused-vars
+  const [instructorTaskData, setInstructorTaskData] = useState();
+  const [errorRetrievingData, setErrorRetrievingData] = useState(false);
 
-  useEffect(() => {
+  /**
+   * We use a custom hook (`useInterval`) here to setup a timer that will refresh the pending instructor task data
+   * displayed in the table of this component.
+   */
+  useInterval(() => {
     async function fetchPendingInstructorTasksData() {
       const data = await getInstructorTasks(courseId);
       const { tasks } = data;
       setInstructorTaskData(tasks);
     }
-    fetchPendingInstructorTasksData();
-  }, []);
+
+    try {
+      fetchPendingInstructorTasksData();
+    } catch (error) {
+      setErrorRetrievingData(true);
+    }
+  }, 30000);
+
+  const tableColumns = [
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskType)}`,
+      accessor: 'task_type',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskInputs)}`,
+      accessor: 'task_input',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskId)}`,
+      accessor: 'task_id',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskRequester)}`,
+      accessor: 'requester',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskSubmittedDate)}`,
+      accessor: 'created',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskDuration)}`,
+      accessor: 'duration_sec',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskState)}`,
+      accessor: 'task_state',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskStatus)}`,
+      accessor: 'status',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskProgress)}`,
+      accessor: 'task_message',
+    },
+  ];
 
   return (
-    <div>
-      <p>
-        <FormattedMessage
-          id="bulk.email.pending.tasks.section.info"
-          defaultMessage="Email actions run in the background. The status for any active tasks - including email tasks - appears in the table below"
-          description="A section to see pending and executing Instructor Tasks"
-        />
-      </p>
+    <div className="pb-4">
+      <BulkEmailTaskManagerTable
+        error={errorRetrievingData}
+        tableData={instructorTaskData}
+        tableDescription={intl.formatMessage(messages.pendingTaskSectionInfo)}
+        alertWarningMessage={intl.formatMessage(messages.noPendingTaskData)}
+        alertErrorMessage={intl.formatMessage(messages.errorFetchingPendingTaskData)}
+        columns={tableColumns}
+      />
     </div>
   );
 }
+
+BulkEmailPendingTasks.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(BulkEmailPendingTasks);

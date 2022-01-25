@@ -1,41 +1,129 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { Icon, StatefulButton } from '@edx/paragon';
+import { SpinnerSimple } from '@edx/paragon/icons';
 import { getEmailTaskHistory } from './api';
+import messages from './messages';
 
-export default function BulkEmailTaskHistory() {
+import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
+
+export function BulkEmailTaskHistory({ intl }) {
   const { courseId } = useParams();
+  const BUTTON_STATE = {
+    DEFAULT: 'default',
+    PENDING: 'pending',
+    COMPLETE: 'complete',
+  };
 
-  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState(); // eslint-disable-line no-unused-vars
+  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState();
+  const [showHistoricalTaskContentTable, setShowHistoricalTaskContentTable] = useState(false);
+  const [errorRetrievingData, setErrorRetrievingData] = useState(false);
+  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
-  useEffect(() => {
-    async function fetchEmailTaskHistoryData() {
-      const data = await getEmailTaskHistory(courseId);
+  /**
+   * Async function that makes a REST API call to retrieve historical bulk email (Instructor) task data for display
+   * within this component.
+   */
+  async function fetchEmailTaskHistoryData() {
+    setButtonState(BUTTON_STATE.PENDING);
+
+    let data = null;
+    try {
+      data = await getEmailTaskHistory(courseId);
+    } catch (error) {
+      setErrorRetrievingData(true);
+    }
+
+    if (data) {
       const { tasks } = data;
       setEmailTaskHistoryData(tasks);
+      setShowHistoricalTaskContentTable(true);
     }
-    fetchEmailTaskHistoryData();
-  }, []);
+
+    setButtonState(BUTTON_STATE.COMPLETE);
+  }
+
+  const tableColumns = [
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskType)}`,
+      accessor: 'task_type',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskInputs)}`,
+      accessor: 'task_input',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskId)}`,
+      accessor: 'task_id',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskRequester)}`,
+      accessor: 'requester',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskSubmittedDate)}`,
+      accessor: 'created',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskDuration)}`,
+      accessor: 'duration_sec',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskState)}`,
+      accessor: 'task_state',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskStatus)}`,
+      accessor: 'status',
+    },
+    {
+      Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskProgress)}`,
+      accessor: 'task_message',
+    },
+  ];
 
   return (
     <div>
       <div>
         <p>
-          <FormattedMessage
-            id="bulk.email.task.history.section.heading"
-            defaultMessage="To see the status for all email tasks submitted for this course, click this button:"
-            description="Instructions for course staff and admins to view historical bulk course email task data"
-          />
+          {intl.formatMessage(messages.emailTaskHistoryTableSectionButtonHeader)}
         </p>
-        <button type="button" className="btn btn-outline-primary mb-2">
-          <FormattedMessage
-            id="bulk.email.view.task.history.button"
-            defaultMessage="Show Task Email History"
-            description="Button that displays a table with historical bulk email task data for a course-run"
+        <StatefulButton
+          className="btn btn-outline-primary mb-2"
+          variant="outline-primary"
+          type="submit"
+          onClick={async () => { await fetchEmailTaskHistoryData(); }}
+          labels={{
+            default: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
+            pending: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
+            complete: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
+          }}
+          icons={{
+            pending: <Icon src={SpinnerSimple} className="icon-spin" />,
+          }}
+          disabledStates={['error']}
+          state={buttonState}
+        >
+          {intl.formatMessage(messages.emailHistoryTableSectionButton)}
+        </StatefulButton>
+        {showHistoricalTaskContentTable && (
+          <BulkEmailTaskManagerTable
+            error={errorRetrievingData}
+            tableData={emailTaskHistoryData}
+            alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
+            alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
+            columns={tableColumns}
           />
-        </button>
+        )}
       </div>
     </div>
   );
 }
+
+BulkEmailTaskHistory.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(BulkEmailTaskHistory);

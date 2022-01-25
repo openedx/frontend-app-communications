@@ -4,25 +4,35 @@ import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
-  Alert, Button, DataTable, Modal,
+  Button, Icon, Modal, StatefulButton,
 } from '@edx/paragon';
+import { SpinnerSimple } from '@edx/paragon/icons';
 import messages from './messages';
 import { getSentEmailHistory } from './api';
+import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 export function BulkEmailContentHistory({ intl }) {
   const { courseId } = useParams();
+  const BUTTON_STATE = {
+    DEFAULT: 'default',
+    PENDING: 'pending',
+    COMPLETE: 'complete',
+  };
 
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
   const [showHistoricalEmailContentTable, setShowHistoricalEmailContentTable] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageContent, setMessageContent] = useState();
+  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
   /**
    * Async function that makes a REST API call to retrieve historical email message data sent by the bulk course email
    * tool from edx-platform.
    */
   async function fetchSentEmailHistoryData() {
+    setButtonState(BUTTON_STATE.PENDING);
+
     let data = null;
     try {
       data = await getSentEmailHistory(courseId);
@@ -35,6 +45,24 @@ export function BulkEmailContentHistory({ intl }) {
       setEmailHistoryData(emails);
       setShowHistoricalEmailContentTable(true);
     }
+
+    setButtonState(BUTTON_STATE.COMPLETE);
+  }
+
+  /**
+   * This utility function transforms the data stored in `emailHistoryData` to make it easier to display in the Paragon
+   * DataTable component. Some of the information we want displayed is in an inner object so we extract it and move it
+   * up a level (the `subject` field). We also convert the `sent_to` data to be a String rather than an array to fix a
+   * display bug in the table.
+   */
+  function transformDataForTable() {
+    const tableData = emailHistoryData.map((item) => ({
+      ...item,
+      subject: item.email.subject,
+      sent_to: item.sent_to.join(', '),
+    }));
+
+    return tableData;
   }
 
   /**
@@ -46,34 +74,6 @@ export function BulkEmailContentHistory({ intl }) {
     setMessageContent(tableData);
     setIsMessageModalOpen(true);
   };
-
-  /**
-   * Render function for the email content history table. If an error occurs while attempting to fetch data from
-   * edx-platform we will render this error instead of the table.
-   */
-  const renderError = () => (
-    <div>
-      <Alert variant="danger">
-        <p className="font-weight-bold">
-          {intl.formatMessage(messages.errorFetchingData)}
-        </p>
-      </Alert>
-    </div>
-  );
-
-  /**
-   * Render function for the email content history table. If there is no data to display in our table we will render
-   * this informative message instead.
-   */
-  const renderEmpty = () => (
-    <div className="pt-1">
-      <Alert variant="warning">
-        <p className="font-weight-bold">
-          {intl.formatMessage(messages.noEmailData)}
-        </p>
-      </Alert>
-    </div>
-  );
 
   /**
    * Renders a modal that will display the contents of a single historical email message sent via the bulk course email
@@ -132,81 +132,50 @@ export function BulkEmailContentHistory({ intl }) {
     </div>
   );
 
+  const tableColumns = [
+    {
+      Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderSubject)}`,
+      accessor: 'subject',
+    },
+    {
+      Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderAuthor)}`,
+      accessor: 'requester',
+    },
+    {
+      Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderRecipients)}`,
+      accessor: 'sent_to',
+    },
+    {
+      Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderTimeSent)}`,
+      accessor: 'created',
+    },
+    {
+      Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderNumberSent)}`,
+      accessor: 'number_sent',
+    },
+  ];
+
   /**
-   * Render function for the email content history table. This function is responsible for displaying data inside of
-   * the table when the `Show Sent Email History` button is pressed on the page.
+   * Paragon's DataTable supports the ability to add extra columns that might not directly coincide with the data being
+   * represented in the table. We are using an additional column to embed a button that will open a Modal to display the
+   * contents of a previously sent message.
    */
-  const renderTable = () => {
-    // Do a little data manipulation to make it easier to display what we want in the table. Pull the email subject out
-    // of the email data. Transforms the `sent_to` array to a string for easier display in our table.
-    const tableData = emailHistoryData.map((item) => ({
-      ...item,
-      subject: item.email.subject,
-      sent_to: item.sent_to.join(', '),
-    }));
+  const additionalColumns = () => {
+    const tableData = transformDataForTable();
 
     return (
-      <div className="pb-3">
-        <p className="font-italic">
-          {intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
-        </p>
-        <DataTable
-          itemCount={emailHistoryData.length}
-          columns={[
-            {
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderSubject)}`,
-              accessor: 'subject',
-            },
-            {
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderAuthor)}`,
-              accessor: 'requester',
-            },
-            {
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderRecipients)}`,
-              accessor: 'sent_to',
-            },
-            {
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderTimeSent)}`,
-              accessor: 'created',
-            },
-            {
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderNumberSent)}`,
-              accessor: 'number_sent',
-            },
-          ]}
-          data={tableData}
-          additionalColumns={[
-            {
-              id: 'view_message',
-              Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderViewMessage)}`,
-              Cell: ({ row }) => (
-                <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
-                  {intl.formatMessage(messages.buttonViewMessage)}
-                </Button>
-              ),
-            },
-          ]}
-        />
-      </div>
+      [
+        {
+          id: 'view_message',
+          Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderViewMessage)}`,
+          Cell: ({ row }) => (
+            <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
+              {intl.formatMessage(messages.buttonViewMessage)}
+            </Button>
+          ),
+        },
+      ]
     );
-  };
-
-  /**
-   * Today there can be three states which the renderTableData function will handle:
-   *   1. There was an error retrieving data from edx-platform and we can't display anything (for now).
-   *   2. There is no email history for this course-run and we have nothing to display to the end user.
-   *   3. We were able to receive historical email content and it will be presented in a table.
-   */
-  const renderTableData = () => {
-    if (errorRetrievingData) {
-      return renderError();
-    }
-
-    if (!emailHistoryData.length) {
-      return renderEmpty();
-    }
-
-    return renderTable();
   };
 
   return (
@@ -218,10 +187,35 @@ export function BulkEmailContentHistory({ intl }) {
         <p>
           {intl.formatMessage(messages.emailHistoryTableSectionButtonHeader)}
         </p>
-        <Button variant="outline-primary" className="btn btn-outline-primary mb-2" onClick={async () => { await fetchSentEmailHistoryData(); }}>
+        <StatefulButton
+          className="btn btn-outline-primary mb-2"
+          variant="outline-primary"
+          type="submit"
+          onClick={async () => { await fetchSentEmailHistoryData(); }}
+          labels={{
+            default: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
+            pending: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
+            complete: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
+          }}
+          icons={{
+            pending: <Icon src={SpinnerSimple} className="icon-spin" />,
+          }}
+          disabledStates={['error']}
+          state={buttonState}
+        >
           {intl.formatMessage(messages.emailHistoryTableSectionButton)}
-        </Button>
-        {showHistoricalEmailContentTable && renderTableData()}
+        </StatefulButton>
+        { showHistoricalEmailContentTable && (
+          <BulkEmailTaskManagerTable
+            error={errorRetrievingData}
+            tableData={transformDataForTable()}
+            tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
+            alertWarningMessage={intl.formatMessage(messages.noEmailData)}
+            alertErrorMessage={intl.formatMessage(messages.errorFetchingEmailHistoryData)}
+            columns={tableColumns}
+            additionalColumns={additionalColumns()}
+          />
+        )}
       </div>
     </div>
   );

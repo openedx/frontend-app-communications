@@ -1,30 +1,23 @@
 import React from 'react';
 
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import BulkEmailContentHistory from './BulkEmailContentHistory';
 import BulkEmailPendingTasks from './BulkEmailPendingTasks';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
+import messages from './messages';
 
-export default function BulkEmailTaskManager() {
+export function BulkEmailTaskManager({ intl }) {
   return (
     <div className="px-5">
       <div>
         <h2 className="h3">
-          <FormattedMessage
-            id="bulk.email.pending.tasks.section.heading"
-            defaultMessage="Pending Tasks"
-            description="A section to see pending and executing Instructor Tasks"
-          />
+          {intl.formatMessage(messages.pendingTasksHeader)}
         </h2>
         <BulkEmailPendingTasks />
       </div>
       <div>
         <h2 className="h3">
-          <FormattedMessage
-            id="bulk.email.task.manager.heading"
-            defaultMessage="Email Task History"
-            description="Title of the Email task History section of the Bulk Course Email tool"
-          />
+          {intl.formatMessage(messages.emailTaskHistoryHeader)}
         </h2>
         <BulkEmailContentHistory />
       </div>
@@ -34,3 +27,9 @@ export default function BulkEmailTaskManager() {
     </div>
   );
 }
+
+BulkEmailTaskManager.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(BulkEmailTaskManager);
