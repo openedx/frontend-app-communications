@@ -11,7 +11,7 @@ export default function NavigationTabs(props) {
       <Nav>
         {tabData && tabData.map(tab => (
           <Nav.Item key={tab.tab_id}>
-            <Nav.Link eventKey={tab.tab_id} href={tab.url} className="mx-3 py-2">{tab.title}</Nav.Link>
+            <Nav.Link eventKey={tab.url} href={tab.url} className="mx-3 py-2">{tab.title}</Nav.Link>
           </Nav.Item>
         ))}
       </Nav>
@@ -20,7 +20,7 @@ export default function NavigationTabs(props) {
 }
 
 NavigationTabs.propTypes = {
-  tabData: PropTypes.arrayOf(PropTypes.exact({
+  tabData: PropTypes.arrayOf(PropTypes.shape({
     tab_id: PropTypes.string,
     title: PropTypes.string,
     url: PropTypes.string,

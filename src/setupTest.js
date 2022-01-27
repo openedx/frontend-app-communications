@@ -1,5 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import '@testing-library/jest-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
@@ -50,9 +51,7 @@ configureI18n({
 function Wrapper({ children }) {
   return (
     // eslint-disable-next-line react/jsx-filename-extension
-    <AppProvider>
-      {children}
-    </AppProvider>
+    <AppProvider>{children}</AppProvider>
   );
 }
 
@@ -67,6 +66,4 @@ Wrapper.propTypes = {
 export * from '@testing-library/react';
 
 // Override `render` method.
-export {
-  renderWithProviders as render,
-};
+export { renderWithProviders as render };

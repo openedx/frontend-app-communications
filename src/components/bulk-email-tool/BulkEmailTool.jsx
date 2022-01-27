@@ -4,12 +4,11 @@ import classnames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { Spinner } from '@edx/paragon';
 import { ErrorPage } from '@edx/frontend-platform/react';
-import BulkEmailRecepient from './BulkEmailRecepient';
-import BulkEmailBody from './BulkEmailBody';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import Navigationtabs from '../navigation-tabs/NavigationTabs';
-import { getCourseHomeCourseMetadata } from './api';
+import { getCourseHomeCourseMetadata } from './data/api';
 import useMobileResponsive from '../../utils/useMobileResponsive';
+import BulkEmailForm from './bulk-email-form';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
@@ -39,23 +38,20 @@ export default function BulkEmailTool() {
   }, []);
 
   if (courseMetadata) {
-    return (
-      courseMetadata.isStaff ? (
-        <div>
-          <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
-          <div className={classnames({ 'border border-primary-200': !isMobile })}>
-            <div className="row">
-              <BulkEmailRecepient courseId={courseId} />
-            </div>
-            <div className="row">
-              <BulkEmailBody courseId={courseId} />
-            </div>
-            <div className="row">
-              <BulkEmailTaskManager courseId={courseId} />
-            </div>
+    return courseMetadata.isStaff ? (
+      <div>
+        <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
+        <div className={classnames({ 'border border-primary-200': !isMobile })}>
+          <div className="row">
+            <BulkEmailForm courseId={courseId} />
+          </div>
+          <div className="row">
+            <BulkEmailTaskManager courseId={courseId} />
           </div>
         </div>
-      ) : <ErrorPage />
+      </div>
+    ) : (
+      <ErrorPage />
     );
   }
   return (
@@ -64,7 +60,7 @@ export default function BulkEmailTool() {
         animation="border"
         variant="primary"
         role="status"
-        screenReaderText="loading"
+        screenreadertext="loading"
         className="spinner-border spinner-border-lg text-primary p-5 m-5"
       />
     </div>
