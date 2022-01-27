@@ -4,7 +4,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { Icon, StatefulButton } from '@edx/paragon';
 import { SpinnerSimple } from '@edx/paragon/icons';
-import { getEmailTaskHistory } from './api';
+import { getEmailTaskHistory } from './data/api';
 import messages from './messages';
 
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
@@ -27,6 +27,8 @@ export function BulkEmailTaskHistory({ intl }) {
    * within this component.
    */
   async function fetchEmailTaskHistoryData() {
+    setErrorRetrievingData(false);
+    setShowHistoricalTaskContentTable(false);
     setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
@@ -39,9 +41,9 @@ export function BulkEmailTaskHistory({ intl }) {
     if (data) {
       const { tasks } = data;
       setEmailTaskHistoryData(tasks);
-      setShowHistoricalTaskContentTable(true);
     }
 
+    setShowHistoricalTaskContentTable(true);
     setButtonState(BUTTON_STATE.COMPLETE);
   }
 
@@ -110,7 +112,7 @@ export function BulkEmailTaskHistory({ intl }) {
         </StatefulButton>
         {showHistoricalTaskContentTable && (
           <BulkEmailTaskManagerTable
-            error={errorRetrievingData}
+            errorRetrievingData={errorRetrievingData}
             tableData={emailTaskHistoryData}
             alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
             alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}

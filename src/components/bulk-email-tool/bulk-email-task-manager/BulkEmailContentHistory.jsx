@@ -8,7 +8,7 @@ import {
 } from '@edx/paragon';
 import { SpinnerSimple } from '@edx/paragon/icons';
 import messages from './messages';
-import { getSentEmailHistory } from './api';
+import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 export function BulkEmailContentHistory({ intl }) {
@@ -31,6 +31,8 @@ export function BulkEmailContentHistory({ intl }) {
    * tool from edx-platform.
    */
   async function fetchSentEmailHistoryData() {
+    setErrorRetrievingData(false);
+    setShowHistoricalEmailContentTable(false);
     setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
@@ -43,9 +45,9 @@ export function BulkEmailContentHistory({ intl }) {
     if (data) {
       const { emails } = data;
       setEmailHistoryData(emails);
-      setShowHistoricalEmailContentTable(true);
     }
 
+    setShowHistoricalEmailContentTable(true);
     setButtonState(BUTTON_STATE.COMPLETE);
   }
 
@@ -56,12 +58,14 @@ export function BulkEmailContentHistory({ intl }) {
    * display bug in the table.
    */
   function transformDataForTable() {
-    const tableData = emailHistoryData.map((item) => ({
-      ...item,
-      subject: item.email.subject,
-      sent_to: item.sent_to.join(', '),
-    }));
-
+    let tableData = {};
+    if (emailHistoryData) {
+      tableData = emailHistoryData.map((item) => ({
+        ...item,
+        subject: item.email.subject,
+        sent_to: item.sent_to.join(', '),
+      }));
+    }
     return tableData;
   }
 
@@ -167,7 +171,7 @@ export function BulkEmailContentHistory({ intl }) {
       [
         {
           id: 'view_message',
-          Header: `${intl.formatMessage(messages.emailHistoryTableColumnHeaderViewMessage)}`,
+          Header: '',
           Cell: ({ row }) => (
             <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
               {intl.formatMessage(messages.buttonViewMessage)}
@@ -207,7 +211,7 @@ export function BulkEmailContentHistory({ intl }) {
         </StatefulButton>
         { showHistoricalEmailContentTable && (
           <BulkEmailTaskManagerTable
-            error={errorRetrievingData}
+            errorRetrievingData={errorRetrievingData}
             tableData={transformDataForTable()}
             tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
             alertWarningMessage={intl.formatMessage(messages.noEmailData)}

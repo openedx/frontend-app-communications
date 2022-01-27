@@ -56,11 +56,7 @@ const messages = defineMessages({
   },
   emailHistoryTableColumnHeaderNumberSent: {
     id: 'bulk.email.content.history.table.column.header.numberSent',
-    defaultMessage: 'Subject',
-  },
-  emailHistoryTableColumnHeaderViewMessage: {
-    id: 'bulk.email.content.history.table.column.header.viewMessage',
-    defaultMessage: 'View Message',
+    defaultMessage: 'Number Sent',
   },
   emailHistoryTableSectionButtonHeader: {
     id: 'bulk.email.content.history.table.button.header',
@@ -86,7 +82,7 @@ const messages = defineMessages({
   },
   errorFetchingPendingTaskData: {
     id: 'bulk.email.pending.tasks.table.alert.errorFetchingData',
-    defaultMessage: 'Error fetching Instructor Task data. This request will be retried automatically.',
+    defaultMessage: 'Error fetching running task data. This request will be retried automatically.',
   },
   noPendingTaskData: {
     id: 'bulk.email.pending.tasks.table.alert.noTaskData',
