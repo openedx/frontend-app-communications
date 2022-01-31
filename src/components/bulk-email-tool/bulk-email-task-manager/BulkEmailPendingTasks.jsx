@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { getInstructorTasks } from './api';
+import { getInstructorTasks } from './data/api';
 import messages from './messages';
 import useInterval from '../../../utils/useInterval';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
@@ -19,16 +19,21 @@ export function BulkEmailPendingTasks({ intl }) {
    */
   useInterval(() => {
     async function fetchPendingInstructorTasksData() {
-      const data = await getInstructorTasks(courseId);
-      const { tasks } = data;
-      setInstructorTaskData(tasks);
+      setErrorRetrievingData(false);
+
+      let data = null;
+      try {
+        data = await getInstructorTasks(courseId);
+        if (data) {
+          const { tasks } = data;
+          setInstructorTaskData(tasks);
+        }
+      } catch (error) {
+        setErrorRetrievingData(true);
+      }
     }
 
-    try {
-      fetchPendingInstructorTasksData();
-    } catch (error) {
-      setErrorRetrievingData(true);
-    }
+    fetchPendingInstructorTasksData();
   }, 30000);
 
   const tableColumns = [
@@ -73,7 +78,7 @@ export function BulkEmailPendingTasks({ intl }) {
   return (
     <div className="pb-4">
       <BulkEmailTaskManagerTable
-        error={errorRetrievingData}
+        errorRetrievingData={errorRetrievingData}
         tableData={instructorTaskData}
         tableDescription={intl.formatMessage(messages.pendingTaskSectionInfo)}
         alertWarningMessage={intl.formatMessage(messages.noPendingTaskData)}
