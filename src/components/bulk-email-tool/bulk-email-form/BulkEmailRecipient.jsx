@@ -12,7 +12,7 @@ const DEFAULT_GROUPS = {
 };
 
 export default function BulkEmailRecipient(props) {
-  const { handleCheckboxes, selectedGroups } = props;
+  const { handleCheckboxes, selectedGroups, additionalCohorts } = props;
   return (
     <Form.Group>
       <Form.Label>
@@ -22,8 +22,13 @@ export default function BulkEmailRecipient(props) {
           description="A label before the list of potential recipients"
         />
       </Form.Label>
-      <Form.CheckboxSet name="recipientGroups" onChange={handleCheckboxes} value={selectedGroups}>
-        <Form.Checkbox key="myself" value="myself">
+      <Form.CheckboxSet
+        name="recipientGroups"
+        className="w-75 flex-wrap flex-row justify-content-between"
+        onChange={handleCheckboxes}
+        value={selectedGroups}
+      >
+        <Form.Checkbox key="myself" value="myself" className="mt-2.5">
           <FormattedMessage
             id="bulk.email.form.recipients.myself"
             defaultMessage="Myself"
@@ -70,6 +75,23 @@ export default function BulkEmailRecipient(props) {
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
+        {
+          // additional cohorts
+          additionalCohorts
+            && additionalCohorts.map((cohort) => (
+              <Form.Checkbox
+                key={cohort}
+                value={`cohort:${cohort}`}
+                disabled={selectedGroups.find((group) => group === (DEFAULT_GROUPS.AUDIT || DEFAULT_GROUPS.VERIFIED))}
+              >
+                <FormattedMessage
+                  id="bulk.email.form.cohort.label"
+                  defaultMessage="Cohort: {cohort}"
+                  values={{ cohort }}
+                />
+              </Form.Checkbox>
+            ))
+        }
       </Form.CheckboxSet>
       {!props.isValid && (
         <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -86,10 +108,12 @@ export default function BulkEmailRecipient(props) {
 
 BulkEmailRecipient.defaultProps = {
   isValid: true,
+  additionalCohorts: [],
 };
 
 BulkEmailRecipient.propTypes = {
   selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
+  additionalCohorts: PropTypes.arrayOf(PropTypes.string),
 };

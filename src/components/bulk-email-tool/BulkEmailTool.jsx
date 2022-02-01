@@ -6,7 +6,7 @@ import { Spinner } from '@edx/paragon';
 import { ErrorPage } from '@edx/frontend-platform/react';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import Navigationtabs from '../navigation-tabs/NavigationTabs';
-import { getCourseHomeCourseMetadata } from './data/api';
+import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
 import useMobileResponsive from '../../utils/useMobileResponsive';
 import BulkEmailForm from './bulk-email-form';
 
@@ -18,20 +18,25 @@ export default function BulkEmailTool() {
 
   useEffect(() => {
     async function fetchTabData() {
-      let data;
+      let metadataResponse;
+      let cohortsResponse;
       try {
-        data = await getCourseHomeCourseMetadata(courseId);
+        metadataResponse = await getCourseHomeCourseMetadata(courseId);
+        cohortsResponse = await getCohorts(courseId);
       } catch (e) {
         setCourseMetadata({
           isStaff: false,
           tabs: [],
+          cohorts: [],
         });
         return;
       }
-      const { tabs, is_staff: isStaff } = data;
+      const { tabs, is_staff: isStaff } = metadataResponse;
+      const { cohorts } = cohortsResponse;
       setCourseMetadata({
         isStaff,
         tabs: [...tabs],
+        cohorts: cohorts.map(({ name }) => name),
       });
     }
     fetchTabData();
@@ -43,7 +48,7 @@ export default function BulkEmailTool() {
         <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
         <div className={classnames({ 'border border-primary-200': !isMobile })}>
           <div className="row">
-            <BulkEmailForm courseId={courseId} />
+            <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} />
           </div>
           <div className="row">
             <BulkEmailTaskManager courseId={courseId} />

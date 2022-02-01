@@ -20,7 +20,7 @@ export const FORM_SUBMIT_STATES = {
 };
 
 export default function BulkEmailForm(props) {
-  const { courseId } = props;
+  const { courseId, cohorts } = props;
   const [subject, setSubject] = useState('');
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
@@ -126,6 +126,7 @@ export default function BulkEmailForm(props) {
         <BulkEmailRecipient
           selectedGroups={selectedRecipients}
           handleCheckboxes={onRecipientChange}
+          additionalCohorts={cohorts}
           isValid={emailFormValidation.recipients}
         />
         <Form.Group controlId="emailSubject">
@@ -220,6 +221,11 @@ export default function BulkEmailForm(props) {
   );
 }
 
+BulkEmailForm.defaultProps = {
+  cohorts: [],
+};
+
 BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
+  cohorts: PropTypes.arrayOf(PropTypes.string),
 };
