@@ -29,6 +29,7 @@ export default function TextEditor(props) {
       init={{
         selector: 'textarea#editor',
         height: 600,
+        branding: false,
         plugins: 'advlist code emoticons link lists table',
         toolbar: 'bold italic | bullist numlist | link emoticons',
         skin: false,
