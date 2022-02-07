@@ -13,6 +13,7 @@ import 'tinymce/plugins/emoticons/js/emojis';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
+import 'tinymce/plugins/image';
 import '@edx/tinymce-language-selector';
 
 import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
@@ -30,12 +31,13 @@ export default function TextEditor(props) {
         selector: 'textarea#editor',
         height: 600,
         branding: false,
-        plugins: 'advlist code emoticons link lists table',
-        toolbar: 'bold italic | bullist numlist | link emoticons',
+        plugins: 'advlist code emoticons link lists table image language',
+        toolbar: 'formatselect fontselect bold italic underline forecolor | code bullist numlist alignlef aligncenter alignright alignjustify indent | blockquote link emoticons image | language',
         skin: false,
         content_css: false,
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
         extended_valid_elements: 'span[lang|id] -span',
+        block_unsupported_drop: false,
       }}
       onChange={onChange}
       onKeyUp={onKeyUp}
