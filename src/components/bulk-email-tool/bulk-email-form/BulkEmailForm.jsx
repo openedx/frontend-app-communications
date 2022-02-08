@@ -101,18 +101,11 @@ export default function BulkEmailForm(props) {
                 }}
               />
             </p>
-            <ul>
+            <ul className="list-unstyled">
               {selectedRecipients.map((group) => (
                 <li key={group}>{group}</li>
               ))}
             </ul>
-            <p>
-              <FormattedMessage
-                id="bulk.email.task.alert.warning"
-                defaultMessage="CAUTION! When you select Send Email, your email message is added to the queue for sending, and cannot be cancelled."
-                description="Warns the user in an alert that the email may not be immediately sent out to users."
-              />
-            </p>
           </>
         )}
         close={(event) => {
@@ -167,6 +160,28 @@ export default function BulkEmailForm(props) {
             </Form.Control.Feedback>
           )}
         </Form.Group>
+        <div>
+          <p>
+            <FormattedMessage
+              id="bulk.email.instructions.proofreading"
+              defaultMessage="We recommend sending learners no more than one email message per week. Before you send your email, review
+              the text carefully and send it to yourself first, so that you can preview the formatting and make sure
+              embedded images and links work correctly."
+              description="A set of instructions to give users a heads up about the formatting of the email they are about to send"
+            />
+          </p>
+          <p>
+            <strong>
+              <FormattedMessage id="bulk.email.instructions.caution" defaultMessage="Caution!" />
+            </strong>
+            <FormattedMessage
+              id="bulk.email.instructions.caution.message"
+              defaultMessage=" When you select Send Email, your email message is added to the queue for sending,
+              and cannot be cancelled."
+              description="A warning about how emails are sent out to users"
+            />
+          </p>
+        </div>
         <Form.Group className="d-flex flex-row">
           <StatefulButton
             variant="primary"

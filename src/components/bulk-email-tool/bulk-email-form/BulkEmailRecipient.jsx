@@ -82,7 +82,6 @@ export default function BulkEmailRecipient(props) {
               <Form.Checkbox
                 key={cohort}
                 value={`cohort:${cohort}`}
-                disabled={selectedGroups.find((group) => group === (DEFAULT_GROUPS.AUDIT || DEFAULT_GROUPS.VERIFIED))}
               >
                 <FormattedMessage
                   id="bulk.email.form.cohort.label"
