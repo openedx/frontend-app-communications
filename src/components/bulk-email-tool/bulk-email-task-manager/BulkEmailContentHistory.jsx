@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
   Button, Icon, Modal, StatefulButton,
@@ -11,14 +11,13 @@ import messages from './messages';
 import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-export function BulkEmailContentHistory({ intl }) {
+export function BulkEmailContentHistory({ intl, copyTextToEditor }) {
   const { courseId } = useParams();
   const BUTTON_STATE = {
     DEFAULT: 'default',
     PENDING: 'pending',
     COMPLETE: 'complete',
   };
-
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
   const [showHistoricalEmailContentTable, setShowHistoricalEmailContentTable] = useState(false);
@@ -91,47 +90,42 @@ export function BulkEmailContentHistory({ intl }) {
         body={(
           <div>
             <div className="d-flex flex-row">
-              <p>
-                {intl.formatMessage(messages.modalMessageSubject)}
-              </p>
-              <p className="pl-2">
-                {messageContent.subject}
-              </p>
+              <p>{intl.formatMessage(messages.modalMessageSubject)}</p>
+              <p className="pl-2">{messageContent.subject}</p>
             </div>
             <div className="d-flex flex-row">
-              <p>
-                {intl.formatMessage(messages.modalMessageSentBy)}
-              </p>
-              <p className="pl-2">
-                {messageContent.requester}
-              </p>
+              <p>{intl.formatMessage(messages.modalMessageSentBy)}</p>
+              <p className="pl-2">{messageContent.requester}</p>
             </div>
             <div className="d-flex flex-row">
-              <p>
-                {intl.formatMessage(messages.modalMessageTimeSent)}
-              </p>
-              <p className="pl-2">
-                {messageContent.created}
-              </p>
+              <p>{intl.formatMessage(messages.modalMessageTimeSent)}</p>
+              <p className="pl-2">{messageContent.created}</p>
             </div>
             <div className="d-flex flex-row">
-              <p>
-                {intl.formatMessage(messages.modalMessageSentTo)}
-              </p>
-              <p className="pl-2">
-                {messageContent.sent_to}
-              </p>
+              <p>{intl.formatMessage(messages.modalMessageSentTo)}</p>
+              <p className="pl-2">{messageContent.sent_to}</p>
             </div>
             <hr className="py-2" />
             <div>
-              <p>
-                {intl.formatMessage(messages.modalMessageBody)}
-              </p>
+              <p>{intl.formatMessage(messages.modalMessageBody)}</p>
+              {/* eslint-disable-next-line react/no-danger */}
               <div dangerouslySetInnerHTML={{ __html: messageContent.email.html_message }} />
             </div>
           </div>
         )}
         onClose={() => setIsMessageModalOpen(false)}
+        buttons={[
+          <Button onClick={() => {
+            copyTextToEditor(messageContent.email.html_message);
+            setIsMessageModalOpen(false);
+          }}
+          >
+            <FormattedMessage
+              id="bulk.email.tool.copy.message.button"
+              defaultMessage="Copy to editor"
+            />
+          </Button>,
+        ]}
       />
     </div>
   );
@@ -167,35 +161,31 @@ export function BulkEmailContentHistory({ intl }) {
   const additionalColumns = () => {
     const tableData = transformDataForTable();
 
-    return (
-      [
-        {
-          id: 'view_message',
-          Header: '',
-          Cell: ({ row }) => (
-            <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
-              {intl.formatMessage(messages.buttonViewMessage)}
-            </Button>
-          ),
-        },
-      ]
-    );
+    return [
+      {
+        id: 'view_message',
+        Header: '',
+        Cell: ({ row }) => (
+          <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
+            {intl.formatMessage(messages.buttonViewMessage)}
+          </Button>
+        ),
+      },
+    ];
   };
 
   return (
     <div>
+      <div>{messageContent && renderMessageModal()}</div>
       <div>
-        {messageContent && renderMessageModal()}
-      </div>
-      <div>
-        <p>
-          {intl.formatMessage(messages.emailHistoryTableSectionButtonHeader)}
-        </p>
+        <p>{intl.formatMessage(messages.emailHistoryTableSectionButtonHeader)}</p>
         <StatefulButton
           className="btn btn-outline-primary mb-2"
           variant="outline-primary"
           type="submit"
-          onClick={async () => { await fetchSentEmailHistoryData(); }}
+          onClick={async () => {
+            await fetchSentEmailHistoryData();
+          }}
           labels={{
             default: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
             pending: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
@@ -209,7 +199,7 @@ export function BulkEmailContentHistory({ intl }) {
         >
           {intl.formatMessage(messages.emailHistoryTableSectionButton)}
         </StatefulButton>
-        { showHistoricalEmailContentTable && (
+        {showHistoricalEmailContentTable && (
           <BulkEmailTaskManagerTable
             errorRetrievingData={errorRetrievingData}
             tableData={transformDataForTable()}
@@ -230,6 +220,7 @@ BulkEmailContentHistory.propTypes = {
   row: PropTypes.shape({
     index: PropTypes.number,
   }),
+  copyTextToEditor: PropTypes.func.isRequired,
 };
 
 BulkEmailContentHistory.defaultProps = {

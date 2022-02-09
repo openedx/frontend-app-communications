@@ -1,12 +1,13 @@
 import React from 'react';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import PropTypes from 'prop-types';
 import BulkEmailContentHistory from './BulkEmailContentHistory';
 import BulkEmailPendingTasks from './BulkEmailPendingTasks';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
 import messages from './messages';
 
-export function BulkEmailTaskManager({ intl }) {
+export function BulkEmailTaskManager({ intl, copyTextToEditor }) {
   return (
     <div className="px-5">
       <div>
@@ -19,7 +20,7 @@ export function BulkEmailTaskManager({ intl }) {
         <h2 className="h3">
           {intl.formatMessage(messages.emailTaskHistoryHeader)}
         </h2>
-        <BulkEmailContentHistory />
+        <BulkEmailContentHistory copyTextToEditor={copyTextToEditor} />
       </div>
       <div>
         <BulkEmailTaskHistory />
@@ -30,6 +31,7 @@ export function BulkEmailTaskManager({ intl }) {
 
 BulkEmailTaskManager.propTypes = {
   intl: intlShape.isRequired,
+  copyTextToEditor: PropTypes.func.isRequired,
 };
 
 export default injectIntl(BulkEmailTaskManager);

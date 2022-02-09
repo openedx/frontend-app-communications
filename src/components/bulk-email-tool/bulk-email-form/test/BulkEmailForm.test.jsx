@@ -18,17 +18,17 @@ describe('bulk-email-form', () => {
   beforeEach(() => jest.resetModules());
   afterEach(cleanup);
   test('it renders', () => {
-    render(<BulkEmailForm courseId="test-course-id" />);
+    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
     expect(screen.getByText('Submit')).toBeTruthy();
   });
   test('it shows a warning when clicking submit', async () => {
-    render(<BulkEmailForm courseId="test-course-id" />);
+    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
     fireEvent.click(screen.getByText('Submit'));
     const warning = await screen.findByText('CAUTION!', { exact: false });
     expect(warning).toBeTruthy();
   });
   test('Prevent form POST if invalid', async () => {
-    render(<BulkEmailForm courseId="test-course-id" />);
+    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
     fireEvent.click(screen.getByText('Submit'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
@@ -36,7 +36,7 @@ describe('bulk-email-form', () => {
     expect(await screen.findByText('A subject is required')).toBeInTheDocument();
   });
   test('Shows complete message on completed POST', async () => {
-    render(<BulkEmailForm courseId="test-course-id" />);
+    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     expect(screen.getByRole('checkbox', { name: 'Myself' })).toBeChecked();
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject:' }), { target: { value: 'test subject' } });
@@ -51,7 +51,7 @@ describe('bulk-email-form', () => {
       throw Error('api-response-error');
     });
     await act(async () => {
-      render(<BulkEmailForm courseId="test-course-id" />);
+      render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
       const subjectLine = screen.getByRole('textbox', { name: 'Subject:' });
       const recipient = screen.getByRole('checkbox', { name: 'Myself' });
       fireEvent.click(recipient);
