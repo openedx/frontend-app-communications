@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Form, Icon, StatefulButton, useCheckboxSetValues, useToggle,
@@ -20,7 +20,7 @@ export const FORM_SUBMIT_STATES = {
 };
 
 export default function BulkEmailForm(props) {
-  const { courseId, cohorts } = props;
+  const { courseId, cohorts, editorRef } = props;
   const [subject, setSubject] = useState('');
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
@@ -31,7 +31,6 @@ export default function BulkEmailForm(props) {
   });
   const [selectedRecipients, { add, remove }] = useCheckboxSetValues([]);
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
-  const editorRef = useRef(null);
   const resetEmailForm = useTimeout(() => {
     setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETED_DEFAULT);
   }, 3000);
@@ -243,4 +242,6 @@ BulkEmailForm.defaultProps = {
 BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
+  editorRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
+    .isRequired,
 };

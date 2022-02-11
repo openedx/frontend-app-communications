@@ -19,7 +19,7 @@ describe('BulkEmailContentHistory component', () => {
   afterEach(cleanup);
 
   test('renders correctly', async () => {
-    render(<BulkEmailContentHistory />);
+    render(<BulkEmailContentHistory copyTextToEditor={jest.fn()} />);
     const tableDescription = await screen.findByText(
       'To see the content of previously sent emails, click this button:',
     );
@@ -33,7 +33,7 @@ describe('BulkEmailContentHistory component', () => {
       const emailHistoryData = buildEmailContentHistoryData(1);
       getSentEmailHistory.mockImplementation(() => emailHistoryData);
 
-      render(<BulkEmailContentHistory />);
+      render(<BulkEmailContentHistory copyTextToEditor={jest.fn()} />);
 
       const showEmailContentHistoryButton = await screen.findByText('Show Sent Email History');
       fireEvent.click(showEmailContentHistoryButton);
@@ -68,7 +68,7 @@ describe('BulkEmailContentHistory component', () => {
       const emailHistoryData = buildEmailContentHistoryData(1);
       getSentEmailHistory.mockImplementation(() => emailHistoryData);
 
-      render(<BulkEmailContentHistory />);
+      render(<BulkEmailContentHistory copyTextToEditor={jest.fn()} />);
 
       const showEmailContentHistoryButton = await screen.findByText('Show Sent Email History');
       fireEvent.click(showEmailContentHistoryButton);
@@ -101,7 +101,7 @@ describe('BulkEmailContentHistory component', () => {
       const emailHistoryData = buildEmailContentHistoryData(0);
       getSentEmailHistory.mockImplementation(() => emailHistoryData);
       // render the component
-      render(<BulkEmailContentHistory />);
+      render(<BulkEmailContentHistory copyTextToEditor={jest.fn()} />);
       // press the `show sent email history` button to initiate data retrieval
       const showEmailContentHistoryButton = await screen.findByText('Show Sent Email History');
       fireEvent.click(showEmailContentHistoryButton);
@@ -117,7 +117,7 @@ describe('BulkEmailContentHistory component', () => {
         throw new Error();
       });
       // render the component
-      render(<BulkEmailContentHistory />);
+      render(<BulkEmailContentHistory copyTextToEditor={jest.fn()} />);
       // press the `show sent email history` button to initiate data retrieval
       const showEmailContentHistoryButton = await screen.findByText('Show Sent Email History');
       fireEvent.click(showEmailContentHistoryButton);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classnames from 'classnames';
 
 import { useParams } from 'react-router-dom';
@@ -15,6 +15,13 @@ export default function BulkEmailTool() {
 
   const [courseMetadata, setCourseMetadata] = useState();
   const isMobile = useMobileResponsive();
+  const textEditorRef = useRef();
+
+  const copyTextToEditor = (body) => {
+    if (textEditorRef?.current) {
+      textEditorRef.current.setContent(body);
+    }
+  };
 
   useEffect(() => {
     async function fetchTabData() {
@@ -48,10 +55,10 @@ export default function BulkEmailTool() {
         <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
         <div className={classnames({ 'border border-primary-200': !isMobile })}>
           <div className="row">
-            <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} />
+            <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} editorRef={textEditorRef} />
           </div>
           <div className="row">
-            <BulkEmailTaskManager courseId={courseId} />
+            <BulkEmailTaskManager courseId={courseId} copyTextToEditor={copyTextToEditor} />
           </div>
         </div>
       </div>
