@@ -1,4 +1,9 @@
-|Build Status| |Codecov| |license| |semantic-release| ## As many of these as you'd like to include, or others if you wish!
+|Codecov| |license|
+
+.. |codecov| image:: https://codecov.io/gh/edx/frontend-app-learning/branch/master/graph/badge.svg?token=3z7XvuzTq3
+   :target: https://codecov.io/gh/edx/frontend-app-communications
+.. |license| image:: https://img.shields.io/badge/license-AGPL-informational
+   :target: https://github.com/edx/frontend-app-account/blob/master/LICENSE
 
 frontend-app-communications
 ==============================
@@ -22,7 +27,7 @@ For now, this repo is not intergrated with devstack. You'll be running the app l
 
       mkdir -p ~/workspace/
       cd ~/workspace/
-      git clone https://github.com/edx/devstack.git
+      git clone https://github.com/edx/frontend-app-communications.git
 
 2. Install frontend dependencies
 
@@ -30,21 +35,32 @@ For now, this repo is not intergrated with devstack. You'll be running the app l
 
       npm i
 
-3. start the devserver. The app will be running at `localhost:8585`, or whatever port you change it too.
+3. Start the devserver. The app will be running at ``localhost:1984``, or whatever port you change it too.
 
    .. code-block::
 
-      npm i
+      npm start
 
 Environment Variables/Setup Notes
 ---------------------------------
 
-TBD
+If you wish to add new environment varibles for local testing, they should be listed in 2 places:
+
+1. In ``.env.development``
+2. Added to the ``mergeConfig`` found in ``src/index.jsx``
+
+.. code-block::
+
+   initialize({
+      config: () => {
+       mergeConfig({
+       EXAMPLE_VALUE: true,
+       }, 'CommuncationsAppConfig');
 
 Running Tests
 ---------------------------
 
-tests use jest as usual. To run all the tests for this repo:
+Tests use `jest` and `react-test-library`. To run all the tests for this repo:
 
    .. code-block::
 
