@@ -1,0 +1,9 @@
+.recipient-groups {
+  > div {
+    min-width: 50%;
+    padding-right: 0.5rem;
+    input {
+      padding: 0.5rem !important;
+    }
+  }
+}

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
+import './bulkEmailRecepient.scss';
+
 const DEFAULT_GROUPS = {
   SELF: 'myself',
   STAFF: 'staff',
@@ -24,7 +26,7 @@ export default function BulkEmailRecipient(props) {
       </Form.Label>
       <Form.CheckboxSet
         name="recipientGroups"
-        className="w-75 flex-wrap flex-row justify-content-between"
+        className="flex-wrap flex-row recipient-groups w-75"
         onChange={handleCheckboxes}
         value={selectedGroups}
       >
