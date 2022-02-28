@@ -7,7 +7,7 @@ import { SpinnerSimple, CheckCircle, Cancel } from '@edx/paragon/icons';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import TextEditor from '../text-editor/TextEditor';
 import { postBulkEmail } from './api';
-import BulkEmailRecipient from './BulkEmailRecipient';
+import BulkEmailRecipient from './bulk-email-recipient';
 import TaskAlertModal from './TaskAlertModal';
 import useTimeout from '../../../utils/useTimeout';
 
