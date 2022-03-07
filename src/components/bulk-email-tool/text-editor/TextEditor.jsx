@@ -31,6 +31,7 @@ export default function TextEditor(props) {
         selector: 'textarea#editor',
         height: 600,
         branding: false,
+        menubar: 'edit view insert format table tools',
         plugins: 'advlist code emoticons link lists table image language',
         toolbar: 'formatselect fontselect bold italic underline forecolor | code bullist numlist alignlef aligncenter alignright alignjustify indent | blockquote link emoticons image | language',
         skin: false,
