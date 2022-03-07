@@ -22,7 +22,7 @@ subscribe(APP_READY, () => {
       <Header />
       <div className="container">
         <Switch>
-          <AuthenticatedPageRoute path="/courses/:courseId/instructor/bulk_email" component={BulkEmailTool} />
+          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email" component={BulkEmailTool} />
         </Switch>
       </div>
       <Footer />
