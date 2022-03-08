@@ -35,9 +35,9 @@
     "url": "https://github.com/edx/frontend-app-communications/issues"
   },
   "dependencies": {
-    "@edx/brand": "npm:@edx/brand-edx.org@^2.0.3",
+    "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
     "@edx/frontend-component-footer": "10.1.6",
-    "@edx/frontend-component-header": "2.3.0",
+    "@edx/frontend-component-header": "^2.4.2",
     "@edx/frontend-platform": "1.12.7",
     "@edx/paragon": "16.3.2",
     "@edx/tinymce-language-selector": "^1.1.0",
