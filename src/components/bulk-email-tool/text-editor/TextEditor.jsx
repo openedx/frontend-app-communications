@@ -39,7 +39,6 @@ export default function TextEditor(props) {
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
-        paste_data_images: true,
       }}
       onChange={onChange}
       onKeyUp={onKeyUp}
