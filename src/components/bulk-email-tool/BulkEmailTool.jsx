@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import classnames from 'classnames';
 
 import { useParams } from 'react-router-dom';
-import { Spinner } from '@edx/paragon';
+
 import { ErrorPage } from '@edx/frontend-platform/react';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
-import Navigationtabs from '../navigation-tabs/NavigationTabs';
-import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
+import NavigationTabs from '../navigation-tabs/NavigationTabs';
 import useMobileResponsive from '../../utils/useMobileResponsive';
 import BulkEmailForm from './bulk-email-form';
+import { CourseMetadataContext } from '../page-container/PageContainer';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
 
-  const [courseMetadata, setCourseMetadata] = useState();
   const isMobile = useMobileResponsive();
   const textEditorRef = useRef();
 
@@ -23,58 +22,23 @@ export default function BulkEmailTool() {
     }
   };
 
-  useEffect(() => {
-    async function fetchTabData() {
-      let metadataResponse;
-      let cohortsResponse;
-      try {
-        metadataResponse = await getCourseHomeCourseMetadata(courseId);
-        cohortsResponse = await getCohorts(courseId);
-      } catch (e) {
-        setCourseMetadata({
-          isStaff: false,
-          tabs: [],
-          cohorts: [],
-        });
-        return;
-      }
-      const { tabs, is_staff: isStaff } = metadataResponse;
-      const { cohorts } = cohortsResponse;
-      setCourseMetadata({
-        isStaff,
-        tabs: [...tabs],
-        cohorts: cohorts.map(({ name }) => name),
-      });
-    }
-    fetchTabData();
-  }, []);
-
-  if (courseMetadata) {
-    return courseMetadata.isStaff ? (
-      <div>
-        <Navigationtabs courseId={courseId} tabData={courseMetadata.tabs} />
-        <div className={classnames({ 'border border-primary-200': !isMobile })}>
-          <div className="row">
-            <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} editorRef={textEditorRef} />
-          </div>
-          <div className="row">
-            <BulkEmailTaskManager courseId={courseId} copyTextToEditor={copyTextToEditor} />
+  return (
+    <CourseMetadataContext.Consumer>
+      {(courseMetadata) => (courseMetadata.isStaff ? (
+        <div>
+          <NavigationTabs courseId={courseId} tabData={courseMetadata.tabs} />
+          <div className={classnames({ 'border border-primary-200': !isMobile })}>
+            <div className="row">
+              <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} editorRef={textEditorRef} />
+            </div>
+            <div className="row">
+              <BulkEmailTaskManager courseId={courseId} copyTextToEditor={copyTextToEditor} />
+            </div>
           </div>
         </div>
-      </div>
-    ) : (
-      <ErrorPage />
-    );
-  }
-  return (
-    <div className="d-flex justify-content-center">
-      <Spinner
-        animation="border"
-        variant="primary"
-        role="status"
-        screenreadertext="loading"
-        className="spinner-border spinner-border-lg text-primary p-5 m-5"
-      />
-    </div>
+      ) : (
+        <ErrorPage />
+      ))}
+    </CourseMetadataContext.Consumer>
   );
 }
