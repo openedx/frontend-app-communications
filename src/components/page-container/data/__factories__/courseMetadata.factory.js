@@ -9,6 +9,7 @@ export default Factory.define('courseMetadata')
     original_user_is_staff: false,
     number: 'DemoX',
     org: 'edX',
+    title: 'Demonstration Course',
     verified_mode: {
       upgrade_url: 'test',
       price: 10,

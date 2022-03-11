@@ -115,6 +115,13 @@ export default function BulkEmailForm(props) {
         }}
       />
       <Form>
+        <p className="h2">
+          <FormattedMessage
+            id="bulk.email.tool.label"
+            defaultMessage="Email"
+            description="Tool label. Describes the function of the tool (to send email)."
+          />
+        </p>
         <BulkEmailRecipient
           selectedGroups={selectedRecipients}
           handleCheckboxes={onRecipientChange}

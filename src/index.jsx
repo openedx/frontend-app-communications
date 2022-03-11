@@ -7,25 +7,28 @@ import {
 import { AppProvider, AuthenticatedPageRoute, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 
-import Header, { messages as headerMessages } from '@edx/frontend-component-header';
-import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
+import { messages as headerMessages } from '@edx/frontend-component-header';
+import { messages as footerMessages } from '@edx/frontend-component-footer';
 
 import { Switch } from 'react-router-dom';
 import appMessages from './i18n';
 
 import './index.scss';
 import BulkEmailTool from './components/bulk-email-tool';
+import PageContainer from './components/page-container/PageContainer';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
-      <Header />
-      <div className="container">
+      <div className="pb-3 container">
         <Switch>
-          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email" component={BulkEmailTool} />
+          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email">
+            <PageContainer>
+              <BulkEmailTool />
+            </PageContainer>
+          </AuthenticatedPageRoute>
         </Switch>
       </div>
-      <Footer />
     </AppProvider>,
     document.getElementById('root'),
   );
