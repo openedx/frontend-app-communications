@@ -8,6 +8,8 @@ import { Spinner } from '@edx/paragon';
 
 import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
 
+import './PageContainer.scss';
+
 export const CourseMetadataContext = React.createContext();
 
 export default function PageContainer(props) {
@@ -58,6 +60,7 @@ export default function PageContainer(props) {
       <CourseMetadataContext.Provider value={courseMetadata}>
         <>
           <Header
+            className="learning-header"
             courseOrg={courseMetadata.org}
             courseNumber={courseMetadata.number}
             courseTitle={courseMetadata.title}
