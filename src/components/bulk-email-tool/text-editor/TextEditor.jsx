@@ -14,6 +14,7 @@ import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/image';
+import 'tinymce/plugins/codesample';
 import '@edx/tinymce-language-selector';
 
 import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
@@ -32,8 +33,9 @@ export default function TextEditor(props) {
         height: 600,
         branding: false,
         menubar: 'edit view insert format table tools',
-        plugins: 'advlist code emoticons link lists table image language',
-        toolbar: 'formatselect fontselect bold italic underline forecolor | code bullist numlist alignlef aligncenter alignright alignjustify indent | blockquote link emoticons image | language',
+        plugins: 'advlist code emoticons link lists table image language codesample',
+        toolbar:
+          'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignlef aligncenter alignright alignjustify indent | blockquote link emoticons image code| language',
         skin: false,
         content_css: false,
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
