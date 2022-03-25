@@ -35,12 +35,13 @@ export default function TextEditor(props) {
         menubar: 'edit view insert format table tools',
         plugins: 'advlist code emoticons link lists table image language codesample',
         toolbar:
-          'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignlef aligncenter alignright alignjustify indent | blockquote link emoticons image code| language',
+          'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link emoticons image code| language',
         skin: false,
         content_css: false,
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
+        image_advtab: true,
       }}
       onChange={onChange}
       onKeyUp={onKeyUp}
