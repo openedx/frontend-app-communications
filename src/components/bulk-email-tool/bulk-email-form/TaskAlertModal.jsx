@@ -35,7 +35,14 @@ function TaskAlertModal(props) {
               id="bulk.email.form.recipients.Contine"
               defaultMessage="Continue"
               description="Continue button for the task alert"
-            />
+            >
+              { // FormattedMessage wraps the translated string in a <span/> by default. This was
+                // causing strange click event target issues in safari. To solve this, we want to
+                // wrap the string in a fragment instead of a span, so that the whole button considered
+                // a "button" target, and not a "span inside a button"
+                msg => <>{msg}</>
+              }
+            </FormattedMessage>
           </Button>
         </ActionRow>
       )}

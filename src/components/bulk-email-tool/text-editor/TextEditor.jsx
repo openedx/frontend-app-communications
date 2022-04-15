@@ -33,9 +33,9 @@ export default function TextEditor(props) {
         height: 600,
         branding: false,
         menubar: 'edit view insert format table tools',
-        plugins: 'advlist code link lists table image language codesample',
+        plugins: 'advlist code link lists table image codesample',
         toolbar:
-          'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link image code | language',
+          'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link image code ',
         skin: false,
         content_css: false,
         content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
