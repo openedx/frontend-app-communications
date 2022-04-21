@@ -3,7 +3,9 @@
  */
 import React from 'react';
 import { Factory } from 'rosie';
-import { render, screen, cleanup } from '../../../setupTest';
+import {
+  render, screen, cleanup, initializeMockApp,
+} from '../../../setupTest';
 import BulkEmailTool from '../BulkEmailTool';
 import { CourseMetadataContext } from '../../page-container/PageContainer';
 import '../../page-container/data/__factories__/cohort.factory';
@@ -23,6 +25,9 @@ jest.mock('react-router-dom', () => ({
 
 describe('BulkEmailTool', () => {
   beforeEach(() => jest.resetModules());
+  beforeAll(async () => {
+    await initializeMockApp();
+  });
   afterEach(cleanup);
 
   /**

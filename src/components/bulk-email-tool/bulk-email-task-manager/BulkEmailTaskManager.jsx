@@ -9,7 +9,7 @@ import messages from './messages';
 
 function BulkEmailTaskManager({ intl, copyTextToEditor }) {
   return (
-    <div className="px-5">
+    <div>
       <div>
         <h2 className="h3">
           {intl.formatMessage(messages.pendingTasksHeader)}

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {
-  render, screen, fireEvent, cleanup, act,
+  render, screen, fireEvent, cleanup, act, initializeMockApp,
 } from '../../../../setupTest';
 import BulkEmailTaskHistory from '../BulkEmailTaskHistory';
 import { getEmailTaskHistory } from '../data/api';
@@ -16,6 +16,9 @@ jest.mock('../data/api', () => ({
 
 describe('BulkEmailTaskHistory component', () => {
   beforeEach(() => jest.resetModules());
+  beforeAll(async () => {
+    await initializeMockApp();
+  });
   afterEach(cleanup);
 
   test('renders correctly ', async () => {
