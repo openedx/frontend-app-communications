@@ -7,7 +7,7 @@ import BulkEmailPendingTasks from './BulkEmailPendingTasks';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
 import messages from './messages';
 
-export function BulkEmailTaskManager({ intl, copyTextToEditor }) {
+function BulkEmailTaskManager({ intl, copyTextToEditor }) {
   return (
     <div className="px-5">
       <div>

@@ -11,7 +11,7 @@ import messages from './messages';
 import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-export function BulkEmailContentHistory({ intl, copyTextToEditor }) {
+function BulkEmailContentHistory({ intl, copyTextToEditor }) {
   const { courseId } = useParams();
   const BUTTON_STATE = {
     DEFAULT: 'default',
