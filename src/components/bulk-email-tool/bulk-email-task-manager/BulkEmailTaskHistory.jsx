@@ -9,7 +9,7 @@ import messages from './messages';
 
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-export function BulkEmailTaskHistory({ intl }) {
+function BulkEmailTaskHistory({ intl }) {
   const { courseId } = useParams();
   const BUTTON_STATE = {
     DEFAULT: 'default',

@@ -7,7 +7,7 @@ import messages from './messages';
 import useInterval from '../../../utils/useInterval';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-export function BulkEmailPendingTasks({ intl }) {
+function BulkEmailPendingTasks({ intl }) {
   const { courseId } = useParams();
 
   const [instructorTaskData, setInstructorTaskData] = useState();
