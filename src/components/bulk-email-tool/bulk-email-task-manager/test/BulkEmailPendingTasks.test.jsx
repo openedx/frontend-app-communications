@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {
-  render, screen, cleanup, act,
+  render, screen, cleanup, act, initializeMockApp,
 } from '../../../../setupTest';
 import BulkEmailPendingTasks from '../BulkEmailPendingTasks';
 import { getInstructorTasks } from '../data/api';
@@ -16,6 +16,9 @@ jest.mock('../data/api', () => ({
 
 describe('BulkEmailPendingTasks component', () => {
   beforeEach(() => jest.resetModules());
+  beforeAll(async () => {
+    await initializeMockApp();
+  });
   afterEach(cleanup);
 
   test('renders correctly', async () => {

@@ -4,7 +4,7 @@
 import React from 'react';
 import { Factory } from 'rosie';
 import {
-  act, cleanup, render, screen,
+  act, cleanup, initializeMockApp, render, screen,
 } from '../../../setupTest';
 
 import PageContainer from '../PageContainer';
@@ -26,6 +26,9 @@ jest.mock('react-router-dom', () => ({
 
 describe('PageContainer', () => {
   beforeEach(() => jest.resetModules());
+  beforeAll(async () => {
+    await initializeMockApp();
+  });
   afterEach(cleanup);
 
   test('PageContainer renders properly when given course metadata', async () => {

@@ -39,13 +39,16 @@ subscribe(APP_INIT_ERROR, (error) => {
 });
 
 initialize({
-  config: () => {
-    mergeConfig({
-    }, 'CommuncationsAppConfig');
+  handlers: {
+    config: () => {
+      mergeConfig(
+        {
+          // MICROBA-1505: Remove this when we remove the flag from config
+          SCHEDULE_EMAIL_SECTION: process.env.SCHEDULE_EMAIL_SECTION || null,
+        },
+        'CommunicationsAppConfig',
+      );
+    },
   },
-  messages: [
-    appMessages,
-    headerMessages,
-    footerMessages,
-  ],
+  messages: [appMessages, headerMessages, footerMessages],
 });
