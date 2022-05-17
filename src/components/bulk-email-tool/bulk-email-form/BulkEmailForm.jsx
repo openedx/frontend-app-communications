@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Form, Icon, StatefulButton, useCheckboxSetValues, useToggle,
@@ -10,13 +10,15 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
-import { postBulkEmail } from './api';
+import { postBulkEmail } from './data/api';
 import BulkEmailRecipient from './bulk-email-recipient';
 import TaskAlertModal from './TaskAlertModal';
 import useTimeout from '../../../utils/useTimeout';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
+import { BulkEmailContext } from '../bulk-email-context';
+import { handleEditorChange } from './data/actions';
 
 export const FORM_SUBMIT_STATES = {
   DEFAULT: 'default',
@@ -28,11 +30,8 @@ export const FORM_SUBMIT_STATES = {
 };
 
 function BulkEmailForm(props) {
-  const {
-    courseId, cohorts, editorRef, intl,
-  } = props;
-  const [subject, setSubject] = useState('');
-  const [dateTime, setDateTime] = useState({ scheduleDate: '', scheduleTime: '' });
+  const { courseId, cohorts, intl } = props;
+  const [{ editor }, dispatch] = useContext(BulkEmailContext);
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
     // set these as true on initialization, to prevent invalid messages from prematurely showing
@@ -44,6 +43,8 @@ function BulkEmailForm(props) {
   const [selectedRecipients, { add, remove }] = useCheckboxSetValues([]);
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
   const [isScheduled, toggleScheduled] = useState(false);
+  const isMobile = useMobileResponsive();
+
   const resetEmailForm = useTimeout(() => {
     if (isScheduled) {
       setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
@@ -51,7 +52,8 @@ function BulkEmailForm(props) {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
   }, 3000);
-  const isMobile = useMobileResponsive();
+
+  const onFormChange = (event) => dispatch(handleEditorChange(event.target.name, event.target.value));
 
   const onRecipientChange = (event) => {
     if (event.target.checked) {
@@ -59,15 +61,6 @@ function BulkEmailForm(props) {
     } else {
       remove(event.target.value);
     }
-  };
-  const onInit = (event, editor) => {
-    editorRef.current = editor;
-  };
-
-  const onSubjectChange = (event) => setSubject(event.target.value);
-  const onDateTimeChange = (event) => {
-    const next = { [event.target.name]: event.target.value };
-    setDateTime((prev) => ({ ...prev, ...next }));
   };
 
   const validateDateTime = (date, time) => {
@@ -78,11 +71,10 @@ function BulkEmailForm(props) {
   };
 
   const validateEmailForm = () => {
-    const subjectValid = subject.length !== 0;
-    const bodyValid = editorRef.current.getContent().length !== 0;
+    const subjectValid = editor.emailSubject.length !== 0;
+    const bodyValid = editor.emailBody.length !== 0;
     const recipientsValid = selectedRecipients.length !== 0;
-    const { scheduleDate, scheduleTime } = dateTime;
-    const scheduleValid = validateDateTime(scheduleDate, scheduleTime);
+    const scheduleValid = validateDateTime(editor.scheduleDate, editor.scheduleTime);
     setEmailFormValidation({
       subject: subjectValid,
       recipients: recipientsValid,
@@ -98,12 +90,10 @@ function BulkEmailForm(props) {
       setEmailFormStatus(() => FORM_SUBMIT_STATES.PENDING);
       emailData.append('action', 'send');
       emailData.append('send_to', JSON.stringify(selectedRecipients));
-      emailData.append('subject', subject);
-      emailData.append('message', editorRef.current.getContent());
+      emailData.append('subject', editor.emailSubject);
+      emailData.append('message', editor.emailBody);
       if (isScheduled) {
-        const { scheduleDate, scheduleTime } = dateTime;
-        emailData.append('schedule', new Date(`${scheduleDate} ${scheduleTime}`).toISOString());
-        emailData.append('browser_timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
+        emailData.append('schedule', new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString());
       }
       let data;
       try {
@@ -137,7 +127,7 @@ function BulkEmailForm(props) {
         isOpen={isTaskAlertOpen}
         alertMessage={(
           <>
-            <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject })}</p>
+            <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
             <ul className="list-unstyled">
               {selectedRecipients.map((group) => (
                 <li key={group}>{group}</li>
@@ -168,7 +158,7 @@ function BulkEmailForm(props) {
         />
         <Form.Group controlId="emailSubject">
           <Form.Label>{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>
-          <Form.Control name="subject" className="w-lg-50" onChange={onSubjectChange} />
+          <Form.Control name="emailSubject" className="w-lg-50" onChange={onFormChange} value={editor.emailSubject} />
           {!emailFormValidation.subject && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">
               {intl.formatMessage(messages.bulkEmailFormSubjectError)}
@@ -177,7 +167,7 @@ function BulkEmailForm(props) {
         </Form.Group>
         <Form.Group controlId="emailBody">
           <Form.Label>{intl.formatMessage(messages.bulkEmailBodyLabel)}</Form.Label>
-          <TextEditor onInit={onInit} />
+          <TextEditor onChange={(value) => dispatch(handleEditorChange('emailBody', value))} value={editor.emailBody} />
           {!emailFormValidation.body && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">
               {intl.formatMessage(messages.bulkEmailFormBodyError)}
@@ -203,8 +193,8 @@ function BulkEmailForm(props) {
           {isScheduled && (
             <ScheduleEmailForm
               isValid={emailFormValidation.schedule}
-              onDateTimeChange={onDateTimeChange}
-              dateTime={dateTime}
+              onDateTimeChange={onFormChange}
+              dateTime={{ date: editor.scheduleDate, time: editor.scheduleTime }}
             />
           )}
           <div
@@ -264,8 +254,6 @@ BulkEmailForm.defaultProps = {
 BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
-  editorRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
-    .isRequired,
   intl: intlShape.isRequired,
 };
 

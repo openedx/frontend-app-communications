@@ -12,7 +12,7 @@ import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
 
-function BulkEmailContentHistory({ intl, copyTextToEditor }) {
+function BulkEmailContentHistory({ intl }) {
   const { courseId } = useParams();
   const BUTTON_STATE = {
     DEFAULT: 'default',
@@ -130,7 +130,6 @@ function BulkEmailContentHistory({ intl, copyTextToEditor }) {
           messageContent={messageContent}
           isOpen={isMessageModalOpen}
           setModalOpen={setIsMessageModalOpen}
-          copyTextToEditor={copyTextToEditor}
         />
       )}
       <div>
@@ -176,7 +175,6 @@ BulkEmailContentHistory.propTypes = {
   row: PropTypes.shape({
     index: PropTypes.number,
   }),
-  copyTextToEditor: PropTypes.func.isRequired,
 };
 
 BulkEmailContentHistory.defaultProps = {

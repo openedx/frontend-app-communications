@@ -142,6 +142,10 @@ const messages = defineMessages({
     id: 'bulk.email.task.history.table.column.header.taskProgress',
     defaultMessage: 'Task Progress',
   },
+  scheduledEmailsTableHeader: {
+    id: 'bulk.email.scheduled.emails.table.header',
+    defaultMessage: 'Scheduled emails',
+  },
 });
 
 export default messages;

@@ -6,14 +6,23 @@ import {
   render, screen, cleanup, fireEvent, initializeMockApp,
 } from '../../../../setupTest';
 import BulkEmailForm from '..';
-import { postBulkEmail } from '../api';
+import { postBulkEmail } from '../data/api';
+import { BulkEmailProvider } from '../../bulk-email-context';
 
 jest.mock('../../text-editor/TextEditor');
-jest.mock('../api', () => ({
+jest.mock('../data/api', () => ({
   __esModule: true,
   postBulkEmail: jest.fn(() => ({ status: 200 })),
 }));
 const appendMock = jest.spyOn(FormData.prototype, 'append');
+
+function renderBulkEmailForm() {
+  return (
+    <BulkEmailProvider>
+      <BulkEmailForm courseId="test-course-id" />
+    </BulkEmailProvider>
+  );
+}
 
 describe('bulk-email-form', () => {
   beforeAll(async () => {
@@ -23,17 +32,17 @@ describe('bulk-email-form', () => {
   beforeEach(() => jest.resetModules());
   afterEach(cleanup);
   test('it renders', () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     expect(screen.getByText('Send Email')).toBeTruthy();
   });
   test('it shows a warning when clicking submit', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     fireEvent.click(screen.getByText('Send Email'));
     const warning = await screen.findByText('CAUTION!', { exact: false });
     expect(warning).toBeTruthy();
   });
   test('Prevent form POST if invalid', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     fireEvent.click(screen.getByText('Send Email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
@@ -41,10 +50,11 @@ describe('bulk-email-form', () => {
     expect(await screen.findByText('A subject is required')).toBeInTheDocument();
   });
   test('Shows complete message on completed POST', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     expect(screen.getByRole('checkbox', { name: 'Myself' })).toBeChecked();
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject:' }), { target: { value: 'test subject' } });
+    fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     fireEvent.click(screen.getByText('Send Email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
@@ -55,18 +65,19 @@ describe('bulk-email-form', () => {
     postBulkEmail.mockImplementation(() => {
       throw Error('api-response-error');
     });
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     const subjectLine = screen.getByRole('textbox', { name: 'Subject:' });
     const recipient = screen.getByRole('checkbox', { name: 'Myself' });
     fireEvent.click(recipient);
     fireEvent.change(subjectLine, { target: { value: 'test subject' } });
+    fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     fireEvent.click(screen.getByText('Send Email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
     expect(await screen.findByText('Error')).toBeInTheDocument();
   });
   test('Shows scheduling form when checkbox is checked and submit is changed', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
     fireEvent.click(scheduleCheckbox);
     expect(screen.getByText('Time'));
@@ -74,7 +85,7 @@ describe('bulk-email-form', () => {
     expect(screen.getByText('Schedule Email'));
   });
   test('Prevents sending email when scheduling inputs are empty', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
     fireEvent.click(scheduleCheckbox);
     const submitButton = await screen.findByText('Schedule Email');
@@ -84,9 +95,10 @@ describe('bulk-email-form', () => {
     expect(screen.getByText('Date and time cannot be blank'));
   });
   test('Adds scheduling data to POST requests when schedule is selected', async () => {
-    render(<BulkEmailForm courseId="test-course-id" editorRef={jest.fn()} />);
+    render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject:' }), { target: { value: 'test subject' } });
+    fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
     fireEvent.click(scheduleCheckbox);
     const submitButton = screen.getByText('Schedule Email');
