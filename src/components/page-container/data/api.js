@@ -1,4 +1,4 @@
-import { getConfig } from '@edx/frontend-platform';
+import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const courseHomeBaseUrl = `${getConfig().LMS_BASE_URL}/api/course_home/v1/course_metadata`;
@@ -6,7 +6,7 @@ const courseHomeBaseUrl = `${getConfig().LMS_BASE_URL}/api/course_home/v1/course
 export async function getCourseHomeCourseMetadata(courseId) {
   const courseHomeMetadataUrl = `${courseHomeBaseUrl}/${courseId}`;
   const { data } = await getAuthenticatedHttpClient().get(courseHomeMetadataUrl);
-  return data;
+  return camelCaseObject(data);
 }
 
 export async function getCohorts(courseId) {

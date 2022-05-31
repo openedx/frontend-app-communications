@@ -19,7 +19,7 @@ export default function BulkEmailTool() {
 
   return (
     <CourseMetadataContext.Consumer>
-      {(courseMetadata) => (courseMetadata.isStaff ? (
+      {(courseMetadata) => (courseMetadata.originalUserIsStaff ? (
         <div>
           <NavigationTabs courseId={courseId} tabData={courseMetadata.tabs} />
           <div>

@@ -31,7 +31,7 @@ export default function PageContainer(props) {
           org: '',
           number: '',
           title: '',
-          isStaff: false,
+          originalUserIsStaff: false,
           tabs: [],
           cohorts: [],
         });
@@ -39,7 +39,7 @@ export default function PageContainer(props) {
       }
 
       const {
-        org, number, title, tabs, is_staff: isStaff,
+        org, number, title, tabs, originalUserIsStaff,
       } = metadataResponse;
       const { cohorts } = cohortsResponse;
 
@@ -47,7 +47,7 @@ export default function PageContainer(props) {
         org,
         number,
         title,
-        isStaff,
+        originalUserIsStaff,
         tabs: [...tabs],
         cohorts: cohorts.map(({ name }) => name),
       });

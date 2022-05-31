@@ -6,7 +6,7 @@ export default Factory.define('courseMetadata')
   .option('host', 'http://localhost:18000')
   .attrs({
     is_staff: true,
-    original_user_is_staff: false,
+    original_user_is_staff: true,
     number: 'DemoX',
     org: 'edX',
     title: 'Demonstration Course',
