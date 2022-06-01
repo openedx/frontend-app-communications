@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { Factory } from 'rosie';
+import { camelCaseObject } from '@edx/frontend-platform';
 import {
   render, screen, cleanup, initializeMockApp,
 } from '../../../setupTest';
@@ -36,15 +37,15 @@ describe('BulkEmailTool', () => {
    */
   function buildCourseMetadata(cohortData, courseData) {
     const {
-      org, number, title, tabs, is_staff: isStaff,
-    } = courseData;
+      org, number, title, tabs, originalUserIsStaff,
+    } = camelCaseObject(courseData);
     const { cohorts } = cohortData;
 
     return {
       org,
       number,
       title,
-      isStaff,
+      originalUserIsStaff,
       tabs: [...tabs],
       cohorts: cohorts.map(({ name }) => name),
     };
@@ -78,7 +79,7 @@ describe('BulkEmailTool', () => {
 
   test('BulkEmailTool renders error page on no staff user', async () => {
     const cohorts = { cohorts: [] };
-    const courseInfo = Factory.build('courseMetadata', { is_staff: false });
+    const courseInfo = Factory.build('courseMetadata', { original_user_is_staff: false });
     const courseMetadata = buildCourseMetadata(cohorts, courseInfo);
     renderBulkEmailTool(courseMetadata);
     // verify error page is displayed for user without staff permissions
