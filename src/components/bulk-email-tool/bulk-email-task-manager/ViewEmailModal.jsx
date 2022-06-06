@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal } from '@edx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from './messages';
+import { BulkEmailContext } from '../bulk-email-context';
+import { copyToEditor } from '../bulk-email-form/data/actions';
 
 function ViewEmailModal({
-  intl, messageContent, isOpen, setModalOpen, copyTextToEditor,
+  intl, messageContent, isOpen, setModalOpen,
 }) {
+  const [, dispatch] = useContext(BulkEmailContext);
   return (
     <div>
       <Modal
@@ -42,7 +45,7 @@ function ViewEmailModal({
         buttons={[
           <Button
             onClick={() => {
-              copyTextToEditor(messageContent.email.html_message);
+              dispatch(copyToEditor(messageContent.email.html_message, messageContent.subject));
               setModalOpen(false);
             }}
           >
@@ -63,11 +66,10 @@ ViewEmailModal.propTypes = {
     email: PropTypes.shape({
       html_message: PropTypes.string,
     }).isRequired,
-    sent_to: PropTypes.arrayOf(PropTypes.string),
+    sent_to: PropTypes.string,
   }).isRequired,
   isOpen: PropTypes.bool.isRequired,
   setModalOpen: PropTypes.func.isRequired,
-  copyTextToEditor: PropTypes.func.isRequired,
 };
 
 export default injectIntl(ViewEmailModal);

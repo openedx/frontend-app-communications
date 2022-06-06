@@ -22,7 +22,7 @@ import contentCss from 'tinymce/skins/content/default/content.css';
 
 export default function TextEditor(props) {
   const {
-    onChange, onKeyUp, onInit, disabled,
+    onChange, onKeyUp, onInit, disabled, value,
   } = props;
 
   return (
@@ -42,8 +42,10 @@ export default function TextEditor(props) {
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
         image_advtab: true,
+        name: 'emailBody',
       }}
-      onChange={onChange}
+      onEditorChange={onChange}
+      value={value}
       onKeyUp={onKeyUp}
       onInit={onInit}
       disabled={disabled}
@@ -56,6 +58,7 @@ TextEditor.defaultProps = {
   onKeyUp: () => {},
   onInit: () => {},
   disabled: false,
+  value: '',
 };
 
 TextEditor.propTypes = {
@@ -63,4 +66,5 @@ TextEditor.propTypes = {
   onKeyUp: PropTypes.func,
   onInit: PropTypes.func,
   disabled: PropTypes.bool,
+  value: PropTypes.string,
 };

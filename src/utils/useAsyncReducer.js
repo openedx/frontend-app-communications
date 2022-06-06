@@ -3,10 +3,10 @@ import { useMemo, useReducer } from 'react';
 /**
  * This helper function wraps the useReducer dispatch function to allow for invoking function calls
  * when a state change is dispatched.
- * @param {*} dispatch useReducer's dispatch function.
+ * @param {Function} dispatch useReducer's dispatch function.
  * @returns a wrapped dispatch that execututes function actions.
  */
-function wrapAsync(dispatch) {
+export function wrapAsync(dispatch) {
   return (action) => {
     if (typeof action === 'function') {
       return action(dispatch);
@@ -14,6 +14,25 @@ function wrapAsync(dispatch) {
     return dispatch(action);
   };
 }
+
+/**
+ * A utility function to combine reducers. this allows us to organize and create individual reducers
+ * for components with its own slice of the store. This function the returns a combined reducer to make
+ * dispatching easier amoungst multiple components. This function isnt used directly by this hook, but is a part of
+ * the ecosystem around it, and is meant to be used as a step before calling the hook.
+ * @param {Object} slices reducer functions to be combined.
+ * @returns a single reducer function
+*/
+export function combineReducers(slices) {
+  return (prevState, action) => Object.keys(slices).reduce(
+    (nextState, nextProp) => ({
+      ...nextState,
+      [nextProp]: slices[nextProp](prevState[nextProp], action),
+    }),
+    prevState,
+  );
+}
+
 /**
  * By default, the useReducer hook does not allow for async dispatches. This small
  * hook takes the dispatch function from useReducer and wraps it to allow for the execution
