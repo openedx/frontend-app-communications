@@ -1,12 +1,15 @@
 import {
+  deleteScheduledEmail,
+  deleteScheduledEmailComplete,
+  deleteScheduledEmailError,
+  deleteScheduledEmailStart,
   fetchScheduledEmails,
   fetchScheduledEmailsComplete,
   fetchScheduledEmailsError,
   fetchScheduledEmailsStart,
 } from './actions';
-import { getScheduledBulkEmailData } from './api';
+import { deleteScheduledBulkEmailInstructorTask, getScheduledBulkEmailIntructorTaskData } from './api';
 
-// eslint-disable-next-line import/prefer-default-export
 export function getScheduledBulkEmailThunk(courseId, page) {
   return async (dispatch) => {
     dispatch(fetchScheduledEmails());
@@ -20,8 +23,29 @@ export function getScheduledBulkEmailThunk(courseId, page) {
       return error;
     }
     try {
-      const data = await getScheduledBulkEmailData(courseId, page);
+      const data = await getScheduledBulkEmailIntructorTaskData(courseId, page);
       return onComplete(data);
+    } catch (error) {
+      return onError(error);
+    }
+  };
+}
+
+export function deleteScheduledEmailThunk(courseId, emailIndex) {
+  return async (dispatch) => {
+    dispatch(deleteScheduledEmail());
+    dispatch(deleteScheduledEmailStart());
+    function onComplete(data) {
+      dispatch(deleteScheduledEmailComplete(data));
+      return data;
+    }
+    function onError(error) {
+      dispatch(deleteScheduledEmailError());
+      return error;
+    }
+    try {
+      const status = await deleteScheduledBulkEmailInstructorTask(courseId, emailIndex);
+      return onComplete(status);
     } catch (error) {
       return onError(error);
     }

@@ -1,13 +1,8 @@
 import { initializeMockApp } from '../../../../../setupTest';
-import { editorReducer } from '../reducer';
+import { editorInitialState, editorReducer } from '../reducer';
 
 describe('editorReducer', () => {
-  const testState = {
-    emailBody: '',
-    emailSubject: '',
-    emailDate: '',
-    emailTime: '',
-  };
+  const testState = editorInitialState;
   beforeAll(async () => {
     await initializeMockApp();
   });
@@ -18,10 +13,8 @@ describe('editorReducer', () => {
     };
     const returnedState = editorReducer(testState, { type: 'EDITOR_ON_CHANGE', payload: newEditorState });
     const finalState = {
+      ...testState,
       emailBody: 'test',
-      emailSubject: '',
-      emailDate: '',
-      emailTime: '',
     };
     expect(returnedState).toEqual(finalState);
   });
@@ -30,8 +23,7 @@ describe('editorReducer', () => {
     const newEditorState = {
       emailBody: 'test',
       emailSubject: 'test',
-      emailRecipient: ['test'],
-      emailSchedule: 'test',
+      emailRecipients: ['test'],
     };
     const finalState = {
       ...testState,

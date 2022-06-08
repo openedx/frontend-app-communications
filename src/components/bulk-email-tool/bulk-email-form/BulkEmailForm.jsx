@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Form, Icon, StatefulButton, useCheckboxSetValues, useToggle,
+  Form, Icon, StatefulButton, Toast, useToggle,
 } from '@edx/paragon';
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
@@ -10,7 +10,6 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
-import { postBulkEmail } from './data/api';
 import BulkEmailRecipient from './bulk-email-recipient';
 import TaskAlertModal from './TaskAlertModal';
 import useTimeout from '../../../utils/useTimeout';
@@ -18,7 +17,16 @@ import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';
-import { handleEditorChange } from './data/actions';
+import {
+  addRecipient,
+  clearDateTime,
+  clearEditor,
+  handleEditorChange,
+  removeRecipient,
+  setEditMode,
+} from './data/actions';
+import { editScheduledEmailThunk, postBulkEmailThunk } from './data/thunks';
+import { getScheduledBulkEmailThunk } from '../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
 
 export const FORM_SUBMIT_STATES = {
   DEFAULT: 'default',
@@ -26,7 +34,13 @@ export const FORM_SUBMIT_STATES = {
   COMPLETE: 'complete',
   COMPLETE_SCHEDULE: 'completed_schedule',
   SCHEDULE: 'schedule',
+  RESCHEDULE: 'reschedule',
   ERROR: 'error',
+};
+
+const FORM_ACTIONS = {
+  POST: 'POST',
+  PATCH: 'PATCH',
 };
 
 function BulkEmailForm(props) {
@@ -40,26 +54,62 @@ function BulkEmailForm(props) {
     recipients: true,
     schedule: true,
   });
-  const [selectedRecipients, { add, remove }] = useCheckboxSetValues([]);
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
   const [isScheduled, toggleScheduled] = useState(false);
   const isMobile = useMobileResponsive();
 
-  const resetEmailForm = useTimeout(() => {
+  /**
+   * Since we are working with both an old and new API endpoint, the body for the POST
+   * and the PATCH have different signatures. Therefore, based on the action required, we need to
+   * format the data properly to be accepted on the back end.
+   * @param {*} action "POST" or "PATCH" of the FORM_ACTIONS constant
+   * @returns formatted Data
+   */
+  const formatDataForFormAction = (action) => {
+    if (action === FORM_ACTIONS.POST) {
+      const emailData = new FormData();
+      emailData.append('action', 'send');
+      emailData.append('send_to', JSON.stringify(editor.emailRecipients));
+      emailData.append('subject', editor.emailSubject);
+      emailData.append('message', editor.emailBody);
+      if (isScheduled) {
+        emailData.append('schedule', new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString());
+      }
+      return emailData;
+    }
+    if (action === FORM_ACTIONS.PATCH) {
+      return {
+        email: {
+          targets: editor.emailRecipients,
+          subject: editor.emailSubject,
+          message: editor.emailBody,
+          id: editor.emailId,
+        },
+        schedule: isScheduled ? new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString() : null,
+      };
+    }
+    return {};
+  };
+  const resetEmailForm = () => {
+    if (editor.errorRetrievingData === false) {
+      dispatch(clearEditor());
+    }
     if (isScheduled) {
       setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
     } else {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
-  }, 3000);
+  };
+
+  const delayedEmailFormReset = useTimeout(resetEmailForm, 3000);
 
   const onFormChange = (event) => dispatch(handleEditorChange(event.target.name, event.target.value));
 
   const onRecipientChange = (event) => {
     if (event.target.checked) {
-      add(event.target.value);
+      dispatch(addRecipient(event.target.value));
     } else {
-      remove(event.target.value);
+      dispatch(removeRecipient(event.target.value));
     }
   };
 
@@ -73,7 +123,7 @@ function BulkEmailForm(props) {
   const validateEmailForm = () => {
     const subjectValid = editor.emailSubject.length !== 0;
     const bodyValid = editor.emailBody.length !== 0;
-    const recipientsValid = selectedRecipients.length !== 0;
+    const recipientsValid = editor.emailRecipients.length !== 0;
     const scheduleValid = validateDateTime(editor.scheduleDate, editor.scheduleTime);
     setEmailFormValidation({
       subject: subjectValid,
@@ -85,62 +135,95 @@ function BulkEmailForm(props) {
   };
 
   const createEmailTask = async () => {
-    const emailData = new FormData();
     if (validateEmailForm()) {
       setEmailFormStatus(() => FORM_SUBMIT_STATES.PENDING);
-      emailData.append('action', 'send');
-      emailData.append('send_to', JSON.stringify(selectedRecipients));
-      emailData.append('subject', editor.emailSubject);
-      emailData.append('message', editor.emailBody);
-      if (isScheduled) {
-        emailData.append('schedule', new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString());
+      let response;
+      if (editor.editMode) {
+        const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
+        response = await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
+      } else {
+        const emailData = formatDataForFormAction(FORM_ACTIONS.POST);
+        response = await dispatch(postBulkEmailThunk(emailData, courseId));
       }
-      let data;
-      try {
-        data = await postBulkEmail(emailData, courseId);
-      } catch (e) {
-        setEmailFormStatus(FORM_SUBMIT_STATES.ERROR);
-        return;
-      }
-      if (data.status === 200) {
+      if (response?.status === 200) {
         if (isScheduled) {
           setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE_SCHEDULE);
         } else {
           setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE);
         }
-        resetEmailForm();
+      } else {
+        setEmailFormStatus(FORM_SUBMIT_STATES.ERROR);
       }
+      dispatch(getScheduledBulkEmailThunk(courseId, 1));
+      delayedEmailFormReset();
     }
   };
 
   useEffect(() => {
+    if (!!editor.scheduleDate || !!editor.scheduleTime) {
+      toggleScheduled(true);
+    }
     if (isScheduled) {
-      setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
+      if (editor.editMode) {
+        setEmailFormStatus(FORM_SUBMIT_STATES.RESCHEDULE);
+      } else {
+        setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
+      }
     } else {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
-  }, [isScheduled]);
+  }, [isScheduled, editor.scheduleDate, editor.scheduleTime]);
+
+  const AlertMessage = () => (
+    <>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
+      <ul className="list-unstyled">
+        {editor.emailRecipients.map((group) => (
+          <li key={group}>{group}</li>
+        ))}
+      </ul>
+      {!isScheduled && (
+        <p>
+          <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
+          {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
+        </p>
+      )}
+    </>
+  );
+
+  const EditMessage = () => (
+    <>
+      <p>
+        {intl.formatMessage(messages.bulkEmailTaskAlertEditingDate, {
+          dateTime: new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toLocaleString(),
+        })}
+      </p>
+      <p>
+        {intl.formatMessage(messages.bulkEmailTaskAlertEditingSubject, {
+          subject: editor.emailSubject,
+        })}
+      </p>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
+      <ul className="list-unstyled">
+        {editor.emailRecipients.map((group) => (
+          <li key={group}>{group}</li>
+        ))}
+      </ul>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
+      {!isScheduled && (
+        <p>
+          <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
+          {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
+        </p>
+      )}
+    </>
+  );
 
   return (
     <div className={classNames('w-100 m-auto p-lg-4 py-2.5', !isMobile && 'px-5 border border-primary-200')}>
       <TaskAlertModal
         isOpen={isTaskAlertOpen}
-        alertMessage={(
-          <>
-            <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
-            <ul className="list-unstyled">
-              {selectedRecipients.map((group) => (
-                <li key={group}>{group}</li>
-              ))}
-            </ul>
-            {!isScheduled && (
-              <p>
-                <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
-                {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
-              </p>
-            )}
-          </>
-        )}
+        alertMessage={editor.editMode ? EditMessage() : AlertMessage()}
         close={(event) => {
           closeTaskAlert();
           if (event.target.name === 'continue') {
@@ -151,7 +234,7 @@ function BulkEmailForm(props) {
       <Form>
         <p className="h2">{intl.formatMessage(messages.bulkEmailToolLabel)}</p>
         <BulkEmailRecipient
-          selectedGroups={selectedRecipients}
+          selectedGroups={editor.emailRecipients}
           handleCheckboxes={onRecipientChange}
           additionalCohorts={cohorts}
           isValid={emailFormValidation.recipients}
@@ -183,7 +266,13 @@ function BulkEmailForm(props) {
               <Form.Checkbox
                 name="scheduleEmailBox"
                 checked={isScheduled}
-                onChange={() => toggleScheduled((prev) => !prev)}
+                onChange={() => toggleScheduled((prev) => {
+                  if (prev) {
+                    dispatch(clearDateTime());
+                    dispatch(setEditMode(false));
+                  }
+                  return !prev;
+                })}
                 disabled={emailFormStatus === FORM_SUBMIT_STATES.PENDING}
               >
                 {intl.formatMessage(messages.bulkEmailFormScheduleBox)}
@@ -214,6 +303,7 @@ function BulkEmailForm(props) {
               icons={{
                 [FORM_SUBMIT_STATES.DEFAULT]: <Icon src={Send} />,
                 [FORM_SUBMIT_STATES.SCHEDULE]: <Icon src={Event} />,
+                [FORM_SUBMIT_STATES.RESCHEDULE]: <Icon src={Event} />,
                 [FORM_SUBMIT_STATES.PENDING]: <Icon src={SpinnerSimple} className="icon-spin" />,
                 [FORM_SUBMIT_STATES.COMPLETE]: <Icon src={Check} />,
                 [FORM_SUBMIT_STATES.COMPLETE_SCHEDULE]: <Icon src={Check} />,
@@ -222,6 +312,7 @@ function BulkEmailForm(props) {
               labels={{
                 [FORM_SUBMIT_STATES.DEFAULT]: intl.formatMessage(messages.bulkEmailSubmitButtonDefault),
                 [FORM_SUBMIT_STATES.SCHEDULE]: intl.formatMessage(messages.bulkEmailSubmitButtonSchedule),
+                [FORM_SUBMIT_STATES.RESCHEDULE]: intl.formatMessage(messages.bulkEmailSubmitButtonReschedule),
                 [FORM_SUBMIT_STATES.PENDING]: intl.formatMessage(messages.bulkEmailSubmitButtonPending),
                 [FORM_SUBMIT_STATES.COMPLETE]: intl.formatMessage(messages.bulkEmailSubmitButtonComplete),
                 [FORM_SUBMIT_STATES.COMPLETE_SCHEDULE]: intl.formatMessage(
@@ -235,11 +326,19 @@ function BulkEmailForm(props) {
                 FORM_SUBMIT_STATES.COMPLETE_SCHEDULE,
               ]}
             />
-            {emailFormStatus === FORM_SUBMIT_STATES.ERROR && (
-              <Form.Control.Feedback hasIcon={false} type="invalid">
-                {intl.formatMessage(messages.bulkEmailFormError)}
-              </Form.Control.Feedback>
-            )}
+            <Toast
+              show={
+                emailFormStatus === FORM_SUBMIT_STATES.ERROR
+                || emailFormStatus === FORM_SUBMIT_STATES.COMPLETE
+                || emailFormStatus === FORM_SUBMIT_STATES.COMPLETE_SCHEDULE
+              }
+              onClose={resetEmailForm}
+            >
+              {emailFormStatus === FORM_SUBMIT_STATES.ERROR && intl.formatMessage(messages.bulkEmailFormError)}
+              {emailFormStatus === FORM_SUBMIT_STATES.COMPLETE && intl.formatMessage(messages.bulkEmailFormSuccess)}
+              {emailFormStatus === FORM_SUBMIT_STATES.COMPLETE_SCHEDULE
+                && intl.formatMessage(messages.bulkEmailFormScheduledSuccess)}
+            </Toast>
           </div>
         </Form.Group>
       </Form>
