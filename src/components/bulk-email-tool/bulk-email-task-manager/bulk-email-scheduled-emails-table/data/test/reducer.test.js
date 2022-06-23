@@ -1,5 +1,5 @@
-import { initializeMockApp } from '../../../../../setupTest';
-import { scheduledEmailsTableReducer } from '../data/reducer';
+import { initializeMockApp } from '../../../../../../setupTest';
+import { scheduledEmailsTableReducer } from '../reducer';
 
 describe('scheduledEmailsTableReducer', () => {
   const testState = {
@@ -40,6 +40,24 @@ describe('scheduledEmailsTableReducer', () => {
       errorRetrievingData: true,
     };
     const returnedState = scheduledEmailsTableReducer(testState, { type: 'FETCH_FAILURE' });
+    expect(returnedState).toEqual(finalState);
+  });
+  it('properly sets state on DELETE_COMPLETE', () => {
+    const finalState = {
+      ...testState,
+    };
+    const returnedState = scheduledEmailsTableReducer(testState, { type: 'DELETE_COMPLETE' });
+    expect(returnedState).toEqual(finalState);
+    expect(returnedState.isLoading).toEqual(false);
+    expect(returnedState.errorRetrievingData).toEqual(false);
+  });
+  it('sets Error when DELETE_FAILURE action dispatched', () => {
+    const finalState = {
+      ...testState,
+      isLoading: false,
+      errorRetrievingData: true,
+    };
+    const returnedState = scheduledEmailsTableReducer(testState, { type: 'DELETE_FAILURE' });
     expect(returnedState).toEqual(finalState);
   });
 });

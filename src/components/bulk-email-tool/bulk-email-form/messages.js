@@ -64,9 +64,9 @@ const messages = defineMessages({
   bulkEmailInstructionsCaution: { id: 'bulk.email.instructions.caution', defaultMessage: 'Caution!' },
 
   bulkEmailInstructionsCautionMessage: {
-    id: 'bulk.email.instructions.caution.message',
+    id: 'bulk.email.instructions.caution.message.new.email',
     defaultMessage:
-      ' When you select Send Email, your email message is added to the queue for sending, and cannot be cancelled.',
+      ' When you select Send Email, you are creating a new email message that is added to the queue for sending, and cannot be cancelled.',
     description: 'A warning about how emails are sent out to users',
   },
   bulkEmailFormScheduleBox: {
@@ -83,6 +83,36 @@ const messages = defineMessages({
     id: 'bulk.email.form.error',
     defaultMessage: 'An error occured while attempting to send the email.',
     description: 'An Error message located under the submit button for the email form. Visible only on a failure.',
+  },
+  bulkEmailFormSuccess: {
+    id: 'bilk.email.form.success',
+    defaultMessage: 'Email successfully created',
+  },
+  bulkEmailFormScheduledSuccess: {
+    id: 'bulk.email.form.scheduled.success',
+    defaultMessage: 'Email successfully scheduled',
+  },
+  bulkEmailSubmitButtonReschedule: {
+    id: 'bulk.email.submit.button.reschedule',
+    defaultMessage: 'Reschedule Email',
+  },
+  bulkEmailTaskAlertEditingDate: {
+    id: 'bulk.email.task.alert.editing',
+    defaultMessage: 'You are editing a scheduled email to be sent on: {dateTime}',
+    description: 'This alert pops up before submitting when editing an email that has already been scheduled',
+  },
+  bulkEmailTaskAlertEditingSubject: {
+    id: 'bulk.email.task.alert.subject',
+    defaultMessage: 'with the subject: {subject}',
+  },
+  bulkEmailTaskAlertEditingTo: {
+    id: 'bulk.email.task.alert.to',
+    defaultMessage: 'to recipients:',
+  },
+  bulkEmailTaskAlertEditingWarning: {
+    id: 'bulk.email.task.alert.warning',
+    defaultMessage: 'This will not create a new scheduled email task and instead overwrite the one currently selected. Do you want to overwrite this scheduled email?',
+    description: 'This alert pops up before submitting when editing an email that has already been scheduled',
   },
 });
 

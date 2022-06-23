@@ -20,6 +20,26 @@ export function scheduledEmailsTableReducer(state, action) {
         isLoading: false,
         errorRetrievingData: true,
       };
+    case 'DELETE_SCHEDULED_EMAIL':
+      return state;
+    case 'DELETE_START':
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case 'DELETE_COMPLETE':
+      return {
+        ...state,
+        isLoading: false,
+        errorRetrievingData: false,
+        ...action.payload,
+      };
+    case 'DELETE_FAILURE':
+      return {
+        ...state,
+        isLoading: false,
+        errorRetrievingData: true,
+      };
     default:
       return state;
   }

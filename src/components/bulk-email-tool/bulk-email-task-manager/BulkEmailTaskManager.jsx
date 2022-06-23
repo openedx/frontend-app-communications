@@ -10,7 +10,7 @@ import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table';
 
 function BulkEmailTaskManager({ intl }) {
   return (
-    <div>
+    <div className="w-100">
       {getConfig().SCHEDULE_EMAIL_SECTION && (
         <div>
           <h2 className="h3">{intl.formatMessage(messages.scheduledEmailsTableHeader)}</h2>

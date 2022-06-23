@@ -9,7 +9,7 @@ import useMobileResponsive from '../../../utils/useMobileResponsive';
 function ScheduleEmailForm(props) {
   const isMobile = useMobileResponsive();
   const { isValid, onDateTimeChange, dateTime } = props;
-  const { scheduleDate, scheduleTime } = dateTime;
+  const { date, time } = dateTime;
   return (
     <Form.Group>
       <div className={classNames('d-flex', isMobile ? 'flex-column' : 'flex-row', 'my-3')}>
@@ -27,7 +27,7 @@ function ScheduleEmailForm(props) {
             name="scheduleDate"
             data-testid="scheduleDate"
             onChange={onDateTimeChange}
-            value={scheduleDate}
+            value={date}
           />
         </div>
         <div className="w-lg-25 mx-2">
@@ -44,7 +44,7 @@ function ScheduleEmailForm(props) {
             name="scheduleTime"
             data-testid="scheduleTime"
             onChange={onDateTimeChange}
-            value={scheduleTime}
+            value={time}
           />
         </div>
       </div>
@@ -63,8 +63,8 @@ function ScheduleEmailForm(props) {
 
 ScheduleEmailForm.defaultProps = {
   dateTime: {
-    scheduleDate: '',
-    scheduleTime: '',
+    date: '',
+    time: '',
   },
 };
 
@@ -72,8 +72,8 @@ ScheduleEmailForm.propTypes = {
   isValid: PropTypes.bool.isRequired,
   onDateTimeChange: PropTypes.func.isRequired,
   dateTime: PropTypes.shape({
-    scheduleDate: PropTypes.string,
-    scheduleTime: PropTypes.string,
+    date: PropTypes.string,
+    time: PropTypes.string,
   }),
 };
 
