@@ -8,11 +8,13 @@ export default function NavigationTabs(props) {
 
   return (
     <div className="py-4">
-      <Nav>
+      <Nav variant="tabs" defaultActiveKey="Instructor">
         {tabData && tabData.map(tab => (
           <Nav.Item key={tab.tab_id}>
-            <Nav.Link eventKey={tab.url} href={tab.url} className="mx-3 py-2">{tab.title}</Nav.Link>
-          </Nav.Item>
+            <Nav.Link eventKey={tab.title} href={tab.url}>
+              {tab.title}
+            </Nav.Link>
+          </Nav.Item>          
         ))}
       </Nav>
     </div>

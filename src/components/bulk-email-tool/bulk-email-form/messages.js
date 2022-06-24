@@ -4,7 +4,7 @@ const messages = defineMessages({
   /* BulkEmailForm.jsx Messages */
   bulkEmailSubmitButtonDefault: {
     id: 'bulk.email.submit.button.default',
-    defaultMessage: 'Send Email',
+    defaultMessage: 'Send email',
   },
   bulkEmailSubmitButtonSchedule: {
     id: 'bulk.email.submit.button.schedule',
@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   bulkEmailSubjectLabel: {
     id: 'bulk.email.subject.label',
-    defaultMessage: 'Subject:',
+    defaultMessage: 'Subject',
     description: 'Email subject line input label. Meant to have colon or equivilant punctuation.',
   },
   bulkEmailFormSubjectError: {
@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   bulkEmailBodyLabel: {
     id: 'bulk.email.body.label',
-    defaultMessage: 'Body:',
+    defaultMessage: 'Body',
     description: 'Email Body label. Meant to have colon or equivilant punctuation.',
   },
   bulkEmailFormBodyError: {
