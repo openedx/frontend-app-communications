@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Form, Icon } from '@edx/paragon';
-import { Event, WatchOutline } from '@edx/paragon/icons';
+import { Form } from '@edx/paragon';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 
 function ScheduleEmailForm(props) {
@@ -13,39 +12,49 @@ function ScheduleEmailForm(props) {
   return (
     <Form.Group>
       <div className={classNames('d-flex', isMobile ? 'flex-column' : 'flex-row', 'my-3')}>
-        <div className="w-lg-25 mx-2">
-          <Form.Label>
-            <FormattedMessage
-              id="bulk.email.form.schedule.date"
-              defaultMessage="Date"
-              description="Label for the date portion of the email schedule form"
-            />
-          </Form.Label>
+        <div className="w-md-50 mx-2">
           <Form.Control
             type="date"
-            trailingElement={<Icon src={Event} />}
             name="scheduleDate"
             data-testid="scheduleDate"
             onChange={onDateTimeChange}
             value={date}
+            floatingLabel={(
+              <FormattedMessage
+                id="bulk.email.form.schedule.date"
+                defaultMessage="Send date"
+                description="Label for the date portion of the email schedule form"
+              />
+            )}
           />
-        </div>
-        <div className="w-lg-25 mx-2">
-          <Form.Label>
+          <small className="text-light-700 x-small">
             <FormattedMessage
-              id="bulk.email.form.schedule.time"
-              defaultMessage="Time"
-              description="Label for the time portion of the email schedule form"
+              id="bulk.email.form.schedule.date.description"
+              defaultMessage="Enter a start date, e.g. 11/27/2023"
             />
-          </Form.Label>
+          </small>
+        </div>
+        <div className="w-md-50 mx-2">
           <Form.Control
             type="time"
-            trailingElement={<Icon src={WatchOutline} />}
             name="scheduleTime"
             data-testid="scheduleTime"
             onChange={onDateTimeChange}
             value={time}
+            floatingLabel={(
+              <FormattedMessage
+                id="bulk.email.form.schedule.time"
+                defaultMessage="Send time"
+                description="Label for the time portion of the email schedule form"
+              />
+            )}
           />
+          <small className="text-light-700 x-small">
+            <FormattedMessage
+              id="bulk.email.form.schedule.time.description"
+              defaultMessage="Enter a start time, e.g. 09:00 AM"
+            />
+          </small>
         </div>
       </div>
       {!isValid && (

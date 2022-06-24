@@ -24,7 +24,7 @@ describe('BulkEmailTaskHistory component', () => {
   test('renders correctly ', async () => {
     render(<BulkEmailTaskHistory />);
     const tableDescription = await screen.findByText(
-      'To see the status for all email tasks submitted for this course, click this button:',
+      'View the status for all email tasks created for this course',
     );
     expect(tableDescription).toBeTruthy();
     const showEmailTaskHistoryButton = await screen.findByText('Show Email Task History');

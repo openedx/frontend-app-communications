@@ -40,17 +40,17 @@ describe('bulk-email-form', () => {
   afterEach(() => cleanup());
   test('it renders', () => {
     render(renderBulkEmailForm());
-    expect(screen.getByText('Send Email')).toBeTruthy();
+    expect(screen.getByText('Send email')).toBeTruthy();
   });
   test('it shows a warning when clicking submit', async () => {
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByText('Send Email'));
+    fireEvent.click(screen.getByText('Send email'));
     const warning = await screen.findByText('CAUTION!', { exact: false });
     expect(warning).toBeTruthy();
   });
   test('Prevent form POST if invalid', async () => {
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByText('Send Email'));
+    fireEvent.click(screen.getByText('Send email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
     expect(await screen.findByText('At least one recipient is required', { exact: false })).toBeInTheDocument();
@@ -65,9 +65,9 @@ describe('bulk-email-form', () => {
     render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     expect(screen.getByRole('checkbox', { name: 'Myself' })).toBeChecked();
-    fireEvent.change(screen.getByRole('textbox', { name: 'Subject:' }), { target: { value: 'test subject' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Subject' }), { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
-    fireEvent.click(screen.getByText('Send Email'));
+    fireEvent.click(screen.getByText('Send email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /continue/i }));
     expect(await screen.findByText('Submitting')).toBeInTheDocument();
@@ -77,12 +77,12 @@ describe('bulk-email-form', () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(500);
     render(renderBulkEmailForm());
-    const subjectLine = screen.getByRole('textbox', { name: 'Subject:' });
+    const subjectLine = screen.getByRole('textbox', { name: 'Subject' });
     const recipient = screen.getByRole('checkbox', { name: 'Myself' });
     fireEvent.click(recipient);
     fireEvent.change(subjectLine, { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
-    fireEvent.click(screen.getByText('Send Email'));
+    fireEvent.click(screen.getByText('Send email'));
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: /continue/i }));
     expect(await screen.findByText('An error occured while attempting to send the email.')).toBeInTheDocument();
@@ -91,8 +91,8 @@ describe('bulk-email-form', () => {
     render(renderBulkEmailForm());
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
     fireEvent.click(scheduleCheckbox);
-    expect(screen.getByText('Time'));
-    expect(screen.getByText('Date'));
+    expect(screen.getByText('Send time'));
+    expect(screen.getByText('Send date'));
     expect(screen.getByText('Schedule Email'));
   });
   test('Prevents sending email when scheduling inputs are empty', async () => {
@@ -109,7 +109,7 @@ describe('bulk-email-form', () => {
     const postBulkEmailInstructorTask = jest.spyOn(bulkEmailFormApi, 'postBulkEmailInstructorTask');
     render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
-    fireEvent.change(screen.getByRole('textbox', { name: 'Subject:' }), { target: { value: 'test subject' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Subject' }), { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
     fireEvent.click(scheduleCheckbox);
