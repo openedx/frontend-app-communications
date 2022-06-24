@@ -18,26 +18,32 @@ export default function BulkEmailRecipient(props) {
   return (
     <Form.Group>
       <Form.Label>
-        <FormattedMessage
-          id="bulk.email.form.recipients.sendLabel"
-          defaultMessage="Send To:"
-          description="A label before the list of potential recipients"
-        />
+        <span className="h3 text-primary-500">
+          <FormattedMessage
+            id="bulk.email.form.recipients.sendLabel"
+            defaultMessage="Send to"
+            description="A label before the list of potential recipients"
+          />
+        </span>
       </Form.Label>
       <Form.CheckboxSet
         name="recipientGroups"
-        className="flex-wrap flex-row recipient-groups w-75"
+        className="flex-wrap flex-row recipient-groups w-100"
         onChange={handleCheckboxes}
         value={selectedGroups}
       >
-        <Form.Checkbox key="myself" value="myself" className="mt-2.5">
+        <Form.Checkbox key="myself" value="myself" className="mt-2.5 col col-md-4 col-sm-6 col-12">
           <FormattedMessage
             id="bulk.email.form.recipients.myself"
             defaultMessage="Myself"
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
-        <Form.Checkbox key="staff" value="staff">
+        <Form.Checkbox
+          key="staff"
+          value="staff"
+          className="col col-md-4 col-sm-6 col-12"
+        >
           <FormattedMessage
             id="bulk.email.form.recipients.staff"
             defaultMessage="Staff/Administrators"
@@ -45,9 +51,39 @@ export default function BulkEmailRecipient(props) {
           />
         </Form.Checkbox>
         <Form.Checkbox
+          key="track:verified"
+          value="track:verified"
+          disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
+          className="col col-md-4 col-sm-6 col-12"
+        >
+          <FormattedMessage
+            id="bulk.email.form.recipients.verified"
+            defaultMessage="Learners in the verified certificate track"
+            description="A selectable choice from a list of potential email recipients"
+          />
+        </Form.Checkbox>
+        {
+          // additional cohorts
+          additionalCohorts
+          && additionalCohorts.map((cohort) => (
+            <Form.Checkbox
+              key={cohort}
+              value={`cohort:${cohort}`}
+              className="col col-md-4 col-sm-6 col-12"
+            >
+              <FormattedMessage
+                id="bulk.email.form.cohort.label"
+                defaultMessage="Cohort: {cohort}"
+                values={{ cohort }}
+              />
+            </Form.Checkbox>
+          ))
+        }
+        <Form.Checkbox
           key="track:audit"
           value="track:audit"
           disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
+          className="col col-md-4 col-sm-6 col-12"
         >
           <FormattedMessage
             id="bulk.email.form.recipients.audit"
@@ -56,20 +92,10 @@ export default function BulkEmailRecipient(props) {
           />
         </Form.Checkbox>
         <Form.Checkbox
-          key="track:verified"
-          value="track:verified"
-          disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
-        >
-          <FormattedMessage
-            id="bulk.email.form.recipients.verified"
-            defaultMessage="Learners in the verified certificate track"
-            description="A selectable choice from a list of potential email recipients"
-          />
-        </Form.Checkbox>
-        <Form.Checkbox
           key="learners"
           value="learners"
           disabled={selectedGroups.find((group) => group === (DEFAULT_GROUPS.AUDIT || DEFAULT_GROUPS.VERIFIED))}
+          className="col col-md-4 col-sm-6 col-12"
         >
           <FormattedMessage
             id="bulk.email.form.recipients.learners"
@@ -77,22 +103,6 @@ export default function BulkEmailRecipient(props) {
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
-        {
-          // additional cohorts
-          additionalCohorts
-            && additionalCohorts.map((cohort) => (
-              <Form.Checkbox
-                key={cohort}
-                value={`cohort:${cohort}`}
-              >
-                <FormattedMessage
-                  id="bulk.email.form.cohort.label"
-                  defaultMessage="Cohort: {cohort}"
-                  values={{ cohort }}
-                />
-              </Form.Checkbox>
-            ))
-        }
       </Form.CheckboxSet>
       {!props.isValid && (
         <Form.Control.Feedback className="px-3" hasIcon type="invalid">

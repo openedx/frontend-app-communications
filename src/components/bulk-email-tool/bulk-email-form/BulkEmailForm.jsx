@@ -28,6 +28,8 @@ import {
 import { editScheduledEmailThunk, postBulkEmailThunk } from './data/thunks';
 import { getScheduledBulkEmailThunk } from '../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
 
+import './bulkEmailForm.scss';
+
 export const FORM_SUBMIT_STATES = {
   DEFAULT: 'default',
   PENDING: 'pending',
@@ -220,7 +222,7 @@ function BulkEmailForm(props) {
   );
 
   return (
-    <div className={classNames('w-100 m-auto p-lg-4 py-2.5', !isMobile && 'px-5 border border-primary-200')}>
+    <div className={classNames('w-100 m-auto', !isMobile && 'p-4 border border-primary-200')}>
       <TaskAlertModal
         isOpen={isTaskAlertOpen}
         alertMessage={editor.editMode ? EditMessage() : AlertMessage()}
@@ -232,7 +234,6 @@ function BulkEmailForm(props) {
         }}
       />
       <Form>
-        <p className="h2">{intl.formatMessage(messages.bulkEmailToolLabel)}</p>
         <BulkEmailRecipient
           selectedGroups={editor.emailRecipients}
           handleCheckboxes={onRecipientChange}
@@ -240,7 +241,7 @@ function BulkEmailForm(props) {
           isValid={emailFormValidation.recipients}
         />
         <Form.Group controlId="emailSubject">
-          <Form.Label>{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>
+          <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>
           <Form.Control name="emailSubject" className="w-lg-50" onChange={onFormChange} value={editor.emailSubject} />
           {!emailFormValidation.subject && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -249,7 +250,7 @@ function BulkEmailForm(props) {
           )}
         </Form.Group>
         <Form.Group controlId="emailBody">
-          <Form.Label>{intl.formatMessage(messages.bulkEmailBodyLabel)}</Form.Label>
+          <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailBodyLabel)}</Form.Label>
           <TextEditor onChange={(value) => dispatch(handleEditorChange('emailBody', value))} value={editor.emailBody} />
           {!emailFormValidation.body && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -294,6 +295,7 @@ function BulkEmailForm(props) {
             })}
           >
             <StatefulButton
+              className="send-email-btn"
               variant="primary"
               onClick={(event) => {
                 event.preventDefault();

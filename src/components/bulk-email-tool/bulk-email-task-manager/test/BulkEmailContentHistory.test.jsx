@@ -33,7 +33,7 @@ describe('BulkEmailContentHistory component', () => {
   test('renders correctly', async () => {
     render(renderBulkEmailContentHistory());
     const tableDescription = await screen.findByText(
-      'To see the content of previously sent emails, click this button:',
+      'View the content of previously sent emails',
     );
     expect(tableDescription).toBeTruthy();
     const showEmailContentHistoryButton = await screen.findByText('Show Sent Email History');
