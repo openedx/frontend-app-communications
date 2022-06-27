@@ -3,14 +3,14 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ErrorPage } from '@edx/frontend-platform/react';
+import { Container } from '@edx/paragon';
+import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import NavigationTabs from '../navigation-tabs/NavigationTabs';
 import BulkEmailForm from './bulk-email-form';
 import { CourseMetadataContext } from '../page-container/PageContainer';
 import { BulkEmailProvider } from './bulk-email-context';
 import BackToInstructor from '../navigation-tabs/BackToInstructor';
-import { Container } from '@edx/paragon';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
@@ -25,7 +25,7 @@ export default function BulkEmailTool() {
               <BackToInstructor />
               <div className="row pb-4.5">
                 <h1 className="text-primary-500">
-                  <FormattedMessage 
+                  <FormattedMessage
                     id="bulk.email.send.email.header"
                     defaultMessage="Send an email"
                     description="A label for email form"

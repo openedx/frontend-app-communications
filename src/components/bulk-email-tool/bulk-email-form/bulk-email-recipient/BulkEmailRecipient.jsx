@@ -39,8 +39,11 @@ export default function BulkEmailRecipient(props) {
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
-        <Form.Checkbox key="staff" value="staff"
-          className="col col-md-4 col-sm-6 col-12">
+        <Form.Checkbox
+          key="staff"
+          value="staff"
+          className="col col-md-4 col-sm-6 col-12"
+        >
           <FormattedMessage
             id="bulk.email.form.recipients.staff"
             defaultMessage="Staff/Administrators"

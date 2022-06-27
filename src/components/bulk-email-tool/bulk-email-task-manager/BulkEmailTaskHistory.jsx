@@ -13,16 +13,10 @@ import './bulkEmailTaskHistory.scss';
 
 function BulkEmailTaskHistory({ intl }) {
   const { courseId } = useParams();
-  const BUTTON_STATE = {
-    DEFAULT: 'default',
-    PENDING: 'pending',
-    COMPLETE: 'complete',
-  };
 
   const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
   const [showHistoricalTaskContentTable, setShowHistoricalTaskContentTable] = useState(false);
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
-  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
   /**
    * Async function that makes a REST API call to retrieve historical bulk email (Instructor) task data for display
@@ -31,7 +25,6 @@ function BulkEmailTaskHistory({ intl }) {
   async function fetchEmailTaskHistoryData() {
     setErrorRetrievingData(false);
     setShowHistoricalTaskContentTable(false);
-    setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
     try {
@@ -46,7 +39,6 @@ function BulkEmailTaskHistory({ intl }) {
     }
 
     setShowHistoricalTaskContentTable(true);
-    setButtonState(BUTTON_STATE.COMPLETE);
   }
 
   const tableColumns = [
@@ -107,7 +99,7 @@ function BulkEmailTaskHistory({ intl }) {
               alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
               columns={tableColumns}
             />
-          ):(
+          ) : (
             <Icon src={SpinnerSimple} className="icon-spin mx-auto" />
           )}
         </Collapsible>

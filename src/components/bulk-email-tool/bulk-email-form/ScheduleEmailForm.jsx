@@ -19,12 +19,13 @@ function ScheduleEmailForm(props) {
             data-testid="scheduleDate"
             onChange={onDateTimeChange}
             value={date}
-            floatingLabel={
+            floatingLabel={(
               <FormattedMessage
                 id="bulk.email.form.schedule.date"
                 defaultMessage="Send date"
                 description="Label for the date portion of the email schedule form"
-              />}
+              />
+            )}
           />
           <small className="text-light-700 x-small">
             <FormattedMessage
@@ -40,12 +41,13 @@ function ScheduleEmailForm(props) {
             data-testid="scheduleTime"
             onChange={onDateTimeChange}
             value={time}
-            floatingLabel={
+            floatingLabel={(
               <FormattedMessage
                 id="bulk.email.form.schedule.time"
                 defaultMessage="Send time"
                 description="Label for the time portion of the email schedule form"
-              />}
+              />
+            )}
           />
           <small className="text-light-700 x-small">
             <FormattedMessage
