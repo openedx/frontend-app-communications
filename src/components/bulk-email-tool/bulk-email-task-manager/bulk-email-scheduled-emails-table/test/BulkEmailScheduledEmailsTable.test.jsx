@@ -75,6 +75,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
 
   it('properly formats data for editing mode', async () => {
     const editorObj = {
+      editMode: true,
       emailId: 1,
       emailBody: '<p>body</p>',
       emailSubject: 'subject',
@@ -92,7 +93,6 @@ describe('BulkEmailScheduledEmailsTable', () => {
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('Edit'));
     expect(actions.copyToEditor).toHaveBeenCalledWith(editorObj);
-    expect(actions.setEditMode).toHaveBeenCalledWith(true);
   });
   it('removes email when delete is pressed', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
