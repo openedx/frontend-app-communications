@@ -14,7 +14,7 @@ export default function NavigationTabs(props) {
             <Nav.Link eventKey={tab.title} href={tab.url}>
               {tab.title}
             </Nav.Link>
-          </Nav.Item>          
+          </Nav.Item>
         ))}
       </Nav>
     </div>

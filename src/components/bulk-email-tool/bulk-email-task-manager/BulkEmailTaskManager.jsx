@@ -6,7 +6,7 @@ import BulkEmailContentHistory from './BulkEmailContentHistory';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
 import messages from './messages';
 import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table';
-import BulkEmailPendingTasksAlert from './BulkEmailPendingTasksAlert'
+import BulkEmailPendingTasksAlert from './BulkEmailPendingTasksAlert';
 
 function BulkEmailTaskManager({ intl }) {
   return (

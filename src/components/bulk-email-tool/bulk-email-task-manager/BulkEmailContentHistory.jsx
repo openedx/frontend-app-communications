@@ -4,28 +4,21 @@ import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
-  Button, Collapsible, Icon, StatefulButton,
+  Button, Collapsible, Icon,
 } from '@edx/paragon';
 import { SpinnerSimple } from '@edx/paragon/icons';
 import messages from './messages';
 import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
-import { useEffect } from 'react';
 
 function BulkEmailContentHistory({ intl }) {
   const { courseId } = useParams();
-  const BUTTON_STATE = {
-    DEFAULT: 'default',
-    PENDING: 'pending',
-    COMPLETE: 'complete',
-  };
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
   const [showHistoricalEmailContentTable, setShowHistoricalEmailContentTable] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageContent, setMessageContent] = useState();
-  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
   /**
    * Async function that makes a REST API call to retrieve historical email message data sent by the bulk course email
@@ -34,7 +27,6 @@ function BulkEmailContentHistory({ intl }) {
   async function fetchSentEmailHistoryData() {
     setErrorRetrievingData(false);
     setShowHistoricalEmailContentTable(false);
-    setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
     try {
@@ -49,7 +41,6 @@ function BulkEmailContentHistory({ intl }) {
     }
 
     setShowHistoricalEmailContentTable(true);
-    setButtonState(BUTTON_STATE.COMPLETE);
   }
 
   /**
@@ -151,7 +142,7 @@ function BulkEmailContentHistory({ intl }) {
               columns={tableColumns}
               additionalColumns={additionalColumns()}
             />
-          ):(
+          ) : (
             <Icon src={SpinnerSimple} className="icon-spin mx-auto" />
           )}
         </Collapsible>

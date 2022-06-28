@@ -145,7 +145,7 @@ const messages = defineMessages({
   scheduledEmailsTableHeader: {
     id: 'bulk.email.scheduled.emails.table.header',
     defaultMessage: 'Scheduled emails',
-  }
+  },
 });
 
 export default messages;

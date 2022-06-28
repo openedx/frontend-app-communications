@@ -6,21 +6,21 @@ import { Button, Icon } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
 export default function BackToInstructor() {
-	return (
-		<Button 
-			variant="tertiary" 
-			className="mb-4.5 ml-n4.5 text-primary-500" 
-			href={`${getConfig().LMS_BASE_URL}/courses/${location.pathname.split('/')[2]}/instructor#view-course-info`}
-		>
-			<Icon 
-				src={ArrowBack} 
-				className="mr-2"
-			/>
-			<FormattedMessage 
-				id="bulk.email.back.to.instructorDashboard"
-				defaultMessage="Back to Instructor Dashboard"
-				description="A link to take the user back to the instructor dashboard"
-			/>
-		</Button>
-	)
+  return (
+    <Button
+      variant="tertiary"
+      className="mb-4.5 ml-n4.5 text-primary-500"
+      href={`${getConfig().LMS_BASE_URL}/courses/${window.location.pathname.split('/')[2]}/instructor#view-course-info`}
+    >
+      <Icon
+        src={ArrowBack}
+        className="mr-2"
+      />
+      <FormattedMessage
+        id="bulk.email.back.to.instructorDashboard"
+        defaultMessage="Back to Instructor Dashboard"
+        description="A link to take the user back to the instructor dashboard"
+      />
+    </Button>
+  );
 }
