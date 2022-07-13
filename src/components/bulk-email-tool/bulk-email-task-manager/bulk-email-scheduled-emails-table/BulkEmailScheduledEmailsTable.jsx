@@ -14,7 +14,7 @@ import { BulkEmailContext } from '../../bulk-email-context';
 import { deleteScheduledEmailThunk, getScheduledBulkEmailThunk } from './data/thunks';
 import messages from './messages';
 import ViewEmailModal from '../ViewEmailModal';
-import { copyToEditor, setEditMode } from '../../bulk-email-form/data/actions';
+import { copyToEditor } from '../../bulk-email-form/data/actions';
 
 function flattenScheduledEmailsArray(emails) {
   return emails.map((email) => ({
@@ -103,7 +103,6 @@ function BulkEmailScheduledEmailsTable({ intl }) {
     const emailRecipients = targets.replaceAll('-', ':').split(', ');
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
-    dispatch(setEditMode(true));
     dispatch(
       copyToEditor({
         emailId,
@@ -113,6 +112,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
         scheduleDate,
         scheduleTime,
         schedulingId,
+        editMode: true,
       }),
     );
   };

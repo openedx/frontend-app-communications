@@ -15,6 +15,7 @@ export function editorReducer(state, action) {
         scheduleTime: action.payload.scheduleTime || '',
         schedulingId: action.payload.schedulingId || '',
         emailId: action.payload.emailId || null,
+        editMode: action.payload.editMode || false,
       };
     case 'ADD_RECIPIENT':
       return {
@@ -36,6 +37,7 @@ export function editorReducer(state, action) {
         ...state,
         scheduleDate: '',
         scheduleTime: '',
+        editMode: false,
       };
     case 'CLEAR_EDITOR':
       return {
