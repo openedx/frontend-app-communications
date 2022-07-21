@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
 import BulkEmailRecipient from './bulk-email-recipient';
-import TaskAlertModal from './TaskAlertModal';
+import TaskAlertModal from '../task-alert-modal';
 import useTimeout from '../../../utils/useTimeout';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
