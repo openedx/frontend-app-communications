@@ -45,7 +45,12 @@ function ViewEmailModal({
         buttons={[
           <Button
             onClick={() => {
-              dispatch(copyToEditor(messageContent.email.html_message, messageContent.subject));
+              dispatch(
+                copyToEditor({
+                  emailBody: messageContent.email.html_message,
+                  emailSubject: messageContent.subject,
+                }),
+              );
               setModalOpen(false);
             }}
           >

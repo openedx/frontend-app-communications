@@ -60,7 +60,7 @@ const messages = defineMessages({
   },
   emailHistoryTableSectionButtonHeader: {
     id: 'bulk.email.content.history.table.button.header',
-    defaultMessage: 'To see the content of previously sent emails, click this button:',
+    defaultMessage: 'View the content of previously sent emails',
   },
   emailHistoryTableSectionButton: {
     id: 'bulk.email.content.history.table.button',
@@ -69,7 +69,7 @@ const messages = defineMessages({
   /* BulkEmailTaskManager.jsx messages */
   pendingTasksHeader: {
     id: 'bulk.email.pending.tasks.header',
-    defaultMessage: 'Pending Tasks',
+    defaultMessage: 'Pending tasks has moved',
   },
   emailTaskHistoryHeader: {
     id: 'bulk.email.email.task.history.header',
@@ -91,7 +91,7 @@ const messages = defineMessages({
   /* BulkEmailTaskHistory.jsx messages */
   emailTaskHistoryTableSectionButtonHeader: {
     id: 'bulk.email.task.history.table.button.header',
-    defaultMessage: 'To see the status for all email tasks submitted for this course, click this button:',
+    defaultMessage: 'View the status for all email tasks created for this course',
   },
   emailTaskHistoryTableSectionButton: {
     id: 'bulk.email.task.history.table.button',

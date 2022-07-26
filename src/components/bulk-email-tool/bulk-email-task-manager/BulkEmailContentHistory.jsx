@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
-  Button, Icon, StatefulButton,
+  Button, Collapsible, Icon,
 } from '@edx/paragon';
 import { SpinnerSimple } from '@edx/paragon/icons';
 import messages from './messages';
@@ -14,17 +14,11 @@ import ViewEmailModal from './ViewEmailModal';
 
 function BulkEmailContentHistory({ intl }) {
   const { courseId } = useParams();
-  const BUTTON_STATE = {
-    DEFAULT: 'default',
-    PENDING: 'pending',
-    COMPLETE: 'complete',
-  };
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
   const [showHistoricalEmailContentTable, setShowHistoricalEmailContentTable] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageContent, setMessageContent] = useState();
-  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
   /**
    * Async function that makes a REST API call to retrieve historical email message data sent by the bulk course email
@@ -33,7 +27,6 @@ function BulkEmailContentHistory({ intl }) {
   async function fetchSentEmailHistoryData() {
     setErrorRetrievingData(false);
     setShowHistoricalEmailContentTable(false);
-    setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
     try {
@@ -48,7 +41,6 @@ function BulkEmailContentHistory({ intl }) {
     }
 
     setShowHistoricalEmailContentTable(true);
-    setButtonState(BUTTON_STATE.COMPLETE);
   }
 
   /**
@@ -58,7 +50,7 @@ function BulkEmailContentHistory({ intl }) {
    * display bug in the table.
    */
   function transformDataForTable() {
-    let tableData = {};
+    let tableData = [];
     if (emailHistoryData) {
       tableData = emailHistoryData.map((item) => ({
         ...item,
@@ -134,37 +126,26 @@ function BulkEmailContentHistory({ intl }) {
       )}
       <div>
         <p>{intl.formatMessage(messages.emailHistoryTableSectionButtonHeader)}</p>
-        <StatefulButton
-          className="btn btn-outline-primary mb-2"
-          variant="outline-primary"
-          type="submit"
-          onClick={async () => {
-            await fetchSentEmailHistoryData();
-          }}
-          labels={{
-            default: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
-            pending: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
-            complete: `${intl.formatMessage(messages.emailHistoryTableSectionButton)}`,
-          }}
-          icons={{
-            pending: <Icon src={SpinnerSimple} className="icon-spin" />,
-          }}
-          disabledStates={['error']}
-          state={buttonState}
+        <Collapsible
+          styling="card"
+          title={intl.formatMessage(messages.emailHistoryTableSectionButton)}
+          className="mb-3"
+          onOpen={fetchSentEmailHistoryData}
         >
-          {intl.formatMessage(messages.emailHistoryTableSectionButton)}
-        </StatefulButton>
-        {showHistoricalEmailContentTable && (
-          <BulkEmailTaskManagerTable
-            errorRetrievingData={errorRetrievingData}
-            tableData={transformDataForTable()}
-            tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
-            alertWarningMessage={intl.formatMessage(messages.noEmailData)}
-            alertErrorMessage={intl.formatMessage(messages.errorFetchingEmailHistoryData)}
-            columns={tableColumns}
-            additionalColumns={additionalColumns()}
-          />
-        )}
+          {showHistoricalEmailContentTable ? (
+            <BulkEmailTaskManagerTable
+              errorRetrievingData={errorRetrievingData}
+              tableData={transformDataForTable()}
+              tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
+              alertWarningMessage={intl.formatMessage(messages.noEmailData)}
+              alertErrorMessage={intl.formatMessage(messages.errorFetchingEmailHistoryData)}
+              columns={tableColumns}
+              additionalColumns={additionalColumns()}
+            />
+          ) : (
+            <Icon src={SpinnerSimple} className="icon-spin mx-auto" />
+          )}
+        </Collapsible>
       </div>
     </div>
   );

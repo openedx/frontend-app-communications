@@ -16,4 +16,4 @@ export default Factory.define('courseEmailFactory')
   .sequence('id')
   .attr('course_email', Factory.build('emailDataFactory'))
   .sequence('task')
-  .attr('task_due', '2022-04-27T17:00:00Z');
+  .attr('task_due', '2022-04-27T00:00:00Z');

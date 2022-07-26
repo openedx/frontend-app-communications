@@ -28,6 +28,10 @@ const messages = defineMessages({
     id: 'bulk.email.scheduled.emails.table.Author',
     defaultMessage: 'Author',
   },
+  bulkEmailScheduledEmailsTableConfirmDelete: {
+    id: 'bulk.email.scheduled.emails.table.confirm.delete',
+    defaultMessage: 'You are deleting an email scheduled to be sent on {date}. The email will not be sent and the scheduling canceled. Are you sure?',
+  },
 });
 
 export default messages;

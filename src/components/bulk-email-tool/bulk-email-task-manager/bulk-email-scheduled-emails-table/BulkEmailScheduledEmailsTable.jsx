@@ -1,18 +1,26 @@
-import React, { useCallback, useContext, useState } from 'react';
+/* eslint-disable react/prop-types */
+import React, {
+  useCallback, useContext, useState, useEffect,
+} from 'react';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Alert, DataTable, Icon, IconButton,
+  Alert, DataTable, Icon, IconButton, useToggle,
 } from '@edx/paragon';
-import { Info, Visibility } from '@edx/paragon/icons';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import {
+  Delete, Info, Visibility, Edit,
+} from '@edx/paragon/icons';
+import { useParams } from 'react-router-dom';
 import { BulkEmailContext } from '../../bulk-email-context';
-import { getScheduledBulkEmailThunk } from './data/thunks';
+import { deleteScheduledEmailThunk, getScheduledBulkEmailThunk } from './data/thunks';
 import messages from './messages';
 import ViewEmailModal from '../ViewEmailModal';
+import { copyToEditor } from '../../bulk-email-form/data/actions';
+import TaskAlertModal from '../../task-alert-modal';
 
 function flattenScheduledEmailsArray(emails) {
   return emails.map((email) => ({
-    id: email.id,
+    schedulingId: email.id,
+    emailId: email.courseEmail.id,
     task: email.task,
     taskDue: new Date(email.taskDue).toLocaleString(),
     ...email.courseEmail,
@@ -23,10 +31,17 @@ function flattenScheduledEmailsArray(emails) {
 function BulkEmailScheduledEmailsTable({ intl }) {
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
+  const [tableData, setTableData] = useState([]);
   const [viewModal, setViewModal] = useState({
     isOpen: false,
     messageContent: {},
   });
+  const [isConfirmModalOpen, openConfirmModal, closeConfirmModal] = useToggle();
+  const [currentTask, setCurrentTask] = useState({});
+
+  useEffect(() => {
+    setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results));
+  }, [scheduledEmailsTable.results]);
 
   const fetchTableData = useCallback((args) => {
     dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
@@ -38,7 +53,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       messageContent: {
         subject: row.original.subject,
         requester: row.original.sender,
-        created: '',
+        created: row.original.taskDue,
         email: {
           html_message: row.original.htmlMessage,
         },
@@ -56,8 +71,72 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       </div>
     );
   }
+
+  const handleDeleteEmail = async () => {
+    const {
+      row, pageIndex, page, previousPage,
+    } = currentTask;
+    await dispatch(deleteScheduledEmailThunk(courseId, row.original.schedulingId));
+    if (page.length === 1 && pageIndex !== 0) {
+      previousPage();
+    } else {
+      dispatch(getScheduledBulkEmailThunk(courseId, pageIndex + 1));
+    }
+  };
+
+  const normalizeDigits = (value) => (value < 10 ? `0${value}` : value);
+  const formatDate = (date) => {
+    const day = normalizeDigits(date.getDate());
+    const month = normalizeDigits(date.getMonth() + 1);
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  };
+  const formatTime = (date) => {
+    const hours = normalizeDigits(date.getHours());
+    const mins = normalizeDigits(date.getMinutes());
+
+    return `${hours}:${mins}`;
+  };
+
+  const handleEditEmail = (row) => {
+    const {
+      original: {
+        htmlMessage: emailBody, subject: emailSubject, taskDue, targets, schedulingId, emailId,
+      },
+    } = row;
+    const dateTime = new Date(taskDue);
+    const emailRecipients = targets.replaceAll('-', ':').split(', ');
+    const scheduleDate = formatDate(dateTime);
+    const scheduleTime = formatTime(dateTime);
+    dispatch(
+      copyToEditor({
+        emailId,
+        emailBody,
+        emailSubject,
+        emailRecipients,
+        scheduleDate,
+        scheduleTime,
+        schedulingId,
+        editMode: true,
+      }),
+    );
+  };
   return (
     <>
+      <TaskAlertModal
+        isOpen={isConfirmModalOpen}
+        close={(event) => {
+          closeConfirmModal();
+          if (event.target.name === 'continue') {
+            handleDeleteEmail();
+          }
+        }}
+        alertMessage={intl.formatMessage(
+          messages.bulkEmailScheduledEmailsTableConfirmDelete,
+          { date: currentTask?.row?.original?.taskDue ?? '' },
+        )}
+      />
       {viewModal.isOpen && (
         <ViewEmailModal
           isOpen={viewModal.isOpen}
@@ -70,10 +149,10 @@ function BulkEmailScheduledEmailsTable({ intl }) {
           isLoading={scheduledEmailsTable.isLoading}
           itemCount={scheduledEmailsTable.count}
           pageCount={scheduledEmailsTable.numPages}
-          data={flattenScheduledEmailsArray(scheduledEmailsTable.results)}
-          fetchData={fetchTableData}
+          data={tableData}
           isPaginated
           manualPagination
+          fetchData={fetchTableData}
           initialState={{
             pageSize: 10,
             pageIndex: 0,
@@ -100,10 +179,23 @@ function BulkEmailScheduledEmailsTable({ intl }) {
             {
               id: 'action',
               Header: 'Action',
-              // eslint-disable-next-line react/prop-types
-              Cell: ({ row }) => (
+              Cell: ({
+                row, state, page, previousPage,
+              }) => (
                 <>
                   <IconButton src={Visibility} iconAs={Icon} alt="View" onClick={() => handleViewEmail(row)} />
+                  <IconButton
+                    src={Delete}
+                    iconAs={Icon}
+                    alt="Delete"
+                    onClick={() => {
+                      setCurrentTask({
+                        row, pageIndex: state.pageIndex, page, previousPage,
+                      });
+                      openConfirmModal();
+                    }}
+                  />
+                  <IconButton src={Edit} iconAs={Icon} alt="Edit" onClick={() => handleEditEmail(row)} />
                 </>
               ),
             },

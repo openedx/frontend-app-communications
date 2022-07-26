@@ -2,25 +2,21 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { Icon, StatefulButton } from '@edx/paragon';
+import { Icon, Collapsible } from '@edx/paragon';
 import { SpinnerSimple } from '@edx/paragon/icons';
 import { getEmailTaskHistory } from './data/api';
 import messages from './messages';
 
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
+import './bulkEmailTaskHistory.scss';
+
 function BulkEmailTaskHistory({ intl }) {
   const { courseId } = useParams();
-  const BUTTON_STATE = {
-    DEFAULT: 'default',
-    PENDING: 'pending',
-    COMPLETE: 'complete',
-  };
 
-  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState();
+  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
   const [showHistoricalTaskContentTable, setShowHistoricalTaskContentTable] = useState(false);
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
-  const [buttonState, setButtonState] = useState(BUTTON_STATE.DEFAULT);
 
   /**
    * Async function that makes a REST API call to retrieve historical bulk email (Instructor) task data for display
@@ -29,7 +25,6 @@ function BulkEmailTaskHistory({ intl }) {
   async function fetchEmailTaskHistoryData() {
     setErrorRetrievingData(false);
     setShowHistoricalTaskContentTable(false);
-    setButtonState(BUTTON_STATE.PENDING);
 
     let data = null;
     try {
@@ -44,7 +39,6 @@ function BulkEmailTaskHistory({ intl }) {
     }
 
     setShowHistoricalTaskContentTable(true);
-    setButtonState(BUTTON_STATE.COMPLETE);
   }
 
   const tableColumns = [
@@ -87,38 +81,28 @@ function BulkEmailTaskHistory({ intl }) {
   ];
 
   return (
-    <div>
+    <div className="pb-4.5">
       <div>
         <p>
           {intl.formatMessage(messages.emailTaskHistoryTableSectionButtonHeader)}
         </p>
-        <StatefulButton
-          className="btn btn-outline-primary mb-2"
-          variant="outline-primary"
-          type="submit"
-          onClick={async () => { await fetchEmailTaskHistoryData(); }}
-          labels={{
-            default: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
-            pending: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
-            complete: `${intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}`,
-          }}
-          icons={{
-            pending: <Icon src={SpinnerSimple} className="icon-spin" />,
-          }}
-          disabledStates={['error']}
-          state={buttonState}
+        <Collapsible
+          styling="card"
+          title={intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}
+          onOpen={fetchEmailTaskHistoryData}
         >
-          {intl.formatMessage(messages.emailHistoryTableSectionButton)}
-        </StatefulButton>
-        {showHistoricalTaskContentTable && (
-          <BulkEmailTaskManagerTable
-            errorRetrievingData={errorRetrievingData}
-            tableData={emailTaskHistoryData}
-            alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
-            alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
-            columns={tableColumns}
-          />
-        )}
+          {showHistoricalTaskContentTable ? (
+            <BulkEmailTaskManagerTable
+              errorRetrievingData={errorRetrievingData}
+              tableData={emailTaskHistoryData}
+              alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
+              alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
+              columns={tableColumns}
+            />
+          ) : (
+            <Icon src={SpinnerSimple} className="icon-spin mx-auto" />
+          )}
+        </Collapsible>
       </div>
     </div>
   );

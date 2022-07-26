@@ -8,16 +8,17 @@ import { useRef, useEffect } from 'react';
  * and only allow one at a time.
  * @param {function} callback The function to call once the delay ends
  * @param {millisecond} delay time to delay function call
+ * @param {bool} cancel cancels the callback early if true
  */
-export default function useTimeout(callback, delay) {
+export default function useTimeout(callback, delay, cancel) {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     const timeout = timeoutRef.current;
-    if (timeout) {
+    if (timeout || cancel) {
       clearTimeout(timeout);
     }
-  }, []);
+  }, [cancel]);
 
   return () => {
     if (timeoutRef.current) {
