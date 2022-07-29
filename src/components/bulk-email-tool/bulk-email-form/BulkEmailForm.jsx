@@ -152,10 +152,10 @@ function BulkEmailForm(props) {
     if (validateEmailForm()) {
       if (editor.editMode) {
         const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
-        dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
+        await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
       } else {
         const emailData = formatDataForFormAction(FORM_ACTIONS.POST);
-        dispatch(postBulkEmailThunk(emailData, courseId));
+        await dispatch(postBulkEmailThunk(emailData, courseId));
       }
       dispatch(getScheduledBulkEmailThunk(courseId, 1));
     }
