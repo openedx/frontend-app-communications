@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Alert, DataTable, Icon, IconButton,
+  Alert, DataTable, Icon, IconButton, useToggle,
 } from '@edx/paragon';
 import {
   Delete, Info, Visibility, Edit,
@@ -14,7 +14,8 @@ import { BulkEmailContext } from '../../bulk-email-context';
 import { deleteScheduledEmailThunk, getScheduledBulkEmailThunk } from './data/thunks';
 import messages from './messages';
 import ViewEmailModal from '../ViewEmailModal';
-import { copyToEditor, setEditMode } from '../../bulk-email-form/data/actions';
+import { copyToEditor } from '../../bulk-email-form/data/actions';
+import TaskAlertModal from '../../task-alert-modal';
 
 function flattenScheduledEmailsArray(emails) {
   return emails.map((email) => ({
@@ -35,6 +36,8 @@ function BulkEmailScheduledEmailsTable({ intl }) {
     isOpen: false,
     messageContent: {},
   });
+  const [isConfirmModalOpen, openConfirmModal, closeConfirmModal] = useToggle();
+  const [currentTask, setCurrentTask] = useState({});
 
   useEffect(() => {
     setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results));
@@ -69,7 +72,10 @@ function BulkEmailScheduledEmailsTable({ intl }) {
     );
   }
 
-  const handleDeleteEmail = async (row, { pageIndex }, page, previousPage) => {
+  const handleDeleteEmail = async () => {
+    const {
+      row, pageIndex, page, previousPage,
+    } = currentTask;
     await dispatch(deleteScheduledEmailThunk(courseId, row.original.schedulingId));
     if (page.length === 1 && pageIndex !== 0) {
       previousPage();
@@ -103,7 +109,6 @@ function BulkEmailScheduledEmailsTable({ intl }) {
     const emailRecipients = targets.replaceAll('-', ':').split(', ');
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
-    dispatch(setEditMode(true));
     dispatch(
       copyToEditor({
         emailId,
@@ -113,11 +118,25 @@ function BulkEmailScheduledEmailsTable({ intl }) {
         scheduleDate,
         scheduleTime,
         schedulingId,
+        editMode: true,
       }),
     );
   };
   return (
     <>
+      <TaskAlertModal
+        isOpen={isConfirmModalOpen}
+        close={(event) => {
+          closeConfirmModal();
+          if (event.target.name === 'continue') {
+            handleDeleteEmail();
+          }
+        }}
+        alertMessage={intl.formatMessage(
+          messages.bulkEmailScheduledEmailsTableConfirmDelete,
+          { date: currentTask?.row?.original?.taskDue ?? '' },
+        )}
+      />
       {viewModal.isOpen && (
         <ViewEmailModal
           isOpen={viewModal.isOpen}
@@ -169,7 +188,12 @@ function BulkEmailScheduledEmailsTable({ intl }) {
                     src={Delete}
                     iconAs={Icon}
                     alt="Delete"
-                    onClick={() => handleDeleteEmail(row, state, page, previousPage)}
+                    onClick={() => {
+                      setCurrentTask({
+                        row, pageIndex: state.pageIndex, page, previousPage,
+                      });
+                      openConfirmModal();
+                    }}
                   />
                   <IconButton src={Edit} iconAs={Icon} alt="Edit" onClick={() => handleEditEmail(row)} />
                 </>

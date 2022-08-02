@@ -15,6 +15,7 @@ export function editorReducer(state, action) {
         scheduleTime: action.payload.scheduleTime || '',
         schedulingId: action.payload.schedulingId || '',
         emailId: action.payload.emailId || null,
+        editMode: action.payload.editMode || false,
       };
     case 'ADD_RECIPIENT':
       return {
@@ -36,6 +37,7 @@ export function editorReducer(state, action) {
         ...state,
         scheduleDate: '',
         scheduleTime: '',
+        editMode: false,
       };
     case 'CLEAR_EDITOR':
       return {
@@ -48,6 +50,14 @@ export function editorReducer(state, action) {
         editMode: false,
         schedulingId: '',
         emailId: null,
+        errorRetrievingData: false,
+        formComplete: false,
+      };
+    case 'CLEAR_ERROR':
+      return {
+        ...state,
+        errorRetrievingData: false,
+        formComplete: false,
       };
     case 'SET_EDIT_MODE':
       return {
@@ -66,6 +76,7 @@ export function editorReducer(state, action) {
         ...state,
         isLoading: false,
         errorRetrievingData: false,
+        formComplete: true,
         ...action.payload,
       };
     case 'PATCH_FAILURE':
@@ -73,6 +84,7 @@ export function editorReducer(state, action) {
         ...state,
         isLoading: false,
         errorRetrievingData: true,
+        formComplete: false,
       };
     case 'POST_BULK_EMAIL':
       return state;
@@ -86,6 +98,7 @@ export function editorReducer(state, action) {
         ...state,
         isLoading: false,
         errorRetrievingData: false,
+        formComplete: true,
         ...action.payload,
       };
     case 'POST_FAILURE':
@@ -93,6 +106,7 @@ export function editorReducer(state, action) {
         ...state,
         isLoading: false,
         errorRetrievingData: true,
+        formComplete: false,
       };
     default:
       return state;
@@ -110,6 +124,7 @@ export const editorInitialState = {
   emailId: null,
   isLoading: false,
   errorRetrievingData: false,
+  formComplete: false,
 };
 
 export default editorReducer;

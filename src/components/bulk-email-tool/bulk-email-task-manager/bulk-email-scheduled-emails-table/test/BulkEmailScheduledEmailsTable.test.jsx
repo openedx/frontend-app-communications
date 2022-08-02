@@ -75,6 +75,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
 
   it('properly formats data for editing mode', async () => {
     const editorObj = {
+      editMode: true,
       emailId: 1,
       emailBody: '<p>body</p>',
       emailSubject: 'subject',
@@ -92,9 +93,8 @@ describe('BulkEmailScheduledEmailsTable', () => {
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('Edit'));
     expect(actions.copyToEditor).toHaveBeenCalledWith(editorObj);
-    expect(actions.setEditMode).toHaveBeenCalledWith(true);
   });
-  it('removes email when delete is pressed', async () => {
+  it('pops up alert on delete pressed', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
       .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
@@ -113,6 +113,29 @@ describe('BulkEmailScheduledEmailsTable', () => {
       .reply(204, []);
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('Delete'));
+    expect(await screen.findByText('Caution')).toBeInTheDocument();
+  });
+  it('Deletes an email when clicking continue on warning', async () => {
+    const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock
+      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .replyOnce(200, scheduledEmailsFactory.build(1))
+      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .replyOnce(200, {
+        next: null,
+        previous: null,
+        count: 0,
+        num_pages: 1,
+        current_page: 1,
+        start: 0,
+        results: [],
+      })
+      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .reply(204, []);
+    render(renderBulkEmailScheduledEmailsTable());
+    fireEvent.click(await screen.findByLabelText('Delete'));
+    expect(await screen.findByText('Caution')).toBeInTheDocument();
+    fireEvent.click(await screen.findByText('Continue'));
     expect(await screen.findByText('No results found')).toBeInTheDocument();
   });
 });

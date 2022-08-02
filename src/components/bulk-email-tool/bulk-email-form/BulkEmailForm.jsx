@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Button,
   Form, Icon, StatefulButton, Toast, useToggle,
 } from '@edx/paragon';
 import {
@@ -11,7 +12,7 @@ import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
 import BulkEmailRecipient from './bulk-email-recipient';
-import TaskAlertModal from './TaskAlertModal';
+import TaskAlertModal from '../task-alert-modal';
 import useTimeout from '../../../utils/useTimeout';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
@@ -19,11 +20,10 @@ import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';
 import {
   addRecipient,
-  clearDateTime,
   clearEditor,
+  clearErrorState,
   handleEditorChange,
   removeRecipient,
-  setEditMode,
 } from './data/actions';
 import { editScheduledEmailThunk, postBulkEmailThunk } from './data/thunks';
 import { getScheduledBulkEmailThunk } from '../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
@@ -92,18 +92,30 @@ function BulkEmailForm(props) {
     }
     return {};
   };
-  const resetEmailForm = () => {
-    if (editor.errorRetrievingData === false) {
-      dispatch(clearEditor());
-    }
-    if (isScheduled) {
-      setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
+
+  /**
+   * This function resets the form based on what state the form is currently in. Used after
+   * successfully sending or scheduling and email, or on error.
+   *
+   * @param {Boolean} error If true, resets just the state of the form, and not the editor.
+   * if false, reset the form completely, and wipe all email data form the form.
+   */
+  const resetEmailForm = (error) => {
+    if (error) {
+      dispatch(clearErrorState());
     } else {
-      setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
+      dispatch(clearEditor());
     }
   };
 
-  const delayedEmailFormReset = useTimeout(resetEmailForm, 3000);
+  /**
+   * Allows for a delayed form reset, to give the user time to process completion and error
+   * states before reseting the form.
+   */
+  const delayedEmailFormReset = useTimeout(
+    () => resetEmailForm(editor.errorRetrievingData),
+    3000,
+  );
 
   const onFormChange = (event) => dispatch(handleEditorChange(event.target.name, event.target.value));
 
@@ -138,43 +150,52 @@ function BulkEmailForm(props) {
 
   const createEmailTask = async () => {
     if (validateEmailForm()) {
-      setEmailFormStatus(() => FORM_SUBMIT_STATES.PENDING);
-      let response;
       if (editor.editMode) {
         const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
-        response = await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
+        await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
       } else {
         const emailData = formatDataForFormAction(FORM_ACTIONS.POST);
-        response = await dispatch(postBulkEmailThunk(emailData, courseId));
-      }
-      if (response?.status === 200) {
-        if (isScheduled) {
-          setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE_SCHEDULE);
-        } else {
-          setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE);
-        }
-      } else {
-        setEmailFormStatus(FORM_SUBMIT_STATES.ERROR);
+        await dispatch(postBulkEmailThunk(emailData, courseId));
       }
       dispatch(getScheduledBulkEmailThunk(courseId, 1));
-      delayedEmailFormReset();
     }
   };
 
+  /**
+   * State manager for the various states the form can be in at any given time.
+   * The states of the form are based off various pieces of the editor store, and
+   * calculates what state and whether to reset the form based on these booleans.
+   * Any time the form needs to change state, the conditions for that state change should
+   * placed here to prevent unecessary rerenders and implicit/flakey state update batching.
+   */
   useEffect(() => {
-    if (!!editor.scheduleDate || !!editor.scheduleTime) {
-      toggleScheduled(true);
+    if (editor.isLoading) {
+      setEmailFormStatus(FORM_SUBMIT_STATES.PENDING);
+      return;
     }
-    if (isScheduled) {
-      if (editor.editMode) {
-        setEmailFormStatus(FORM_SUBMIT_STATES.RESCHEDULE);
+    if (editor.errorRetrievingData) {
+      setEmailFormStatus(FORM_SUBMIT_STATES.ERROR);
+      delayedEmailFormReset();
+      return;
+    }
+    if (editor.formComplete) {
+      if (isScheduled) {
+        setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE_SCHEDULE);
       } else {
-        setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
+        setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE);
       }
+      delayedEmailFormReset();
+      return;
+    }
+    if (editor.editMode === true) {
+      toggleScheduled(true);
+      setEmailFormStatus(FORM_SUBMIT_STATES.RESCHEDULE);
+    } else if (isScheduled) {
+      setEmailFormStatus(FORM_SUBMIT_STATES.SCHEDULE);
     } else {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
-  }, [isScheduled, editor.scheduleDate, editor.scheduleTime]);
+  }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
 
   const AlertMessage = () => (
     <>
@@ -267,13 +288,7 @@ function BulkEmailForm(props) {
               <Form.Checkbox
                 name="scheduleEmailBox"
                 checked={isScheduled}
-                onChange={() => toggleScheduled((prev) => {
-                  if (prev) {
-                    dispatch(clearDateTime());
-                    dispatch(setEditMode(false));
-                  }
-                  return !prev;
-                })}
+                onChange={() => toggleScheduled((prev) => !prev)}
                 disabled={emailFormStatus === FORM_SUBMIT_STATES.PENDING}
               >
                 {intl.formatMessage(messages.bulkEmailFormScheduleBox)}
@@ -290,10 +305,11 @@ function BulkEmailForm(props) {
           <div
             className={classNames('d-flex', {
               'mt-n4.5': !isScheduled && !isMobile,
-              'flex-row-reverse justify-content-between align-items-end': !isMobile,
+              'flex-row-reverse align-items-end': !isMobile,
               'border-top pt-2': isScheduled,
             })}
           >
+            {editor.editMode && <Button className="ml-2" variant="outline-brand" onClick={() => dispatch(clearEditor())}>Cancel</Button>}
             <StatefulButton
               className="send-email-btn"
               variant="primary"
@@ -334,7 +350,7 @@ function BulkEmailForm(props) {
                 || emailFormStatus === FORM_SUBMIT_STATES.COMPLETE
                 || emailFormStatus === FORM_SUBMIT_STATES.COMPLETE_SCHEDULE
               }
-              onClose={resetEmailForm}
+              onClose={() => resetEmailForm(emailFormStatus === FORM_SUBMIT_STATES.ERROR)}
             >
               {emailFormStatus === FORM_SUBMIT_STATES.ERROR && intl.formatMessage(messages.bulkEmailFormError)}
               {emailFormStatus === FORM_SUBMIT_STATES.COMPLETE && intl.formatMessage(messages.bulkEmailFormSuccess)}
