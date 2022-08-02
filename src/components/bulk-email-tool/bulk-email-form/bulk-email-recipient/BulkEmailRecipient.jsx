@@ -69,6 +69,7 @@ export default function BulkEmailRecipient(props) {
             <Form.Checkbox
               key={cohort}
               value={`cohort:${cohort}`}
+              disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
               className="col col-lg-4 col-sm-6 col-12"
             >
               <FormattedMessage
@@ -94,7 +95,6 @@ export default function BulkEmailRecipient(props) {
         <Form.Checkbox
           key="learners"
           value="learners"
-          disabled={selectedGroups.find((group) => group === (DEFAULT_GROUPS.AUDIT || DEFAULT_GROUPS.VERIFIED))}
           className="col col-lg-4 col-sm-6 col-12"
         >
           <FormattedMessage
