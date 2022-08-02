@@ -11,6 +11,7 @@ import BulkEmailForm from '..';
 import * as bulkEmailFormApi from '../data/api';
 import { BulkEmailContext, BulkEmailProvider } from '../../bulk-email-context';
 import { formatDate } from '../../../../utils/formatDateAndTime';
+import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
 
 jest.mock('../../text-editor/TextEditor');
 
@@ -21,9 +22,10 @@ const tomorrow = new Date();
 tomorrow.setDate(new Date().getDate() + 1);
 
 function renderBulkEmailForm() {
+  const { cohorts } = cohortFactory.build();
   return (
     <BulkEmailProvider>
-      <BulkEmailForm courseId="test" />
+      <BulkEmailForm courseId="test" cohorts={cohorts} />
     </BulkEmailProvider>
   );
 }
@@ -90,6 +92,16 @@ describe('bulk-email-form', () => {
     expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
     fireEvent.click(await screen.findByRole('button', { name: /continue/i }));
     expect(await screen.findByText('An error occured while attempting to send the email.')).toBeInTheDocument();
+  });
+  test('Checking "All Learners" disables each learner group', async () => {
+    render(renderBulkEmailForm());
+    fireEvent.click(screen.getByRole('checkbox', { name: 'All Learners' }));
+    const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the verified certificate track' });
+    const auditLearners = screen.getByRole('checkbox', { name: 'Learners in the audit track' });
+    const { cohorts } = cohortFactory.build();
+    cohorts.forEach(cohort => expect(screen.getByRole('checkbox', { name: `Cohort: ${cohort}` })).toBeDisabled());
+    expect(verifiedLearners).toBeDisabled();
+    expect(auditLearners).toBeDisabled();
   });
   test('Shows scheduling form when checkbox is checked and submit is changed', async () => {
     render(renderBulkEmailForm());

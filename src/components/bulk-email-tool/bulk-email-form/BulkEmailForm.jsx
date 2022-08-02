@@ -122,6 +122,14 @@ function BulkEmailForm(props) {
   const onRecipientChange = (event) => {
     if (event.target.checked) {
       dispatch(addRecipient(event.target.value));
+      // if "All Learners" is checked then we want to remove any cohorts, verified learners, and audit learners
+      if (event.target.value === 'learners') {
+        editor.emailRecipients.forEach(recipient => {
+          if (/^cohort/.test(recipient) || /^track/.test(recipient)) {
+            dispatch(removeRecipient(recipient));
+          }
+        });
+      }
     } else {
       dispatch(removeRecipient(event.target.value));
     }
