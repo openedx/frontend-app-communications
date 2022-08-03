@@ -129,7 +129,9 @@ function BulkEmailForm(props) {
 
   const validateDateTime = (date, time) => {
     if (isScheduled) {
-      return !!date && !!time;
+      const now = new Date();
+      const newSchedule = new Date(`${editor.scheduleDate} ${editor.scheduleTime}`);
+      return !!date && !!time && newSchedule > now;
     }
     return true;
   };

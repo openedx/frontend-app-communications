@@ -61,7 +61,7 @@ function ScheduleEmailForm(props) {
         <Form.Control.Feedback className="pb-2" hasIcon type="invalid">
           <FormattedMessage
             id="bulk.email.form.dateTime.error"
-            defaultMessage="Date and time cannot be blank"
+            defaultMessage="Date and time cannot be blank, and must be a date in the future"
             description="An error message located under the date-time selector. Visible only on failure."
           />
         </Form.Control.Feedback>
