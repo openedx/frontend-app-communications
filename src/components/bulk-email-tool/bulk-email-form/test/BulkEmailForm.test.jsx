@@ -32,6 +32,7 @@ function renderBulkEmailForm() {
 
 function renderBulkEmailFormContext(value) {
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <BulkEmailContext.Provider value={[value, dispatchMock]}>
       <BulkEmailForm courseId="test" />
     </BulkEmailContext.Provider>

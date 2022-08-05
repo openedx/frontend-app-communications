@@ -71,12 +71,12 @@ export default function BulkEmailTaskManagerTable(props) {
 
 BulkEmailTaskManagerTable.propTypes = {
   errorRetrievingData: PropTypes.bool.isRequired,
-  tableData: PropTypes.arrayOf(PropTypes.object),
+  tableData: PropTypes.arrayOf(PropTypes.shape({})),
   tableDescription: PropTypes.string,
   alertWarningMessage: PropTypes.string.isRequired,
   alertErrorMessage: PropTypes.string.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  additionalColumns: PropTypes.arrayOf(PropTypes.object),
+  columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  additionalColumns: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 BulkEmailTaskManagerTable.defaultProps = {

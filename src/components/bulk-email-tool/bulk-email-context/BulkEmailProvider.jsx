@@ -17,6 +17,7 @@ export default function BulkEmailProvider({ children }) {
     combineReducers({ editor, scheduledEmailsTable }),
     initialState,
   );
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
   return <BulkEmailContext.Provider value={[state, dispatch]}>{children}</BulkEmailContext.Provider>;
 }
 

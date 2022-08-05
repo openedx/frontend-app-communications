@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // NOTE: These are the breakpoints used in Bootstrap v4.0.0 as seen in
 // the documentation (https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints)
@@ -29,14 +29,14 @@ const breakpoints = {
  */
 export default function useMobileResponsive(breakpoint) {
   const [isMobileWindow, setIsMobileWindow] = useState();
-  const checkForMobile = () => {
+  const checkForMobile = useCallback(() => {
     setIsMobileWindow(window.matchMedia(`(max-width: ${breakpoint || breakpoints.small.maxWidth}px)`).matches);
-  };
+  }, [breakpoint]);
   useEffect(() => {
     checkForMobile();
     window.addEventListener('resize', checkForMobile);
     // return this function here to clean up the event listener
     return () => window.removeEventListener('resize', checkForMobile);
-  }, []);
+  }, [checkForMobile]);
   return isMobileWindow;
 }
