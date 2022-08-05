@@ -45,6 +45,55 @@ const FORM_ACTIONS = {
   PATCH: 'PATCH',
 };
 
+function AlertMessage(intl, editor, isScheduled) {
+  return (
+    <>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
+      <ul className="list-unstyled">
+        {editor.emailRecipients.map((group) => (
+          <li key={group}>{group}</li>
+        ))}
+      </ul>
+      {!isScheduled && (
+      <p>
+        <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
+        {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
+      </p>
+      )}
+    </>
+  );
+}
+
+function EditMessage(intl, editor, isScheduled) {
+  return (
+    <>
+      <p>
+        {intl.formatMessage(messages.bulkEmailTaskAlertEditingDate, {
+          dateTime: new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toLocaleString(),
+        })}
+      </p>
+      <p>
+        {intl.formatMessage(messages.bulkEmailTaskAlertEditingSubject, {
+          subject: editor.emailSubject,
+        })}
+      </p>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
+      <ul className="list-unstyled">
+        {editor.emailRecipients.map((group) => (
+          <li key={group}>{group}</li>
+        ))}
+      </ul>
+      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
+      {!isScheduled && (
+      <p>
+        <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
+        {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
+      </p>
+      )}
+    </>
+  );
+}
+
 function BulkEmailForm(props) {
   const { courseId, cohorts, intl } = props;
   const [{ editor }, dispatch] = useContext(BulkEmailContext);
@@ -205,58 +254,15 @@ function BulkEmailForm(props) {
     } else {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
-  }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
-
-  const AlertMessage = () => (
-    <>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
-      <ul className="list-unstyled">
-        {editor.emailRecipients.map((group) => (
-          <li key={group}>{group}</li>
-        ))}
-      </ul>
-      {!isScheduled && (
-        <p>
-          <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
-          {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
-        </p>
-      )}
-    </>
-  );
-
-  const EditMessage = () => (
-    <>
-      <p>
-        {intl.formatMessage(messages.bulkEmailTaskAlertEditingDate, {
-          dateTime: new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toLocaleString(),
-        })}
-      </p>
-      <p>
-        {intl.formatMessage(messages.bulkEmailTaskAlertEditingSubject, {
-          subject: editor.emailSubject,
-        })}
-      </p>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
-      <ul className="list-unstyled">
-        {editor.emailRecipients.map((group) => (
-          <li key={group}>{group}</li>
-        ))}
-      </ul>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
-      {!isScheduled && (
-        <p>
-          <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
-          {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
-        </p>
-      )}
-    </>
-  );
+  }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData,
+    editor.formComplete, delayedEmailFormReset]);
 
   return (
     <div className={classNames('w-100 m-auto', !isMobile && 'p-4 border border-primary-200')}>
       <TaskAlertModal
         isOpen={isTaskAlertOpen}
-        alertMessage={editor.editMode ? EditMessage() : AlertMessage()}
+        alertMessage={editor.editMode
+          ? EditMessage(intl, editor, isScheduled) : AlertMessage(intl, editor, isScheduled)}
         close={(event) => {
           closeTaskAlert();
           if (event.target.name === 'continue') {

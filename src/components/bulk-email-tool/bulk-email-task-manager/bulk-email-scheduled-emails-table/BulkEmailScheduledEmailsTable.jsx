@@ -108,6 +108,25 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       }),
     );
   };
+
+  const getCell = (row, state, page, previousPage) => (
+    <>
+      <IconButton src={Visibility} iconAs={Icon} alt="View" onClick={() => handleViewEmail(row)} />
+      <IconButton
+        src={Delete}
+        iconAs={Icon}
+        alt="Delete"
+        onClick={() => {
+          setCurrentTask({
+            row, pageIndex: state.pageIndex, page, previousPage,
+          });
+          openConfirmModal();
+        }}
+      />
+      <IconButton src={Edit} iconAs={Icon} alt="Edit" onClick={() => handleEditEmail(row)} />
+    </>
+  );
+
   return (
     <>
       <TaskAlertModal
@@ -167,23 +186,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
               Header: 'Action',
               Cell: ({
                 row, state, page, previousPage,
-              }) => (
-                <>
-                  <IconButton src={Visibility} iconAs={Icon} alt="View" onClick={() => handleViewEmail(row)} />
-                  <IconButton
-                    src={Delete}
-                    iconAs={Icon}
-                    alt="Delete"
-                    onClick={() => {
-                      setCurrentTask({
-                        row, pageIndex: state.pageIndex, page, previousPage,
-                      });
-                      openConfirmModal();
-                    }}
-                  />
-                  <IconButton src={Edit} iconAs={Icon} alt="Edit" onClick={() => handleEditEmail(row)} />
-                </>
-              ),
+              }) => getCell(row, state, page, previousPage),
             },
           ]}
         />
