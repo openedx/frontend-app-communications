@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@edx/frontend-build": "9.2.2",
-    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "1.21.1",
     "codecov": "3.8.3",
