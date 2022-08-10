@@ -53,7 +53,7 @@ export default function PageContainer(props) {
       });
     }
     fetchCourseMetadata();
-  }, [courseId]);
+  }, []);
 
   if (courseMetadata) {
     return (
