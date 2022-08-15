@@ -68,7 +68,7 @@
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "1.21.2",
     "codecov": "3.8.3",
-    "es-check": "6.1.1",
+    "es-check": "6.2.1",
     "glob": "7.2.3",
     "husky": "7.0.4",
     "jest": "27.3.1",
