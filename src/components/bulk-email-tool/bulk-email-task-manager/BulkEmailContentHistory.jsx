@@ -108,6 +108,7 @@ function BulkEmailContentHistory({ intl }) {
         Header: '',
         Cell: ({ row }) => (
           <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
+            <span className="sr-only"> {row.index}</span>
             {intl.formatMessage(messages.buttonViewMessage)}
           </Button>
         ),
