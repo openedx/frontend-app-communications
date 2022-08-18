@@ -71,6 +71,8 @@ describe('BulkEmailContentHistory component', () => {
       expect(await screen.findByText(email.requester)).toBeTruthy();
       expect(await screen.findByText(email.sent_to.join(', '))).toBeTruthy();
       expect(await screen.findByText(email.email.subject)).toBeTruthy();
+      // verify screen reader only <span />
+      expect(await screen.findByText('0')).toHaveClass('sr-only');
       expect(await screen.findAllByText('View Message')).toBeTruthy();
     });
   });
