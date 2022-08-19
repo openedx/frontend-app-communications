@@ -16,6 +16,7 @@ export default function BulkEmailPendingTasksAlert() {
         <Hyperlink
           destination={`${getConfig().LMS_BASE_URL}/courses/${window.location.pathname.split('/')[2]}/instructor#view-course-info`}
           target="_blank"
+          isInline
           showLaunchIcon={false}
         >
           <FormattedMessage

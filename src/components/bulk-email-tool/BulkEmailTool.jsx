@@ -18,13 +18,13 @@ export default function BulkEmailTool() {
   return (
     <CourseMetadataContext.Consumer>
       {(courseMetadata) => (courseMetadata.originalUserIsStaff ? (
-        <div>
+        <>
           <NavigationTabs courseId={courseId} tabData={courseMetadata.tabs} />
           <BulkEmailProvider>
             <Container size="md">
               <BackToInstructor />
               <div className="row pb-4.5">
-                <h1 className="text-primary-500">
+                <h1 className="text-primary-500" id="main-content">
                   <FormattedMessage
                     id="bulk.email.send.email.header"
                     defaultMessage="Send an email"
@@ -40,7 +40,7 @@ export default function BulkEmailTool() {
               </div>
             </Container>
           </BulkEmailProvider>
-        </div>
+        </>
       ) : (
         <ErrorPage />
       ))}
