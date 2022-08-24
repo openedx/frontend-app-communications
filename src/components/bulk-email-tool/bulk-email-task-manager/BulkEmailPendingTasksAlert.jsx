@@ -21,11 +21,22 @@ export default function BulkEmailPendingTasksAlert() {
           id="bulk.email.pending.tasks.link"
           defaultMessage="Course Info"
         />
-      </Hyperlink>
-      <FormattedMessage
-        id="bulk.email.pending.tasks.description.two"
-        defaultMessage="&nbsp;in the Instructor Dashboard."
-      />
-    </Alert>
+        <Hyperlink
+          destination={`${getConfig().LMS_BASE_URL}/courses/${window.location.pathname.split('/')[2]}/instructor#view-course-info`}
+          target="_blank"
+          isInline
+          showLaunchIcon={false}
+        >
+          <FormattedMessage
+            id="bulk.email.pending.tasks.link"
+            defaultMessage="Course Info"
+          />
+        </Hyperlink>
+        <FormattedMessage
+          id="bulk.email.pending.tasks.description.two"
+          defaultMessage="&nbsp;in the Instructor Dashboard."
+        />
+      </Alert>
+    </>
   );
 }

@@ -65,7 +65,9 @@ export default function PageContainer(props) {
             courseNumber={courseMetadata.number}
             courseTitle={courseMetadata.title}
           />
-          {children}
+          <main>
+            {children}
+          </main>
           <Footer />
         </>
       </CourseMetadataContext.Provider>

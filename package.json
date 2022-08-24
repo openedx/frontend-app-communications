@@ -66,13 +66,13 @@
     "@edx/frontend-build": "^12.0.3",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
-    "axios-mock-adapter": "1.21.1",
+    "axios-mock-adapter": "1.21.2",
     "codecov": "3.8.3",
-    "es-check": "6.1.1",
+    "es-check": "6.2.1",
     "glob": "7.2.3",
     "husky": "7.0.4",
-    "jest": "27.3.1",
-    "prettier": "2.5.1",
+    "jest": "27.5.1",
+    "prettier": "2.7.1",
     "reactifex": "1.1.1",
     "rosie": "2.1.0"
   }
