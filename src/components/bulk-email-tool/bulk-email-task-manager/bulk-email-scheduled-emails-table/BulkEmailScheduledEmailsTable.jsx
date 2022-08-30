@@ -16,6 +16,7 @@ import messages from './messages';
 import ViewEmailModal from '../ViewEmailModal';
 import { copyToEditor } from '../../bulk-email-form/data/actions';
 import TaskAlertModal from '../../task-alert-modal';
+import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
 
 function flattenScheduledEmailsArray(emails) {
   return emails.map((email) => ({
@@ -82,21 +83,6 @@ function BulkEmailScheduledEmailsTable({ intl }) {
     } else {
       dispatch(getScheduledBulkEmailThunk(courseId, pageIndex + 1));
     }
-  };
-
-  const normalizeDigits = (value) => (value < 10 ? `0${value}` : value);
-  const formatDate = (date) => {
-    const day = normalizeDigits(date.getDate());
-    const month = normalizeDigits(date.getMonth() + 1);
-    const year = date.getFullYear();
-
-    return `${year}-${month}-${day}`;
-  };
-  const formatTime = (date) => {
-    const hours = normalizeDigits(date.getHours());
-    const mins = normalizeDigits(date.getMinutes());
-
-    return `${hours}:${mins}`;
   };
 
   const handleEditEmail = (row) => {

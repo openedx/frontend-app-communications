@@ -122,6 +122,14 @@ function BulkEmailForm(props) {
   const onRecipientChange = (event) => {
     if (event.target.checked) {
       dispatch(addRecipient(event.target.value));
+      // if "All Learners" is checked then we want to remove any cohorts, verified learners, and audit learners
+      if (event.target.value === 'learners') {
+        editor.emailRecipients.forEach(recipient => {
+          if (/^cohort/.test(recipient) || /^track/.test(recipient)) {
+            dispatch(removeRecipient(recipient));
+          }
+        });
+      }
     } else {
       dispatch(removeRecipient(event.target.value));
     }
@@ -129,7 +137,9 @@ function BulkEmailForm(props) {
 
   const validateDateTime = (date, time) => {
     if (isScheduled) {
-      return !!date && !!time;
+      const now = new Date();
+      const newSchedule = new Date(`${editor.scheduleDate} ${editor.scheduleTime}`);
+      return !!date && !!time && newSchedule > now;
     }
     return true;
   };
@@ -152,10 +162,10 @@ function BulkEmailForm(props) {
     if (validateEmailForm()) {
       if (editor.editMode) {
         const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
-        dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
+        await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
       } else {
         const emailData = formatDataForFormAction(FORM_ACTIONS.POST);
-        dispatch(postBulkEmailThunk(emailData, courseId));
+        await dispatch(postBulkEmailThunk(emailData, courseId));
       }
       dispatch(getScheduledBulkEmailThunk(courseId, 1));
     }
