@@ -94,6 +94,13 @@ function BulkEmailContentHistory({ intl }) {
     },
   ];
 
+  const getViewMessageCell = (tableData, row) => (
+    <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
+      {intl.formatMessage(messages.buttonViewMessage)}
+      <span className="sr-only">&nbsp;{row.index}</span>
+    </Button>
+  );
+
   /**
    * Paragon's DataTable supports the ability to add extra columns that might not directly coincide with the data being
    * represented in the table. We are using an additional column to embed a button that will open a Modal to display the
@@ -106,13 +113,7 @@ function BulkEmailContentHistory({ intl }) {
       {
         id: 'view_message',
         Header: '',
-        // eslint-disable-next-line react/no-unstable-nested-components
-        Cell: ({ row }) => (
-          <Button variant="link" className="px-1" onClick={() => onViewMessageClick(tableData[row.index])}>
-            {intl.formatMessage(messages.buttonViewMessage)}
-            <span className="sr-only">&nbsp;{row.index}</span>
-          </Button>
-        ),
+        Cell: ({ row }) => getViewMessageCell(tableData, row),
       },
     ];
   };

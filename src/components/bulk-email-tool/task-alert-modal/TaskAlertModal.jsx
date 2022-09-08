@@ -40,7 +40,8 @@ function TaskAlertModal(props) {
                 // causing strange click event target issues in safari. To solve this, we want to
                 // wrap the string in a fragment instead of a span, so that the whole button considered
                 // a "button" target, and not a "span inside a button"
-                msg => msg
+                // eslint-disable-next-line react/jsx-no-useless-fragment
+                msg => <>{msg}</>
               }
             </FormattedMessage>
           </Button>

@@ -9,5 +9,8 @@ module.exports = createConfig(
       'react-hooks/exhaustive-deps': 'off',
       'react/jsx-no-bind': [0, { ignoreDOMComponents: true }],
     },
+    overrides: [{
+      files: ['*.test.jsx'], rules: { 'react/jsx-no-constructed-context-values': 'off' },
+    }],
   },
 );
