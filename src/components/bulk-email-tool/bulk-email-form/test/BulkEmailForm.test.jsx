@@ -32,7 +32,7 @@ function renderBulkEmailForm() {
 
 function renderBulkEmailFormContext(value) {
   return (
-    <BulkEmailContext.Provider value={[value, dispatchMock]}>
+    <BulkEmailContext.Provider value={value}>
       <BulkEmailForm courseId="test" />
     </BulkEmailContext.Provider>
   );
@@ -144,7 +144,7 @@ describe('bulk-email-form', () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onPatch().reply(200);
     render(
-      renderBulkEmailFormContext({
+      renderBulkEmailFormContext([{
         editor: {
           editMode: true,
           emailBody: 'test',
@@ -157,7 +157,7 @@ describe('bulk-email-form', () => {
           isLoading: false,
           errorRetrievingData: false,
         },
-      }),
+      }, dispatchMock]),
     );
     const submitButton = screen.getByText('Reschedule Email');
     fireEvent.click(submitButton);

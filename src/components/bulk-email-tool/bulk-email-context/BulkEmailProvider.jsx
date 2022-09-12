@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import useAsyncReducer, { combineReducers } from '../../../utils/useAsyncReducer';
 import editor, { editorInitialState } from '../bulk-email-form/data/reducer';
@@ -17,8 +17,10 @@ export default function BulkEmailProvider({ children }) {
     combineReducers({ editor, scheduledEmailsTable }),
     initialState,
   );
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  return <BulkEmailContext.Provider value={[state, dispatch]}>{children}</BulkEmailContext.Provider>;
+
+  const contextValue = useMemo(() => ([state, dispatch]), [dispatch, state]);
+
+  return <BulkEmailContext.Provider value={contextValue}>{children}</BulkEmailContext.Provider>;
 }
 
 BulkEmailProvider.propTypes = {

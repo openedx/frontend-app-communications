@@ -46,6 +46,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
 
   const fetchTableData = useCallback((args) => {
     dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleViewEmail = (row) => {

@@ -22,7 +22,7 @@ function BulkEmailTaskHistory({ intl }) {
    * Async function that makes a REST API call to retrieve historical bulk email (Instructor) task data for display
    * within this component.
    */
-  async function fetchEmailTaskHistoryData() {
+  const fetchEmailTaskHistoryData = async () => {
     setErrorRetrievingData(false);
     setShowHistoricalTaskContentTable(false);
 
@@ -39,7 +39,7 @@ function BulkEmailTaskHistory({ intl }) {
     }
 
     setShowHistoricalTaskContentTable(true);
-  }
+  };
 
   const tableColumns = [
     {

@@ -24,7 +24,7 @@ function BulkEmailContentHistory({ intl }) {
    * Async function that makes a REST API call to retrieve historical email message data sent by the bulk course email
    * tool from edx-platform.
    */
-  async function fetchSentEmailHistoryData() {
+  const fetchSentEmailHistoryData = async () => {
     setErrorRetrievingData(false);
     setShowHistoricalEmailContentTable(false);
 
@@ -41,7 +41,7 @@ function BulkEmailContentHistory({ intl }) {
     }
 
     setShowHistoricalEmailContentTable(true);
-  }
+  };
 
   /**
    * This utility function transforms the data stored in `emailHistoryData` to make it easier to display in the Paragon
