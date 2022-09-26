@@ -48,7 +48,7 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@tinymce/tinymce-react": "3.14.0",
     "axios": "0.27.2",
-    "classnames": "2.3.1",
+    "classnames": "2.3.2",
     "core-js": "3.15.2",
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
