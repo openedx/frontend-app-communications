@@ -49,7 +49,7 @@
     "@tinymce/tinymce-react": "3.14.0",
     "axios": "0.27.2",
     "classnames": "2.3.2",
-    "core-js": "3.15.2",
+    "core-js": "3.25.4",
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
     "prop-types": "15.7.2",
