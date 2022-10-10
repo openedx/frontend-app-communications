@@ -52,7 +52,7 @@
     "core-js": "3.25.5",
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
-    "prop-types": "15.7.2",
+    "prop-types": "15.8.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-redux": "7.2.9",
