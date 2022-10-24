@@ -60,7 +60,7 @@
     "react-router-dom": "5.3.0",
     "redux": "4.2.0",
     "regenerator-runtime": "0.13.10",
-    "tinymce": "5.10.5"
+    "tinymce": "5.10.6"
   },
   "devDependencies": {
     "@edx/frontend-build": "9.2.2",
