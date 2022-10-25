@@ -8,7 +8,7 @@ import scheduledEmailsTable, {
 
 export const BulkEmailContext = React.createContext();
 
-export default function BulkEmailProvider({ children }) {
+const BulkEmailProvider = ({ children }) => {
   const initialState = {
     editor: editorInitialState,
     scheduledEmailsTable: scheduledEmailsTableInitialState,
@@ -21,8 +21,10 @@ export default function BulkEmailProvider({ children }) {
   const contextValue = useMemo(() => ([state, dispatch]), [dispatch, state]);
 
   return <BulkEmailContext.Provider value={contextValue}>{children}</BulkEmailContext.Provider>;
-}
+};
 
 BulkEmailProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 };
+
+export default BulkEmailProvider;

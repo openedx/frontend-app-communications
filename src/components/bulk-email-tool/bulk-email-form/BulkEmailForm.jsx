@@ -45,56 +45,52 @@ const FORM_ACTIONS = {
   PATCH: 'PATCH',
 };
 
-function AlertMessage(intl, editor, isScheduled) {
-  return (
-    <>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
-      <ul className="list-unstyled">
-        {editor.emailRecipients.map((group) => (
-          <li key={group}>{group}</li>
-        ))}
-      </ul>
-      {!isScheduled && (
+const AlertMessage = (intl, editor, isScheduled) => (
+  <>
+    <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
+    <ul className="list-unstyled">
+      {editor.emailRecipients.map((group) => (
+        <li key={group}>{group}</li>
+      ))}
+    </ul>
+    {!isScheduled && (
       <p>
         <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
         {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
       </p>
-      )}
-    </>
-  );
-}
+    )}
+  </>
+);
 
-function EditMessage(intl, editor, isScheduled) {
-  return (
-    <>
-      <p>
-        {intl.formatMessage(messages.bulkEmailTaskAlertEditingDate, {
-          dateTime: new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toLocaleString(),
-        })}
-      </p>
-      <p>
-        {intl.formatMessage(messages.bulkEmailTaskAlertEditingSubject, {
-          subject: editor.emailSubject,
-        })}
-      </p>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
-      <ul className="list-unstyled">
-        {editor.emailRecipients.map((group) => (
-          <li key={group}>{group}</li>
-        ))}
-      </ul>
-      <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
-      {!isScheduled && (
+const EditMessage = (intl, editor, isScheduled) => (
+  <>
+    <p>
+      {intl.formatMessage(messages.bulkEmailTaskAlertEditingDate, {
+        dateTime: new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toLocaleString(),
+      })}
+    </p>
+    <p>
+      {intl.formatMessage(messages.bulkEmailTaskAlertEditingSubject, {
+        subject: editor.emailSubject,
+      })}
+    </p>
+    <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
+    <ul className="list-unstyled">
+      {editor.emailRecipients.map((group) => (
+        <li key={group}>{group}</li>
+      ))}
+    </ul>
+    <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
+    {!isScheduled && (
       <p>
         <strong>{intl.formatMessage(messages.bulkEmailInstructionsCaution)}</strong>
         {intl.formatMessage(messages.bulkEmailInstructionsCautionMessage)}
       </p>
-      )}
-    </>
-  );
-}
+    )}
+  </>
+);
 
-function BulkEmailForm(props) {
+const BulkEmailForm = (props) => {
   const { courseId, cohorts, intl } = props;
   const [{ editor }, dispatch] = useContext(BulkEmailContext);
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
@@ -378,7 +374,7 @@ function BulkEmailForm(props) {
       </Form>
     </div>
   );
-}
+};
 
 BulkEmailForm.defaultProps = {
   cohorts: [],

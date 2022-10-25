@@ -6,9 +6,9 @@ import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';
 import { copyToEditor } from '../bulk-email-form/data/actions';
 
-function ViewEmailModal({
+const ViewEmailModal = ({
   intl, messageContent, isOpen, setModalOpen,
-}) {
+}) => {
   const [, dispatch] = useContext(BulkEmailContext);
   return (
     <div>
@@ -60,7 +60,7 @@ function ViewEmailModal({
       />
     </div>
   );
-}
+};
 
 ViewEmailModal.propTypes = {
   intl: intlShape.isRequired,

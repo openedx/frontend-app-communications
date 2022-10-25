@@ -5,7 +5,7 @@ import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Form } from '@edx/paragon';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 
-function ScheduleEmailForm(props) {
+const ScheduleEmailForm = (props) => {
   const isMobile = useMobileResponsive();
   const { isValid, onDateTimeChange, dateTime } = props;
   const { date, time } = dateTime;
@@ -68,7 +68,7 @@ function ScheduleEmailForm(props) {
       )}
     </Form.Group>
   );
-}
+};
 
 ScheduleEmailForm.defaultProps = {
   dateTime: {

@@ -2,7 +2,7 @@ import { Alert, DataTable } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function BulkEmailTaskManagerTable(props) {
+const BulkEmailTaskManagerTable = (props) => {
   const {
     errorRetrievingData,
     tableData,
@@ -67,7 +67,7 @@ export default function BulkEmailTaskManagerTable(props) {
       {canRenderTable()}
     </div>
   );
-}
+};
 
 BulkEmailTaskManagerTable.propTypes = {
   errorRetrievingData: PropTypes.bool.isRequired,
@@ -84,3 +84,5 @@ BulkEmailTaskManagerTable.defaultProps = {
   tableDescription: '',
   additionalColumns: [],
 };
+
+export default BulkEmailTaskManagerTable;

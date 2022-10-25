@@ -12,7 +12,7 @@ import './PageContainer.scss';
 
 export const CourseMetadataContext = React.createContext();
 
-export default function PageContainer(props) {
+const PageContainer = (props) => {
   const { children } = props;
   const { courseId } = useParams();
 
@@ -86,8 +86,10 @@ export default function PageContainer(props) {
       />
     </div>
   );
-}
+};
 
 PageContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
+
+export default PageContainer;

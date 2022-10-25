@@ -7,7 +7,7 @@ import messages from './messages';
 import useInterval from '../../../utils/useInterval';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-function BulkEmailPendingTasks({ intl }) {
+const BulkEmailPendingTasks = ({ intl }) => {
   const { courseId } = useParams();
 
   const [instructorTaskData, setInstructorTaskData] = useState();
@@ -87,7 +87,7 @@ function BulkEmailPendingTasks({ intl }) {
       />
     </div>
   );
-}
+};
 
 BulkEmailPendingTasks.propTypes = {
   intl: intlShape.isRequired,

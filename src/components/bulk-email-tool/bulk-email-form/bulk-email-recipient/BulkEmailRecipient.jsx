@@ -13,7 +13,7 @@ const DEFAULT_GROUPS = {
   AUDIT: 'track:audit',
 };
 
-export default function BulkEmailRecipient(props) {
+const BulkEmailRecipient = (props) => {
   const { handleCheckboxes, selectedGroups, additionalCohorts } = props;
   return (
     <Form.Group>
@@ -115,7 +115,7 @@ export default function BulkEmailRecipient(props) {
       )}
     </Form.Group>
   );
-}
+};
 
 BulkEmailRecipient.defaultProps = {
   isValid: true,
@@ -128,3 +128,5 @@ BulkEmailRecipient.propTypes = {
   isValid: PropTypes.bool,
   additionalCohorts: PropTypes.arrayOf(PropTypes.string),
 };
+
+export default BulkEmailRecipient;

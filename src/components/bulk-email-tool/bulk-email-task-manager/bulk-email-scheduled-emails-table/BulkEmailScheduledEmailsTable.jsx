@@ -29,7 +29,7 @@ function flattenScheduledEmailsArray(emails) {
   }));
 }
 
-function BulkEmailScheduledEmailsTable({ intl }) {
+const BulkEmailScheduledEmailsTable = ({ intl }) => {
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
   const [tableData, setTableData] = useState([]);
@@ -194,7 +194,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       </div>
     </>
   );
-}
+};
 
 BulkEmailScheduledEmailsTable.propTypes = {
   intl: intlShape.isRequired,

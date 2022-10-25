@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Nav } from '@edx/paragon';
 
-export default function NavigationTabs(props) {
+const NavigationTabs = (props) => {
   const { tabData } = props;
 
   return (
@@ -19,7 +19,7 @@ export default function NavigationTabs(props) {
       </Nav>
     </div>
   );
-}
+};
 
 NavigationTabs.propTypes = {
   tabData: PropTypes.arrayOf(PropTypes.shape({
@@ -32,3 +32,5 @@ NavigationTabs.propTypes = {
 NavigationTabs.defaultProps = {
   tabData: [],
 };
+
+export default NavigationTabs;

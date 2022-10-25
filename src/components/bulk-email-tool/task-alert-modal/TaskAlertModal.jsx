@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ActionRow, AlertModal, Button } from '@edx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-function TaskAlertModal(props) {
+const TaskAlertModal = (props) => {
   const {
     isOpen, close, alertMessage, intl,
   } = props;
@@ -51,7 +51,7 @@ function TaskAlertModal(props) {
       {alertMessage}
     </AlertModal>
   );
-}
+};
 
 TaskAlertModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,

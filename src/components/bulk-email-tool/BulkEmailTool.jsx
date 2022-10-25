@@ -12,7 +12,7 @@ import { CourseMetadataContext } from '../page-container/PageContainer';
 import { BulkEmailProvider } from './bulk-email-context';
 import BackToInstructor from '../navigation-tabs/BackToInstructor';
 
-export default function BulkEmailTool() {
+const BulkEmailTool = () => {
   const { courseId } = useParams();
 
   return (
@@ -46,4 +46,6 @@ export default function BulkEmailTool() {
       ))}
     </CourseMetadataContext.Consumer>
   );
-}
+};
+
+export default BulkEmailTool;

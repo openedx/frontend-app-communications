@@ -20,7 +20,7 @@ import '@edx/tinymce-language-selector';
 import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
 import contentCss from 'tinymce/skins/content/default/content.css';
 
-export default function TextEditor(props) {
+const TextEditor = (props) => {
   const {
     onChange, onKeyUp, onInit, disabled, value,
   } = props;
@@ -51,7 +51,7 @@ export default function TextEditor(props) {
       disabled={disabled}
     />
   );
-}
+};
 
 TextEditor.defaultProps = {
   onChange: () => {},
@@ -68,3 +68,5 @@ TextEditor.propTypes = {
   disabled: PropTypes.bool,
   value: PropTypes.string,
 };
+
+export default TextEditor;

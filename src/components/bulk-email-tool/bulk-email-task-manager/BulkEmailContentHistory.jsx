@@ -12,7 +12,7 @@ import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
 
-function BulkEmailContentHistory({ intl }) {
+const BulkEmailContentHistory = ({ intl }) => {
   const { courseId } = useParams();
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
@@ -152,7 +152,7 @@ function BulkEmailContentHistory({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 BulkEmailContentHistory.propTypes = {
   intl: intlShape.isRequired,

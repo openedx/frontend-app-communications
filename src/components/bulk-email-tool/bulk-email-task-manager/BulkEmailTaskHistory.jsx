@@ -11,7 +11,7 @@ import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 import './bulkEmailTaskHistory.scss';
 
-function BulkEmailTaskHistory({ intl }) {
+const BulkEmailTaskHistory = ({ intl }) => {
   const { courseId } = useParams();
 
   const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
@@ -106,7 +106,7 @@ function BulkEmailTaskHistory({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 BulkEmailTaskHistory.propTypes = {
   intl: intlShape.isRequired,
