@@ -72,7 +72,7 @@
     "glob": "7.2.3",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.0",
     "reactifex": "1.1.1",
     "rosie": "2.1.0"
   }
