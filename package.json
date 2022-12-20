@@ -6,14 +6,11 @@
     "type": "git",
     "url": "git+https://github.com/edx/frontend-app-communications.git"
   },
-  "browserslist": [
-    "last 2 versions",
-    "ie 11"
-  ],
+  "browserslist": ["extends @edx/browserslist-config"]
+  ,
   "scripts": {
     "build": "fedx-scripts webpack",
     "i18n_extract": "BABEL_ENV=i18n fedx-scripts babel src --quiet > /dev/null",
-    "is-es5": "es-check es5 ./dist/*.js",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "lint:fix": "fedx-scripts eslint --fix --ext .js --ext .jsx .",
     "snapshot": "fedx-scripts jest --updateSnapshot",
@@ -37,7 +34,7 @@
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
     "@edx/frontend-component-footer": "11.2.1",
-    "@edx/frontend-component-header": "3.2.1",
+    "@edx/frontend-component-header": "3.5.0",
     "@edx/frontend-platform": "2.6.2",
     "@edx/paragon": "19.25.3",
     "@edx/tinymce-language-selector": "1.1.0",
@@ -49,30 +46,30 @@
     "@tinymce/tinymce-react": "3.14.0",
     "axios": "0.27.2",
     "classnames": "2.3.2",
-    "core-js": "3.25.4",
+    "core-js": "3.26.1",
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
-    "prop-types": "15.7.2",
+    "prop-types": "15.8.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-redux": "7.2.9",
-    "react-router": "5.2.1",
-    "react-router-dom": "5.3.0",
-    "redux": "4.1.2",
-    "regenerator-runtime": "0.13.9",
-    "tinymce": "5.10.5"
+    "react-router": "5.3.4",
+    "react-router-dom": "5.3.4",
+    "redux": "4.2.0",
+    "regenerator-runtime": "0.13.11",
+    "tinymce": "5.10.7"
   },
   "devDependencies": {
+    "@edx/browserslist-config": "^1.1.0",
     "@edx/frontend-build": "9.2.2",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "1.21.2",
     "codecov": "3.8.3",
-    "es-check": "6.2.1",
     "glob": "7.2.3",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "prettier": "2.7.1",
+    "prettier": "2.8.1",
     "reactifex": "1.1.1",
     "rosie": "2.1.0"
   }
