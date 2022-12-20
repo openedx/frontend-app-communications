@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 
 import { messages as headerMessages } from '@edx/frontend-component-header';
 import { messages as footerMessages } from '@edx/frontend-component-footer';
-
+import { messages as paragonMessages } from '@edx/paragon';
 import { Switch } from 'react-router-dom';
 import appMessages from './i18n';
 
@@ -50,5 +50,5 @@ initialize({
       );
     },
   },
-  messages: [appMessages, headerMessages, footerMessages],
+  messages: [appMessages, headerMessages, footerMessages, paragonMessages],
 });
