@@ -205,6 +205,7 @@ function BulkEmailForm(props) {
     } else {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
 
   const AlertMessage = () => (

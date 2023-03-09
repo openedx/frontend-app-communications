@@ -37,6 +37,7 @@ export default function useMobileResponsive(breakpoint) {
     window.addEventListener('resize', checkForMobile);
     // return this function here to clean up the event listener
     return () => window.removeEventListener('resize', checkForMobile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return isMobileWindow;
 }

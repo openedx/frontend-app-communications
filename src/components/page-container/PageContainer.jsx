@@ -53,6 +53,7 @@ export default function PageContainer(props) {
       });
     }
     fetchCourseMetadata();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (courseMetadata) {
