@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import { messages as headerMessages } from '@edx/frontend-component-header';
 import { messages as footerMessages } from '@edx/frontend-component-footer';
 import { messages as paragonMessages } from '@edx/paragon';
-import { Switch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import appMessages from './i18n';
 
 import './index.scss';
@@ -21,13 +21,18 @@ subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
       <div className="pb-3 container">
-        <Switch>
-          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email">
-            <PageContainer>
-              <BulkEmailTool />
-            </PageContainer>
-          </AuthenticatedPageRoute>
-        </Switch>
+        <Routes>
+          <Route
+            path="/courses/:courseId/bulk_email"
+            element={
+              <AuthenticatedPageRoute>
+                <PageContainer>
+                  <BulkEmailTool />
+                </PageContainer>
+              </AuthenticatedPageRoute>
+            }
+          />
+        </Routes>
       </div>
     </AppProvider>,
     document.getElementById('root'),
