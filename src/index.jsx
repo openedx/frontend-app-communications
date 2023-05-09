@@ -7,11 +7,8 @@ import {
 import { AppProvider, AuthenticatedPageRoute, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 
-import { messages as headerMessages } from '@edx/frontend-component-header';
-import { messages as footerMessages } from '@edx/frontend-component-footer';
-import { messages as paragonMessages } from '@edx/paragon';
 import { Switch } from 'react-router-dom';
-import appMessages from './i18n';
+import messages from './i18n';
 
 import './index.scss';
 import BulkEmailTool from './components/bulk-email-tool';
@@ -50,5 +47,5 @@ initialize({
       );
     },
   },
-  messages: [appMessages, headerMessages, footerMessages, paragonMessages],
+  messages,
 });
