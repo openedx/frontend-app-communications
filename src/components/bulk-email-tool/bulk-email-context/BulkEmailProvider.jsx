@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import useAsyncReducer, { combineReducers } from '../../../utils/useAsyncReducer';
