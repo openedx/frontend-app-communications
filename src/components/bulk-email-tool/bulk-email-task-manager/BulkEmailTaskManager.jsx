@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
@@ -8,7 +9,7 @@ import messages from './messages';
 import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table';
 import BulkEmailPendingTasksAlert from './BulkEmailPendingTasksAlert';
 
-function BulkEmailTaskManager({ intl }) {
+function BulkEmailTaskManager({ intl, courseId }) {
   return (
     <div className="w-100">
       {getConfig().SCHEDULE_EMAIL_SECTION && (
@@ -26,7 +27,7 @@ function BulkEmailTaskManager({ intl }) {
       </div>
       <div className="border-top border-primary-500 pt-4.5">
         <h2 className="h3 mb-4 text-primary-500">{intl.formatMessage(messages.pendingTasksHeader)}</h2>
-        <BulkEmailPendingTasksAlert />
+        <BulkEmailPendingTasksAlert courseId={courseId} />
       </div>
     </div>
   );
@@ -34,6 +35,7 @@ function BulkEmailTaskManager({ intl }) {
 
 BulkEmailTaskManager.propTypes = {
   intl: intlShape.isRequired,
+  courseId: PropTypes.string.isRequired,
 };
 
 export default injectIntl(BulkEmailTaskManager);
