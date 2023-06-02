@@ -43,6 +43,8 @@ export default function TextEditor(props) {
         block_unsupported_drop: false,
         image_advtab: true,
         name: 'emailBody',
+        relative_urls: false,
+        remove_script_host: false,
       }}
       onEditorChange={onChange}
       value={value}
