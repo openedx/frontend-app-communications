@@ -47,7 +47,7 @@ function ViewEmailModal({
         <ModalDialog.Footer>
           <ActionRow>
             <ModalDialog.CloseButton variant="link">
-              Close
+              <FormattedMessage id="bulk.email.tool.close.modalDialog.button" defaultMessage="Close" />
             </ModalDialog.CloseButton>
             <Button
               onClick={() => {
