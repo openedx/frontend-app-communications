@@ -7,7 +7,7 @@ frontend-app-communications
 Purpose
 *******
 
-A tool used by course teams to communicate with thier learners. The interface for anything related to instructor to learner communications. Instructor bulk email, for example.
+A tool used by course teams to communicate with their learners. The interface for anything related to instructor to learner communications. Instructor bulk email, for example.
 
 Getting started
 ------------
@@ -96,14 +96,14 @@ channel`_.
 For anything non-trivial, the best path is to open an issue in this repository
 with as many details about the issue you are facing as you can provide.
 
-https://github.com/openedx/frontend-template-application/issues
+https://github.com/openedx/frontend-app-communications/issues
 
 For more information about these options, see the `Getting Help`_ page.
 
 .. _Slack invitation: https://openedx.org/slack
 .. _community Slack workspace: https://openedx.slack.com/
 .. _#wg-frontend channel: https://openedx.slack.com/archives/C04BM6YC7A6
-.. _Getting Help: https://openedx.org/getting-help
+.. _Getting Help: https://openedx.org/community/connect
 
 License
 *******
@@ -149,7 +149,7 @@ Reporting Security Issues
 Please do not report security issues in public, and email security@openedx.org instead.
 
 .. |license-badge| image:: https://img.shields.io/github/license/openedx/frontend-app-communications.svg
-    :target: https://github.com/openedx/frontend-app-communications/blob/main/LICENSE
+    :target: https://github.com/openedx/frontend-app-communications/blob/master/LICENSE
     :alt: License
 
 .. |status-badge| image:: https://img.shields.io/badge/Status-Maintained-brightgreen
@@ -158,6 +158,6 @@ Please do not report security issues in public, and email security@openedx.org i
     :target: https://github.com/openedx/frontend-app-communications/actions/workflows/ci.yml
     :alt: Continuous Integration
 
-.. |codecov-badge| image:: https://codecov.io/github/openedx/frontend-app-communications/coverage.svg?branch=main
-    :target: https://codecov.io/github/openedx/frontend-app-communications?branch=main
+.. |codecov-badge| image:: https://codecov.io/github/openedx/frontend-app-communications/coverage.svg?branch=master
+    :target: https://codecov.io/github/openedx/frontend-app-communications?branch=master
     :alt: Codecov
