@@ -89,6 +89,7 @@ function BulkEmailTaskHistory({ intl }) {
         <Collapsible
           styling="card"
           title={intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}
+          // eslint-disable-next-line react/jsx-no-bind
           onOpen={fetchEmailTaskHistoryData}
         >
           {showHistoricalTaskContentTable ? (

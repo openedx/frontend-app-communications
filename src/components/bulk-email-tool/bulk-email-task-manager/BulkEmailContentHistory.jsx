@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unstable-nested-components */
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
@@ -131,6 +133,7 @@ function BulkEmailContentHistory({ intl }) {
           styling="card"
           title={intl.formatMessage(messages.emailHistoryTableSectionButton)}
           className="mb-3"
+          // eslint-disable-next-line react/jsx-no-bind
           onOpen={fetchSentEmailHistoryData}
         >
           {showHistoricalEmailContentTable ? (

@@ -34,6 +34,10 @@ const messages = defineMessages({
     id: 'bulk.email.content.history.table.modal.messageBody',
     defaultMessage: 'Message:',
   },
+  modalCloseButton: {
+    id: 'bulk.email.tool.close.modalDialog.button',
+    defaultMessage: 'Close',
+  },
   emailHistoryTableViewMessageInstructions: {
     id: 'bulk.email.content.history.table.viewMessageInstructions',
     defaultMessage: 'To read a sent email message, click the `View Message` button within the table.',

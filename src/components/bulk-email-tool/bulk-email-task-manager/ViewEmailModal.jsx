@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Modal } from '@edx/paragon';
+import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';
@@ -12,10 +12,13 @@ function ViewEmailModal({
   const [, dispatch] = useContext(BulkEmailContext);
   return (
     <div>
-      <Modal
-        open={isOpen}
-        title=""
-        body={(
+      <ModalDialog
+        isOpen={isOpen}
+        onClose={() => setModalOpen(false)}
+        hasCloseButton
+      >
+        <ModalDialog.Body>
+
           <div>
             <div className="d-flex flex-row">
               <p>{intl.formatMessage(messages.modalMessageSubject)}</p>
@@ -40,24 +43,30 @@ function ViewEmailModal({
               <div dangerouslySetInnerHTML={{ __html: messageContent.email.html_message }} />
             </div>
           </div>
-        )}
-        onClose={() => setModalOpen(false)}
-        buttons={[
-          <Button
-            onClick={() => {
-              dispatch(
-                copyToEditor({
-                  emailBody: messageContent.email.html_message,
-                  emailSubject: messageContent.subject,
-                }),
-              );
-              setModalOpen(false);
-            }}
-          >
-            <FormattedMessage id="bulk.email.tool.copy.message.button" defaultMessage="Copy to editor" />
-          </Button>,
-        ]}
-      />
+        </ModalDialog.Body>
+        <ModalDialog.Footer>
+          <ActionRow>
+            <ModalDialog.CloseButton variant="link">
+              <FormattedMessage id="bulk.email.tool.close.modalDialog.button" defaultMessage="Close" />
+            </ModalDialog.CloseButton>
+            <Button
+              onClick={() => {
+                dispatch(
+                  copyToEditor({
+                    emailBody: messageContent.email.html_message,
+                    emailSubject: messageContent.subject,
+                  }),
+                );
+                setModalOpen(false);
+              }}
+              variant="primary"
+            >
+              <FormattedMessage id="bulk.email.tool.copy.message.button" defaultMessage="Copy to editor" />
+
+            </Button>
+          </ActionRow>
+        </ModalDialog.Footer>
+      </ModalDialog>
     </div>
   );
 }
