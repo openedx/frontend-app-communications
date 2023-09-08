@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
+import EmailList from './components/EmailList';
 import './bulkEmailRecepient.scss';
 
 const DEFAULT_GROUPS = {
@@ -11,10 +12,14 @@ const DEFAULT_GROUPS = {
   ALL_LEARNERS: 'learners',
   VERIFIED: 'track:verified',
   AUDIT: 'track:audit',
+  LIST_LEARNERS: 'list-learners',
 };
 
 export default function BulkEmailRecipient(props) {
-  const { handleCheckboxes, selectedGroups, additionalCohorts } = props;
+  const {
+    handleCheckboxes, selectedGroups, additionalCohorts, handleLearnersEmailSelected,
+    emailLearnersList, handleLearnersDeleteEmail, courseId,
+  } = props;
   return (
     <Form.Group>
       <Form.Label>
@@ -103,6 +108,13 @@ export default function BulkEmailRecipient(props) {
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
+
+        <EmailList
+          handleEmailSelected={handleLearnersEmailSelected}
+          emailList={emailLearnersList}
+          handleDeleteEmail={handleLearnersDeleteEmail}
+          courseId={courseId}
+        />
       </Form.CheckboxSet>
       {!props.isValid && (
         <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -118,13 +130,26 @@ export default function BulkEmailRecipient(props) {
 }
 
 BulkEmailRecipient.defaultProps = {
+  courseId: '',
   isValid: true,
   additionalCohorts: [],
+  handleLearnersEmailSelected: () => {},
+  handleLearnersDeleteEmail: () => {},
+  emailLearnersList: [],
 };
 
 BulkEmailRecipient.propTypes = {
+  courseId: PropTypes.string,
   selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   additionalCohorts: PropTypes.arrayOf(PropTypes.string),
+  handleLearnersEmailSelected: PropTypes.func,
+  handleLearnersDeleteEmail: PropTypes.func,
+  emailLearnersList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      email: PropTypes.string.isRequired,
+    }),
+  ),
 };

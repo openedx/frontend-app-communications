@@ -114,6 +114,21 @@ const messages = defineMessages({
     defaultMessage: 'This will not create a new scheduled email task and instead overwrite the one currently selected. Do you want to overwrite this scheduled email?',
     description: 'This alert pops up before submitting when editing an email that has already been scheduled',
   },
+  bulkEmailTaskEmailLearnersInputLabel: {
+    id: 'bulk.email.task.learners.input.label',
+    defaultMessage: 'Add individual learner',
+    description: 'Input autocomplete label for learners email',
+  },
+  bulkEmailTaskEmailLearnersInputPlaceholder: {
+    id: 'bulk.email.task.learners.input.placeholder',
+    defaultMessage: 'Search for individual email',
+    description: 'Placeholder for autocomplete input for learners email',
+  },
+  bulkEmailTaskEmailLearnersListLabel: {
+    id: 'bulk.email.task.learners.list.label',
+    defaultMessage: 'Recipients',
+    description: 'Title for learners email list',
+  },
 });
 
 export default messages;
