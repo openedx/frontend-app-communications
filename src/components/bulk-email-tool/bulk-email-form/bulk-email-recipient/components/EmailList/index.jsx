@@ -54,8 +54,8 @@ function EmailList(props) {
     }
   };
   return (
-    <Container controlId="emailStudents" className="col-12 mt-3">
-      <Form.Label className="mt-3" disabled="disabled">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputLabel)}</Form.Label>
+    <Container className="col-12 mt-3">
+      <Form.Label className="mt-3" disabled="disabled" data-testid="learners-email-input-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputLabel)}</Form.Label>
       <AsyncTypeahead
         filterBy={filterBy}
         id="async-autocompleinput"
@@ -84,20 +84,21 @@ function EmailList(props) {
                 width: '24px',
               }}
             />
-            <span>{option.login}</span>
+            <span data-testid="autocomplete-email-option">{option.login}</span>
           </>
         )}
       />
       <Container className="email-list">
-        <Form.Label className="col-12">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersListLabel)}</Form.Label>
+        <Form.Label className="col-12" data-testid="learners-email-list-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersListLabel)}</Form.Label>
         {emailList.map(({ id, email }) => (
           <Chip
-            variant="primary"
+            variant="dark"
             className="email-chip"
             iconBefore={Person}
             iconAfter={Close}
             onIconAfterClick={() => handleDeleteEmailSelected(id)}
             key={id}
+            data-testid="email-list-chip"
           >
             {email}
           </Chip>
