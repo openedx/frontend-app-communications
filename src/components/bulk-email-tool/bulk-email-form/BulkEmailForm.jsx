@@ -143,7 +143,10 @@ function BulkEmailForm(props) {
 
   // When the user selects an email from input autocomplete list
   const handleEmailLearnersSelected = (emailSelected) => {
-    setEmailLearnersList([...emailLearnersList, emailSelected]);
+    const isEmailAdded = emailLearnersList.some(({ email }) => email === emailSelected.email);
+    if (!isEmailAdded) {
+      setEmailLearnersList([...emailLearnersList, emailSelected]);
+    }
   };
 
   // To delete an email from learners list, that list is on the bottom of the input autocomplete
