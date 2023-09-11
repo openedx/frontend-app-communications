@@ -13,63 +13,47 @@ describe('EmailList Component', () => {
     { id: '1', email: 'user1@example.com' },
     { id: '2', email: 'user2@example.com' },
   ];
+
   it('renders the component without errors', () => {
     render(<EmailList emailList={mockEmailList} />);
   });
 
-  it('renders the component with main components ', () => {
-    render(
-      <EmailList
-        courseId="123"
-        emailList={mockEmailList}
-      />,
-    );
+  it('renders the component with main components', () => {
+    render(<EmailList emailList={mockEmailList} />);
 
     // Check if the component renders without errors
-    const emailInputLabel = screen.getByTestId('learners-email-list-label');
-    const emailInput = screen.getByRole('combobox');
+    const emailInputLabel = screen.getByTestId('learners-email-input-label');
+    const emailInput = screen.getByTestId('learners-email-input');
+    const emailAddButton = screen.getByTestId('learners-email-add-button');
     const emailListLabel = screen.getByTestId('learners-email-list-label');
 
     expect(emailInputLabel).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
+    expect(emailAddButton).toBeInTheDocument();
     expect(emailListLabel).toBeInTheDocument();
   });
+
   it('should render two email chips', () => {
-    render(
-      <EmailList
-        courseId="123"
-        emailList={mockEmailList}
-      />,
-    );
+    render(<EmailList emailList={mockEmailList} />);
 
     const emailChips = screen.getAllByTestId('email-list-chip');
 
     expect(emailChips).toHaveLength(2);
   });
-  it('invokes handleDeleteEmail when clicking on delete icons', () => {
-    const handleDeleteEmail = jest.fn();
-    render(
-      <EmailList
-        courseId="123"
-        emailList={mockEmailList}
-        handleDeleteEmail={handleDeleteEmail}
-      />,
-    );
 
-    // Find all delete icons
-    const emailChips = screen.getAllByTestId('email-list-chip');
+  it('displays an error message for invalid email', () => {
+    render(<EmailList emailList={mockEmailList} />);
 
-    // Iterate through the email chips to find the button inside each one
-    emailChips.forEach((chip) => {
-      const deleteButton = chip.querySelector('[role="button"]');
-      fireEvent.click(deleteButton);
-    });
+    // Enter an invalid email
+    const emailInput = screen.getByTestId('learners-email-input');
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
 
-    // Ensure that handleDeleteEmail is called for each email chip
-    expect(handleDeleteEmail).toHaveBeenCalledTimes(mockEmailList.length);
+    // Click the add button
+    const emailAddButton = screen.getByTestId('learners-email-add-button');
+    fireEvent.click(emailAddButton);
 
-    // Check that handleDeleteEmail is called with the correct email IDs
-    expect(handleDeleteEmail).toHaveBeenCalledWith(mockEmailList[0].id);
-    expect(handleDeleteEmail).toHaveBeenCalledWith(mockEmailList[1].id);
+    // Check if the error message is displayed
+    const errorMessage = screen.getByText('Invalid email address');
+    expect(errorMessage).toBeInTheDocument();
   });
 });

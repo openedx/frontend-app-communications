@@ -59,7 +59,8 @@
     "react-router-dom": "5.3.4",
     "redux": "4.2.0",
     "regenerator-runtime": "0.13.11",
-    "tinymce": "5.10.7"
+    "tinymce": "5.10.7",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.0",

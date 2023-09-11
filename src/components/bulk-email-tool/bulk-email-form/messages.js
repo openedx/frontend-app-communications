@@ -121,13 +121,23 @@ const messages = defineMessages({
   },
   bulkEmailTaskEmailLearnersInputPlaceholder: {
     id: 'bulk.email.task.learners.input.placeholder',
-    defaultMessage: 'Search for individual email',
+    defaultMessage: 'Type an email address',
     description: 'Placeholder for autocomplete input for learners email',
   },
   bulkEmailTaskEmailLearnersListLabel: {
     id: 'bulk.email.task.learners.list.label',
     defaultMessage: 'Recipients',
     description: 'Title for learners email list',
+  },
+  bulkEmailTaskEmailLearnersErrorMessage: {
+    id: 'bulk.email.task.learners.list.error.message',
+    defaultMessage: 'Invalid email address',
+    description: 'Error message when email address is invalid',
+  },
+  bulkEmailTaskEmailLearnersAddEmailButton: {
+    id: 'bulk.email.task.learners.list.add.button',
+    defaultMessage: 'Add email',
+    description: 'Button to add a new email to learners list',
   },
 });
 

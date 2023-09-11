@@ -143,12 +143,7 @@ function BulkEmailForm(props) {
 
   // When the user selects an email from input autocomplete list
   const handleEmailLearnersSelected = (emailSelected) => {
-    const [firstItem] = emailSelected;
-    // Change this when  emails come in from backend
-    if (firstItem) {
-      const { id, login } = firstItem;
-      setEmailLearnersList([...emailLearnersList, { id, email: `${login}@email.com` }]);
-    }
+    setEmailLearnersList([...emailLearnersList, emailSelected]);
   };
 
   // To delete an email from learners list, that list is on the bottom of the input autocomplete
@@ -312,7 +307,6 @@ function BulkEmailForm(props) {
           emailLearnersList={emailLearnersList}
           handleLearnersEmailSelected={handleEmailLearnersSelected}
           handleLearnersDeleteEmail={handleDeleteEmailLearnerSelected}
-          courseId={courseId}
         />
         <Form.Group controlId="emailSubject">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>

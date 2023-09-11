@@ -18,7 +18,7 @@ const DEFAULT_GROUPS = {
 export default function BulkEmailRecipient(props) {
   const {
     handleCheckboxes, selectedGroups, additionalCohorts, handleLearnersEmailSelected,
-    emailLearnersList, handleLearnersDeleteEmail, courseId,
+    emailLearnersList, handleLearnersDeleteEmail,
   } = props;
   return (
     <Form.Group>
@@ -113,7 +113,6 @@ export default function BulkEmailRecipient(props) {
           handleEmailSelected={handleLearnersEmailSelected}
           emailList={emailLearnersList}
           handleDeleteEmail={handleLearnersDeleteEmail}
-          courseId={courseId}
         />
       </Form.CheckboxSet>
       {!props.isValid && (
@@ -130,7 +129,6 @@ export default function BulkEmailRecipient(props) {
 }
 
 BulkEmailRecipient.defaultProps = {
-  courseId: '',
   isValid: true,
   additionalCohorts: [],
   handleLearnersEmailSelected: () => {},
@@ -139,7 +137,6 @@ BulkEmailRecipient.defaultProps = {
 };
 
 BulkEmailRecipient.propTypes = {
-  courseId: PropTypes.string,
   selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
