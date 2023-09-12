@@ -24,14 +24,3 @@ export async function patchScheduledBulkEmailInstructorTask(emailData, courseId,
     throw new Error(error);
   }
 }
-
-export async function getLearnersEmailInstructorTask(courseId, emailAddress) {
-  const endpointUrl = `${getConfig().LMS_BASE_URL}/oncampus/api/v1/user/enrollments/?course_id=${courseId}&email_startswith=${emailAddress}`;
-  try {
-    const response = await getAuthenticatedHttpClient().get(endpointUrl);
-    return response;
-  } catch (error) {
-    logError(error);
-    throw new Error(error);
-  }
-}

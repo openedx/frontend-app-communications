@@ -59,7 +59,7 @@ function BulkEmailForm(props) {
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
   const [isScheduled, toggleScheduled] = useState(false);
   const isMobile = useMobileResponsive();
-  const [emailLearnersList, setEmailLearnersList] = useState([]);
+  const [learnersEmailList, setLearnersEmailList] = useState([]);
 
   /**
    * Since we are working with both an old and new API endpoint, the body for the POST
@@ -69,14 +69,14 @@ function BulkEmailForm(props) {
    * @returns formatted Data
    */
   const formatDataForFormAction = (action) => {
-    const emailsFormat = emailLearnersList.map(({ email }) => email);
+    const individualLearnersList = learnersEmailList.map(({ email }) => email);
     if (action === FORM_ACTIONS.POST) {
       const emailData = new FormData();
       emailData.append('action', 'send');
       emailData.append('send_to', JSON.stringify(editor.emailRecipients));
       emailData.append('subject', editor.emailSubject);
       emailData.append('message', editor.emailBody);
-      emailData.append('email_learners', JSON.stringify(emailsFormat));
+      emailData.append('individual_learners_emails', JSON.stringify(individualLearnersList));
       if (isScheduled) {
         emailData.append('schedule', new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString());
       }
@@ -89,7 +89,7 @@ function BulkEmailForm(props) {
           subject: editor.emailSubject,
           message: editor.emailBody,
           id: editor.emailId,
-          email_learners: emailsFormat,
+          individual_learners_emails: individualLearnersList,
         },
         schedule: isScheduled ? new Date(`${editor.scheduleDate} ${editor.scheduleTime}`).toISOString() : null,
       };
@@ -129,7 +129,7 @@ function BulkEmailForm(props) {
       // if "All Learners" is checked then we want to remove any cohorts, verified learners, and audit learners
       if (event.target.value === 'learners') {
         // Clean the emails list when select "All Learners"
-        setEmailLearnersList([]);
+        setLearnersEmailList([]);
         editor.emailRecipients.forEach(recipient => {
           if (/^cohort/.test(recipient) || /^track/.test(recipient)) {
             dispatch(removeRecipient(recipient));
@@ -143,16 +143,16 @@ function BulkEmailForm(props) {
 
   // When the user selects an email from input autocomplete list
   const handleEmailLearnersSelected = (emailSelected) => {
-    const isEmailAdded = emailLearnersList.some(({ email }) => email === emailSelected.email);
+    const isEmailAdded = learnersEmailList.some(({ email }) => email === emailSelected.email);
     if (!isEmailAdded) {
-      setEmailLearnersList([...emailLearnersList, emailSelected]);
+      setLearnersEmailList([...learnersEmailList, emailSelected]);
     }
   };
 
   // To delete an email from learners list, that list is on the bottom of the input autocomplete
   const handleDeleteEmailLearnerSelected = (idDelete) => {
-    const setEmailLearnersListUpdated = emailLearnersList.filter(({ id }) => id !== idDelete);
-    setEmailLearnersList(setEmailLearnersListUpdated);
+    const setLearnersEmailListUpdated = learnersEmailList.filter(({ id }) => id !== idDelete);
+    setLearnersEmailList(setLearnersEmailListUpdated);
   };
 
   const validateDateTime = (date, time) => {
@@ -229,20 +229,20 @@ function BulkEmailForm(props) {
   }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
 
   /*
-   This will be checking if there are emails added to the emailLearnersList state
+   This will be checking if there are emails added to the learnersEmailList state
    if so, we will delete emailRecipients "learners" because that is for all learners
-   if not, we will delete the list-learners from emailRecipients because of we won't use the emails
+   if not, we will delete the individual-learners from emailRecipients because of we won't use the emails
   */
   useEffect(() => {
-    if (emailLearnersList.length && !editor.emailRecipients.includes('list-learners')) {
-      dispatch(addRecipient('list-learners'));
+    if (learnersEmailList.length && !editor.emailRecipients.includes('individual-learners')) {
+      dispatch(addRecipient('individual-learners'));
       if (editor.emailRecipients.includes('learners')) {
         dispatch(removeRecipient('learners'));
       }
-    } else if (!emailLearnersList.length && editor.emailRecipients.includes('list-learners')) {
-      dispatch(removeRecipient('list-learners'));
+    } else if (!learnersEmailList.length && editor.emailRecipients.includes('individual-learners')) {
+      dispatch(removeRecipient('individual-learners'));
     }
-  }, [dispatch, editor.emailRecipients, emailLearnersList]);
+  }, [dispatch, editor.emailRecipients, learnersEmailList]);
 
   const AlertMessage = () => (
     <>
@@ -307,9 +307,9 @@ function BulkEmailForm(props) {
           handleCheckboxes={onRecipientChange}
           additionalCohorts={cohorts}
           isValid={emailFormValidation.recipients}
-          emailLearnersList={emailLearnersList}
-          handleLearnersEmailSelected={handleEmailLearnersSelected}
-          handleLearnersDeleteEmail={handleDeleteEmailLearnerSelected}
+          learnersEmailList={learnersEmailList}
+          handleEmailLearnersSelected={handleEmailLearnersSelected}
+          handleDeleteEmailLearnerSelected={handleDeleteEmailLearnerSelected}
         />
         <Form.Group controlId="emailSubject">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>

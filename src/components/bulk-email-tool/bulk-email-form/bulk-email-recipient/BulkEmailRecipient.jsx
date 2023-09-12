@@ -12,13 +12,13 @@ const DEFAULT_GROUPS = {
   ALL_LEARNERS: 'learners',
   VERIFIED: 'track:verified',
   AUDIT: 'track:audit',
-  LIST_LEARNERS: 'list-learners',
+  INDIVIDUAL_LEARNERS: 'individual-learners',
 };
 
 export default function BulkEmailRecipient(props) {
   const {
-    handleCheckboxes, selectedGroups, additionalCohorts, handleLearnersEmailSelected,
-    emailLearnersList, handleLearnersDeleteEmail,
+    handleCheckboxes, selectedGroups, additionalCohorts, handleEmailLearnersSelected,
+    learnersEmailList, handleDeleteEmailLearnerSelected,
   } = props;
   return (
     <Form.Group>
@@ -110,9 +110,9 @@ export default function BulkEmailRecipient(props) {
         </Form.Checkbox>
 
         <EmailList
-          handleEmailSelected={handleLearnersEmailSelected}
-          emailList={emailLearnersList}
-          handleDeleteEmail={handleLearnersDeleteEmail}
+          handleEmailLearnersSelected={handleEmailLearnersSelected}
+          learnersEmailList={learnersEmailList}
+          handleDeleteEmailLearnerSelected={handleDeleteEmailLearnerSelected}
         />
       </Form.CheckboxSet>
       {!props.isValid && (
@@ -131,9 +131,9 @@ export default function BulkEmailRecipient(props) {
 BulkEmailRecipient.defaultProps = {
   isValid: true,
   additionalCohorts: [],
-  handleLearnersEmailSelected: () => {},
-  handleLearnersDeleteEmail: () => {},
-  emailLearnersList: [],
+  handleEmailLearnersSelected: () => {},
+  handleDeleteEmailLearnerSelected: () => {},
+  learnersEmailList: [],
 };
 
 BulkEmailRecipient.propTypes = {
@@ -141,9 +141,9 @@ BulkEmailRecipient.propTypes = {
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   additionalCohorts: PropTypes.arrayOf(PropTypes.string),
-  handleLearnersEmailSelected: PropTypes.func,
-  handleLearnersDeleteEmail: PropTypes.func,
-  emailLearnersList: PropTypes.arrayOf(
+  handleEmailLearnersSelected: PropTypes.func,
+  handleDeleteEmailLearnerSelected: PropTypes.func,
+  learnersEmailList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       email: PropTypes.string.isRequired,

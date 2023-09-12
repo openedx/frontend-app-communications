@@ -13,7 +13,7 @@ import './styles.scss';
 
 function EmailList(props) {
   const {
-    handleEmailSelected, emailList, handleDeleteEmail,
+    handleEmailLearnersSelected, learnersEmailList, handleDeleteEmailLearnerSelected,
     intl,
   } = props;
 
@@ -22,8 +22,8 @@ function EmailList(props) {
   const [invalidEmailError, setInvalidEmailError] = useState(false);
 
   const handleDeleteEmailSelected = (id) => {
-    if (handleDeleteEmail) {
-      handleDeleteEmail(id);
+    if (handleDeleteEmailLearnerSelected) {
+      handleDeleteEmailLearnerSelected(id);
     }
   };
 
@@ -35,23 +35,23 @@ function EmailList(props) {
   };
 
   const handleAddEmail = () => {
-    if (emailInputValue.length) {
-      if (!emailListAdded) {
-        setEmailListAdded(true);
-      }
-      if (isValidEmail(emailInputValue)) {
-        const emailFormatted = emailInputValue.toLocaleLowerCase();
-        const data = { id: uniqueId(), email: emailFormatted };
-        handleEmailSelected(data);
-        setInvalidEmailError(false);
-      } else {
-        setInvalidEmailError(true);
-      }
+    if (!emailInputValue.length) { return; }
+    if (!emailListAdded) {
+      setEmailListAdded(true);
+    }
+    if (isValidEmail(emailInputValue)) {
+      const emailFormatted = emailInputValue.toLocaleLowerCase();
+      const data = { id: uniqueId(), email: emailFormatted };
+      handleEmailLearnersSelected(data);
+      setInvalidEmailError(false);
+    } else {
+      setInvalidEmailError(true);
     }
   };
+
   return (
     <Container className="col-12 my-3">
-      <Form.Group controlId="emailIndividual">
+      <Form.Group controlId="emailIndividualLearners">
         <Form.Label className="mt-3" data-testid="learners-email-input-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputLabel)}</Form.Label>
         <Container className="row">
           <Form.Control data-testid="learners-email-input" name="emailSubject" className="w-lg-50" onChange={handleChangeEmailInput} placeholder={intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputPlaceholder)} />
@@ -67,7 +67,7 @@ function EmailList(props) {
       </Form.Group>
       <Container className="email-list">
         <Form.Label className="col-12" data-testid="learners-email-list-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersListLabel)}</Form.Label>
-        {emailList.map(({ id, email }) => (
+        {learnersEmailList.map(({ id, email }) => (
           <Chip
             className="email-chip"
             iconBefore={Person}
@@ -86,15 +86,15 @@ function EmailList(props) {
 }
 
 EmailList.defaultProps = {
-  handleEmailSelected: () => {},
-  handleDeleteEmail: () => {},
-  emailList: [],
+  handleEmailLearnersSelected: () => {},
+  handleDeleteEmailLearnerSelected: () => {},
+  learnersEmailList: [],
 };
 
 EmailList.propTypes = {
-  handleEmailSelected: PropTypes.func,
-  handleDeleteEmail: PropTypes.func,
-  emailList: PropTypes.arrayOf(
+  handleEmailLearnersSelected: PropTypes.func,
+  handleDeleteEmailLearnerSelected: PropTypes.func,
+  learnersEmailList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       email: PropTypes.string.isRequired,

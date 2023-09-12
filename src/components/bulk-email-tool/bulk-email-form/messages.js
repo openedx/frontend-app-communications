@@ -122,7 +122,7 @@ const messages = defineMessages({
   bulkEmailTaskEmailLearnersInputPlaceholder: {
     id: 'bulk.email.task.learners.input.placeholder',
     defaultMessage: 'Type an email address',
-    description: 'Placeholder for autocomplete input for learners email',
+    description: 'Placeholder for input to add learners email',
   },
   bulkEmailTaskEmailLearnersListLabel: {
     id: 'bulk.email.task.learners.list.label',
