@@ -5,7 +5,6 @@ import {
 import { Person, Close, SupervisedUserCircle } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { v4 as uniqueId } from 'uuid';
 import messages from '../../../messages';
 
 import { isValidEmail } from './utils';
@@ -41,7 +40,8 @@ function EmailList(props) {
     }
     if (isValidEmail(emailInputValue)) {
       const emailFormatted = emailInputValue.toLocaleLowerCase();
-      const data = { id: uniqueId(), email: emailFormatted };
+      const currentDateTime = new Date().getTime();
+      const data = { id: currentDateTime, email: emailFormatted };
       handleEmailLearnersSelected(data);
       setInvalidEmailError(false);
     } else {
