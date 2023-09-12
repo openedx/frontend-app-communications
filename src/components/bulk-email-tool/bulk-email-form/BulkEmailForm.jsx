@@ -141,7 +141,7 @@ function BulkEmailForm(props) {
     }
   };
 
-  // When the user selects an email from input autocomplete list
+  // When the user clicks the button "Add email" gets the email and an id
   const handleEmailLearnersSelected = (emailSelected) => {
     const isEmailAdded = learnersEmailList.some(({ email }) => email === emailSelected.email);
     if (!isEmailAdded) {
