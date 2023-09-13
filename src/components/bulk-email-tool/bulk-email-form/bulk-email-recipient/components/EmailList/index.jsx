@@ -44,6 +44,7 @@ function EmailList(props) {
       const data = { id: currentDateTime, email: emailFormatted };
       handleEmailLearnersSelected(data);
       setInvalidEmailError(false);
+      setEmailInputValue('');
     } else {
       setInvalidEmailError(true);
     }
@@ -52,21 +53,44 @@ function EmailList(props) {
   return (
     <Container className="col-12 my-3">
       <Form.Group controlId="emailIndividualLearners">
-        <Form.Label className="mt-3" data-testid="learners-email-input-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputLabel)}</Form.Label>
+        <Form.Label className="mt-3" data-testid="learners-email-input-label">
+          {intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputLabel)}
+        </Form.Label>
         <Container className="row">
-          <Form.Control data-testid="learners-email-input" name="emailSubject" className="w-lg-50" onChange={handleChangeEmailInput} placeholder={intl.formatMessage(messages.bulkEmailTaskEmailLearnersInputPlaceholder)} />
-          <Button data-testid="learners-email-add-button" variant="primary" iconAfter={SupervisedUserCircle} className="mb-2 mb-sm-0" onClick={handleAddEmail}>
-            {intl.formatMessage(messages.bulkEmailTaskEmailLearnersAddEmailButton)}
+          <Form.Control
+            data-testid="learners-email-input"
+            name="emailSubject"
+            className="w-lg-50"
+            onChange={handleChangeEmailInput}
+            value={emailInputValue}
+            placeholder={intl.formatMessage(
+              messages.bulkEmailTaskEmailLearnersInputPlaceholder,
+            )}
+          />
+          <Button
+            data-testid="learners-email-add-button"
+            variant="primary"
+            iconAfter={SupervisedUserCircle}
+            className="mb-2 mb-sm-0"
+            onClick={handleAddEmail}
+          >
+            {intl.formatMessage(
+              messages.bulkEmailTaskEmailLearnersAddEmailButton,
+            )}
           </Button>
         </Container>
-        { invalidEmailError && (
-        <Form.Control.Feedback className="px-3 mt-1" hasIcon type="invalid">
-          {intl.formatMessage(messages.bulkEmailTaskEmailLearnersErrorMessage)}
-        </Form.Control.Feedback>
+        {invalidEmailError && (
+          <Form.Control.Feedback className="px-3 mt-1" hasIcon type="invalid">
+            {intl.formatMessage(
+              messages.bulkEmailTaskEmailLearnersErrorMessage,
+            )}
+          </Form.Control.Feedback>
         )}
       </Form.Group>
       <Container className="email-list">
-        <Form.Label className="col-12" data-testid="learners-email-list-label">{intl.formatMessage(messages.bulkEmailTaskEmailLearnersListLabel)}</Form.Label>
+        <Form.Label className="col-12" data-testid="learners-email-list-label">
+          {intl.formatMessage(messages.bulkEmailTaskEmailLearnersListLabel)}
+        </Form.Label>
         {learnersEmailList.map(({ id, email }) => (
           <Chip
             className="email-chip"
@@ -80,7 +104,6 @@ function EmailList(props) {
           </Chip>
         ))}
       </Container>
-
     </Container>
   );
 }
