@@ -41,6 +41,11 @@ const messages = defineMessages({
     defaultMessage: 'Subject',
     description: 'Email subject line input label. Meant to have colon or equivilant punctuation.',
   },
+  bulkEmailFormSubjectTip: {
+    id: 'bulk.email.form.subject.tip',
+    defaultMessage: '(Maximum 128 characters)',
+    description: 'Default Subject tip'
+  },
   bulkEmailFormSubjectError: {
     id: 'bulk.email.form.subject.error',
     defaultMessage: 'A subject is required',
