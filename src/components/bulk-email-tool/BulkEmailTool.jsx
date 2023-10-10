@@ -24,7 +24,7 @@ export default function BulkEmailTool() {
             <Container size="md">
               <BackToInstructor courseId={courseId} />
               <div className="row pb-4.5">
-                <h1 className="text-primary-500" id="main-content">
+                <h1 className="text-primary-500">
                   <FormattedMessage
                     id="bulk.email.send.email.header"
                     defaultMessage="Send an email"

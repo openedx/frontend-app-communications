@@ -67,7 +67,7 @@ export default function PageContainer(props) {
             courseTitle={courseMetadata.title}
           />
           <div className="pb-3 container">
-            <main>
+            <main id="main-content">
               {children}
             </main>
           </div>
