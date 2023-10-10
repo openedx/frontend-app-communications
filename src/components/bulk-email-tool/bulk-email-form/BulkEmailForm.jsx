@@ -234,12 +234,16 @@ function BulkEmailForm(props) {
    if not, we will delete the individual-learners from emailRecipients because of we won't use the emails
   */
   useEffect(() => {
-    if (learnersEmailList.length && !editor.emailRecipients.includes('individual-learners')) {
+    const hasLearners = learnersEmailList.length > 0;
+    const hasIndividualLearners = editor.emailRecipients.includes('individual-learners');
+    const hasLearnersGroup = editor.emailRecipients.includes('learners');
+
+    if (hasLearners && !hasIndividualLearners) {
       dispatch(addRecipient('individual-learners'));
-      if (editor.emailRecipients.includes('learners')) {
+      if (hasLearnersGroup) {
         dispatch(removeRecipient('learners'));
       }
-    } else if (!learnersEmailList.length && editor.emailRecipients.includes('individual-learners')) {
+    } else if (!hasLearners && hasIndividualLearners) {
       dispatch(removeRecipient('individual-learners'));
     }
   }, [dispatch, editor.emailRecipients, learnersEmailList]);

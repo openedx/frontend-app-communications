@@ -170,4 +170,31 @@ describe('bulk-email-form', () => {
     fireEvent.click(continueButton);
     expect(dispatchMock).toHaveBeenCalled();
   });
+  test('learnersEmailList state is updated correctly', () => {
+    const { getByTestId } = render(
+      renderBulkEmailFormContext({
+        editor: {
+          editMode: true,
+          emailBody: 'test',
+          emailSubject: 'test',
+          emailRecipients: ['test'],
+          scheduleDate: formatDate(tomorrow),
+          scheduleTime: '10:00',
+          schedulingId: 1,
+          emailId: 1,
+          isLoading: false,
+          errorRetrievingData: false,
+        },
+      }),
+    );
+
+    const learnersEmailAddButton = getByTestId('learners-email-add-button');
+    const emailLearnerInput = getByTestId('learners-email-input');
+    fireEvent.change(emailLearnerInput, { target: { value: 'test@email.com' } });
+    expect(emailLearnerInput.value).toBe('test@email.com');
+    fireEvent.click(learnersEmailAddButton);
+    // clean the input after adding an email learner
+    expect(emailLearnerInput.value).toBe('');
+    expect(dispatchMock).toHaveBeenCalled();
+  });
 });
