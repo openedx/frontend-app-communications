@@ -66,9 +66,11 @@ export default function PageContainer(props) {
             courseNumber={courseMetadata.number}
             courseTitle={courseMetadata.title}
           />
-          <main>
-            {children}
-          </main>
+          <div className="pb-3 container">
+            <main>
+              {children}
+            </main>
+          </div>
           <Footer />
         </>
       </CourseMetadataContext.Provider>
