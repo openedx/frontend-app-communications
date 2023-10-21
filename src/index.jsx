@@ -21,15 +21,13 @@ subscribe(APP_READY, () => {
       <Helmet>
         <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
       </Helmet>
-      <div className="pb-3 container">
-        <Switch>
-          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email">
-            <PageContainer>
-              <BulkEmailTool />
-            </PageContainer>
-          </AuthenticatedPageRoute>
-        </Switch>
-      </div>
+      <Switch>
+        <AuthenticatedPageRoute path="/courses/:courseId/bulk_email">
+          <PageContainer>
+            <BulkEmailTool />
+          </PageContainer>
+        </AuthenticatedPageRoute>
+      </Switch>
     </AppProvider>,
     document.getElementById('root'),
   );
