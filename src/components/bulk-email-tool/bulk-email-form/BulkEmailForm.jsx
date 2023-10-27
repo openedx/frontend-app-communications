@@ -275,9 +275,9 @@ function BulkEmailForm(props) {
         />
         <Form.Group controlId="emailSubject">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>
-          <Form.Control name="emailSubject" className="w-lg-50" onChange={onFormChange} value={editor.emailSubject} maxLength={128}/>
+          <Form.Control name="emailSubject" className="w-lg-50" onChange={onFormChange} value={editor.emailSubject} maxLength={128} />
           <Form.Control.Feedback className="px-3" type="default">
-              {intl.formatMessage(messages.bulkEmailFormSubjectTip)}
+            {intl.formatMessage(messages.bulkEmailFormSubjectTip)}
           </Form.Control.Feedback>
           {!emailFormValidation.subject && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">

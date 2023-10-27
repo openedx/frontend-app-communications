@@ -44,7 +44,7 @@ const messages = defineMessages({
   bulkEmailFormSubjectTip: {
     id: 'bulk.email.form.subject.tip',
     defaultMessage: '(Maximum 128 characters)',
-    description: 'Default Subject tip'
+    description: 'Default Subject tip',
   },
   bulkEmailFormSubjectError: {
     id: 'bulk.email.form.subject.error',
