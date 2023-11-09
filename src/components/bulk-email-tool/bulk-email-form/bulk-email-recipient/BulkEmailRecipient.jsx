@@ -14,7 +14,12 @@ const DEFAULT_GROUPS = {
 };
 
 export default function BulkEmailRecipient(props) {
-  const { handleCheckboxes, selectedGroups, additionalCohorts } = props;
+  const {
+    handleCheckboxes,
+    selectedGroups,
+    additionalCohorts,
+    courseModes,
+  } = props;
   return (
     <Form.Group>
       <Form.Label>
@@ -50,18 +55,25 @@ export default function BulkEmailRecipient(props) {
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
-        <Form.Checkbox
-          key="track:verified"
-          value="track:verified"
-          disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
-          className="col col-lg-4 col-sm-6 col-12"
-        >
-          <FormattedMessage
-            id="bulk.email.form.recipients.verified"
-            defaultMessage="Learners in the verified certificate track"
-            description="A selectable choice from a list of potential email recipients"
-          />
-        </Form.Checkbox>
+        {
+          // additional modes
+          courseModes
+          && courseModes.length > 1
+          && courseModes.map((courseMode) => (
+            <Form.Checkbox
+              key={`track:${courseMode.slug}`}
+              value={`track:${courseMode.slug}`}
+              disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
+              className="col col-lg-4 col-sm-6 col-12"
+            >
+              <FormattedMessage
+                id="bulk.email.form.mode.label"
+                defaultMessage="Learners in the {courseModeName} Track"
+                values={{ courseModeName: courseMode.name }}
+              />
+            </Form.Checkbox>
+          ))
+        }
         {
           // additional cohorts
           additionalCohorts
@@ -80,18 +92,6 @@ export default function BulkEmailRecipient(props) {
             </Form.Checkbox>
           ))
         }
-        <Form.Checkbox
-          key="track:audit"
-          value="track:audit"
-          disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
-          className="col col-lg-4 col-sm-6 col-12"
-        >
-          <FormattedMessage
-            id="bulk.email.form.recipients.audit"
-            defaultMessage="Learners in the audit track"
-            description="A selectable choice from a list of potential email recipients"
-          />
-        </Form.Checkbox>
         <Form.Checkbox
           key="learners"
           value="learners"
@@ -127,4 +127,10 @@ BulkEmailRecipient.propTypes = {
   handleCheckboxes: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   additionalCohorts: PropTypes.arrayOf(PropTypes.string),
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };

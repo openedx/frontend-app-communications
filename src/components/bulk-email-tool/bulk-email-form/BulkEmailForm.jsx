@@ -47,7 +47,12 @@ const FORM_ACTIONS = {
 };
 
 function BulkEmailForm(props) {
-  const { courseId, cohorts, intl } = props;
+  const {
+    courseId,
+    cohorts,
+    courseModes,
+    intl,
+  } = props;
   const [{ editor }, dispatch] = useContext(BulkEmailContext);
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
@@ -272,6 +277,7 @@ function BulkEmailForm(props) {
           handleCheckboxes={onRecipientChange}
           additionalCohorts={cohorts}
           isValid={emailFormValidation.recipients}
+          courseModes={courseModes}
         />
         <Form.Group controlId="emailSubject">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailSubjectLabel)}</Form.Label>
@@ -384,6 +390,12 @@ BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
   intl: intlShape.isRequired,
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default injectIntl(BulkEmailForm);
