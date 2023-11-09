@@ -33,7 +33,11 @@ export default function BulkEmailTool() {
                 </h1>
               </div>
               <div className="row">
-                <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} />
+                <BulkEmailForm
+                  courseId={courseId}
+                  cohorts={courseMetadata.cohorts}
+                  courseModes={courseMetadata.courseModes}
+                />
               </div>
               <div className="row py-5">
                 <BulkEmailTaskManager courseId={courseId} />
