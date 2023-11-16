@@ -9,6 +9,8 @@ function ScheduleEmailForm(props) {
   const isMobile = useMobileResponsive();
   const { isValid, onDateTimeChange, dateTime } = props;
   const { date, time } = dateTime;
+  const descriptionDate = new Date();
+  descriptionDate.setDate(new Date().getDate() + 1);
   return (
     <Form.Group>
       <div className={classNames('d-flex', isMobile ? 'flex-column' : 'flex-row', 'my-3')}>
@@ -30,7 +32,10 @@ function ScheduleEmailForm(props) {
           <small className="text-gray-500 x-small">
             <FormattedMessage
               id="bulk.email.form.schedule.date.description"
-              defaultMessage="Enter a start date, e.g. 11/27/2023"
+              defaultMessage="Enter a start date, e.g. {date}"
+              values={{
+                date: descriptionDate.toLocaleDateString(),
+              }}
             />
           </small>
         </div>
@@ -52,7 +57,10 @@ function ScheduleEmailForm(props) {
           <small className="text-gray-500 x-small">
             <FormattedMessage
               id="bulk.email.form.schedule.time.description"
-              defaultMessage="Enter a start time, e.g. 09:00 AM"
+              defaultMessage="Enter a start time, e.g. {time}"
+              values={{
+                time: descriptionDate.toLocaleTimeString([], { timeStyle: 'short' }),
+              }}
             />
           </small>
         </div>
