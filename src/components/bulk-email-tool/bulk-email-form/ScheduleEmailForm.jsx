@@ -9,7 +9,8 @@ function ScheduleEmailForm(props) {
   const isMobile = useMobileResponsive();
   const { isValid, onDateTimeChange, dateTime } = props;
   const { date, time } = dateTime;
-  const descriptionDate = new Date('11/27/2023, 09:00 AM');
+  const descriptionDate = new Date();
+  descriptionDate.setDate(new Date().getDate() + 1);
   return (
     <Form.Group>
       <div className={classNames('d-flex', isMobile ? 'flex-column' : 'flex-row', 'my-3')}>
