@@ -26,6 +26,7 @@ function flattenScheduledEmailsArray(emails) {
     emailId: email.courseEmail.id,
     task: email.task,
     taskDue: new Date(email.taskDue).toLocaleString(),
+    taskDueUTC: email.taskDue,
     ...email.courseEmail,
     targets: email.courseEmail.targets.join(', '),
   }));
@@ -91,10 +92,10 @@ function BulkEmailScheduledEmailsTable({ intl }) {
   const handleEditEmail = (row) => {
     const {
       original: {
-        htmlMessage: emailBody, subject: emailSubject, taskDue, targets, schedulingId, emailId,
+        htmlMessage: emailBody, subject: emailSubject, taskDueUTC, targets, schedulingId, emailId,
       },
     } = row;
-    const dateTime = new Date(taskDue);
+    const dateTime = new Date(taskDueUTC);
     const emailRecipients = targets.replaceAll('-', ':').split(', ');
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
