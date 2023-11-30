@@ -2,16 +2,14 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import {
-  APP_INIT_ERROR, APP_READY, subscribe, initialize, mergeConfig,
+  APP_INIT_ERROR, APP_READY, subscribe, initialize, mergeConfig, getConfig,
 } from '@edx/frontend-platform';
 import { AppProvider, AuthenticatedPageRoute, ErrorPage } from '@edx/frontend-platform/react';
 import ReactDOM from 'react-dom';
 
-import { messages as headerMessages } from '@edx/frontend-component-header';
-import { messages as footerMessages } from '@edx/frontend-component-footer';
-import { messages as paragonMessages } from '@edx/paragon';
-import { Switch } from 'react-router-dom';
-import appMessages from './i18n';
+import { Helmet } from 'react-helmet';
+import { Routes, Route } from 'react-router-dom';
+import messages from './i18n';
 
 import './index.scss';
 import BulkEmailTool from './components/bulk-email-tool';
@@ -20,14 +18,22 @@ import PageContainer from './components/page-container/PageContainer';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider>
+      <Helmet>
+        <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+      </Helmet>
       <div className="pb-3 container">
-        <Switch>
-          <AuthenticatedPageRoute path="/courses/:courseId/bulk_email">
-            <PageContainer>
-              <BulkEmailTool />
-            </PageContainer>
-          </AuthenticatedPageRoute>
-        </Switch>
+        <Routes>
+          <Route
+            path="/courses/:courseId/bulk_email"
+            element={(
+              <AuthenticatedPageRoute>
+                <PageContainer>
+                  <BulkEmailTool />
+                </PageContainer>
+              </AuthenticatedPageRoute>
+            )}
+          />
+        </Routes>
       </div>
     </AppProvider>,
     document.getElementById('root'),
@@ -50,5 +56,5 @@ initialize({
       );
     },
   },
-  messages: [appMessages, headerMessages, footerMessages, paragonMessages],
+  messages,
 });
