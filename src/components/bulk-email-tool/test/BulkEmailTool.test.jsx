@@ -5,7 +5,7 @@ import React from 'react';
 import { Factory } from 'rosie';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
-  render, screen, cleanup, initializeMockApp,
+  render, screen, cleanup, initializeMockApp, act,
 } from '../../../setupTest';
 import BulkEmailTool from '../BulkEmailTool';
 import { CourseMetadataContext } from '../../page-container/PageContainer';
@@ -67,14 +67,16 @@ describe('BulkEmailTool', () => {
     const cohorts = { cohorts: [] };
     const courseInfo = Factory.build('courseMetadata');
     const courseMetadata = buildCourseMetadata(cohorts, courseInfo);
-    renderBulkEmailTool(courseMetadata);
-    // verify all tab data expected is displayed within our component
-    expect(await screen.findByText('Course')).toBeTruthy();
-    expect(await screen.findByText('Discussion')).toBeTruthy();
-    expect(await screen.findByText('Wiki')).toBeTruthy();
-    expect(await screen.findByText('Progress')).toBeTruthy();
-    expect(await screen.findByText('Instructor')).toBeTruthy();
-    expect(await screen.findByText('Dates')).toBeTruthy();
+    await act(async () => {
+      renderBulkEmailTool(courseMetadata);
+      // verify all tab data expected is displayed within our component
+      expect(screen.findByText('Course')).toBeTruthy();
+      expect(screen.findByText('Discussion')).toBeTruthy();
+      expect(screen.findByText('Wiki')).toBeTruthy();
+      expect(screen.findByText('Progress')).toBeTruthy();
+      expect(screen.findByText('Instructor')).toBeTruthy();
+      expect(screen.findByText('Dates')).toBeTruthy();
+    });
   });
 
   test('BulkEmailTool renders error page on no staff user', async () => {

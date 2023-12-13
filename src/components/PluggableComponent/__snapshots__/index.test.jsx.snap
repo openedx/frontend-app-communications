@@ -3,22 +3,31 @@
 exports[`PluggableComponent renders correctly 1`] = `
 <div>
   <div
-    class="pgn__form-group"
+    class="pgn__form-group p-3 border border-success-300"
     data-testid="plugin-input"
   >
     <label
-      class="pgn__form-label"
+      class="pgn__form-label h3 text-primary-500"
       for="randomID"
     >
       Hello
     </label>
     <div
-      class="pgn__form-control-decorator-group"
+      class="row container-fluid"
     >
-      <input
-        class="form-control is-valid"
-        id="randomID"
-      />
+      <div
+        class="pgn__form-control-decorator-group col-3"
+      >
+        <input
+          class="form-control is-valid"
+          id="randomID"
+        />
+      </div>
+      <p
+        class="col-8"
+      >
+        @openedx-plugins/communications-app-input-form
+      </p>
     </div>
     <div
       class="pgn__form-control-description pgn__form-text pgn__form-text-valid"

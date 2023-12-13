@@ -276,7 +276,7 @@ function BulkEmailForm(props) {
             id="checkbox-form"
             as="communications-app-check-box-form"
             label="checkbox label - @openedx-plugins/communications-app-check-box-form"
-            onChange={() => null}
+            isChecked
           >
             <h1>Checkbox -default</h1>
           </PluggableComponent>
@@ -292,7 +292,7 @@ function BulkEmailForm(props) {
             <h1>Input -default</h1>
           </PluggableComponent>
           {/* this will return default child if the plugin has not been installed  */}
-          <PluggableComponent id="input-form" as="communications-app-card">
+          <PluggableComponent id="card-form" as="communications-app-card">
             <Card className="my-4 p-3 col-6 border border-success-300 w-100">
               <Card.ImageCap
                 src="https://picsum.photos/360/200/"

@@ -14,6 +14,7 @@ import { formatDate } from '../../../../utils/formatDateAndTime';
 import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
 
 jest.mock('../../text-editor/TextEditor');
+jest.mock('../../../PluggableComponent', () => () => null);
 
 const appendMock = jest.spyOn(FormData.prototype, 'append');
 const dispatchMock = jest.fn();

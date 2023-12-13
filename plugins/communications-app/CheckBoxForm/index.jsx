@@ -9,9 +9,13 @@ const CheckBoxForm = ({ isChecked, handleChange, label }) => (
   </Container>
 );
 
+CheckBoxForm.defaultProps = {
+  handleChange: () => {},
+};
+
 CheckBoxForm.propTypes = {
   isChecked: PropTypes.bool.isRequired,
-  handleChange: PropTypes.func.isRequired,
+  handleChange: PropTypes.func,
   label: PropTypes.string.isRequired,
 };
 
