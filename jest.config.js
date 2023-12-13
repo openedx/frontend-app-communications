@@ -10,4 +10,7 @@ module.exports = createConfig('jest', {
     'src/setupTest.js',
     'src/i18n',
   ],
+  moduleNameMapper: {
+    '@node_modules/(.*)': '<rootDir>/node_modules/$1'
+  },
 });

@@ -1,3 +1,4 @@
+const path = require('path');
 const { createConfig } = require('@edx/frontend-build');
 
 const config = createConfig('webpack-dev');
@@ -25,5 +26,11 @@ const webpack5esmInteropRule = {
 const otherRules = config.module.rules;
 
 config.module.rules = [webpack5esmInteropRule, ...otherRules];
+
+const alias = {
+  '@node_modules': path.resolve(__dirname, 'node_modules'),
+};
+
+config.resolve.alias = { ...config.resolve.alias, ...alias };
 
 module.exports = config;
