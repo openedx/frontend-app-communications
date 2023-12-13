@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { render, waitFor, screen } from '@testing-library/react';
 import PluggableComponent from '.';
 
