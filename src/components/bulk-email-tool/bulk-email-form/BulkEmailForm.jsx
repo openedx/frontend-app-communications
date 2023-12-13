@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Form, Icon, StatefulButton, Toast, useToggle,
+  Card,
 } from '@edx/paragon';
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
@@ -15,6 +16,7 @@ import TextEditor from '../text-editor/TextEditor';
 import BulkEmailRecipient from './bulk-email-recipient';
 import TaskAlertModal from '../task-alert-modal';
 import useTimeout from '../../../utils/useTimeout';
+import PluggableComponent from '../../PluggableComponent';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
@@ -267,6 +269,44 @@ function BulkEmailForm(props) {
         }}
       />
       <Form>
+        {/* this will be pluggable */}
+        <div className="border border-brand-400 p-3">
+          <h1>Pluggable components</h1>
+          <PluggableComponent
+            id="checkbox-form"
+            as="communications-app-check-box-form"
+            label="checkbox label - @openedx-plugins/communications-app-check-box-form"
+            onChange={() => null}
+          >
+            <h1>Checkbox -default</h1>
+          </PluggableComponent>
+
+          <PluggableComponent
+            id="input-form"
+            as="communications-app-input-form"
+            isValid
+            label="Hello"
+            feedbackText="This is okay"
+            controlId="test"
+          >
+            <h1>Input -default</h1>
+          </PluggableComponent>
+          {/* this will return default child if the plugin has not been installed  */}
+          <PluggableComponent id="input-form" as="communications-app-card">
+            <Card className="my-4 p-3 col-6 border border-success-300 w-100">
+              <Card.ImageCap
+                src="https://picsum.photos/360/200/"
+                srcAlt="Card image"
+
+              />
+              <Card.Section className="text-center">
+                <h2>Default Card</h2>
+              </Card.Section>
+              <p className="my-3">@openedx-plugins/communications-app-card</p>
+            </Card>
+          </PluggableComponent>
+        </div>
+
         <BulkEmailRecipient
           selectedGroups={editor.emailRecipients}
           handleCheckboxes={onRecipientChange}
