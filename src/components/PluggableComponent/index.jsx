@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -23,6 +23,7 @@ const PluggableComponent = ({
   ...pluggableComponentProps
 }) => {
   const [newComponent, setNewComponent] = useState(children || null);
+  const loadedComponentRef = useRef(null);
 
   useEffect(() => {
     const loadPluginComponent = async () => {
@@ -41,6 +42,7 @@ const PluggableComponent = ({
           );
 
           setNewComponent(component);
+          loadedComponentRef.current = true;
         }
       } catch (error) {
         console.error(`Failed to load plugin ${as}:`, error);
@@ -51,14 +53,14 @@ const PluggableComponent = ({
   }, [id, as]);
 
   useEffect(() => {
-    if (newComponent && children) {
+    if (newComponent && children && loadedComponentRef.current) {
       const updatedComponent = React.cloneElement(newComponent, pluggableComponentProps, children);
       setNewComponent(updatedComponent);
     }
   }, [children]);
 
   useDeepCompareEffect(() => {
-    if (newComponent) {
+    if (newComponent && loadedComponentRef.current) {
       const updatedComponent = React.cloneElement(newComponent, pluggableComponentProps, children);
       setNewComponent(updatedComponent);
     }
