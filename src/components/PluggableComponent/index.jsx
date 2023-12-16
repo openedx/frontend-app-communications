@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { isPluginAvailable } from './utils';
 
@@ -21,7 +22,7 @@ const PluggableComponent = ({
   id,
   ...pluggableComponentProps
 }) => {
-  const [newComponent, setNewComponent] = useState(children);
+  const [newComponent, setNewComponent] = useState(children || null);
 
   useEffect(() => {
     const loadPluginComponent = async () => {
@@ -47,7 +48,21 @@ const PluggableComponent = ({
     };
 
     loadPluginComponent();
-  }, [id, as, children]);
+  }, [id, as]);
+
+  useEffect(() => {
+    if (newComponent && children) {
+      const updatedComponent = React.cloneElement(newComponent, pluggableComponentProps, children);
+      setNewComponent(updatedComponent);
+    }
+  }, [children]);
+
+  useDeepCompareEffect(() => {
+    if (newComponent) {
+      const updatedComponent = React.cloneElement(newComponent, pluggableComponentProps, children);
+      setNewComponent(updatedComponent);
+    }
+  }, [pluggableComponentProps]);
 
   return newComponent;
 };

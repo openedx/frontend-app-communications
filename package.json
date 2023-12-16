@@ -63,7 +63,8 @@
     "react-router-dom": "6.15.0",
     "redux": "4.2.0",
     "regenerator-runtime": "0.13.11",
-    "tinymce": "5.10.7"
+    "tinymce": "5.10.7",
+    "use-deep-compare-effect": "^1.8.1"
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.2.0",
