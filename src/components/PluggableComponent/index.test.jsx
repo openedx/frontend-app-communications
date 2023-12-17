@@ -1,19 +1,37 @@
-import React from 'react';
-import { render, waitFor, screen } from '@testing-library/react';
+import React, { useState } from 'react';
+import {
+  render, waitFor, screen, fireEvent,
+} from '@testing-library/react';
 import PluggableComponent from '.';
 
+const ToggleContentComponent = () => {
+  const [showContent, setShowContent] = useState(false);
+
+  return (
+    <div>
+      <button type="button" onClick={() => setShowContent((prev) => !prev)}>
+        Toggle Content
+      </button>
+      {showContent && <div data-testid="toggle-content">Toggle On</div>}
+    </div>
+  );
+};
+
 describe('PluggableComponent', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
   it('renders correctly', async () => {
+    const handleClickMock = jest.fn();
     const props = {
-      isValid: true,
-      controlId: 'randomID',
-      label: 'Hello',
-      feedbackText: 'You are correct',
+      title: 'button title',
+      handleClick: handleClickMock,
     };
+
     const { container } = render(
       <PluggableComponent
         id="pluggableComponent"
-        as="communications-app-input-form"
+        as="communications-app-test-component"
         {...props}
       >
         <h1>Hi this is the original component</h1>
@@ -21,10 +39,11 @@ describe('PluggableComponent', () => {
     );
 
     await waitFor(() => {
-      const inputForm = screen.getByTestId('plugin-input');
-      expect(inputForm).toBeInTheDocument();
-      expect(screen.getByText(props.label)).toBeInTheDocument();
-      expect(screen.getByText(props.feedbackText)).toBeInTheDocument();
+      const buttonComponent = screen.getByTestId('button-test');
+      expect(buttonComponent).toBeInTheDocument();
+      expect(screen.getByText(props.title)).toBeInTheDocument();
+      fireEvent.click(buttonComponent);
+      expect(handleClickMock).toHaveBeenCalled();
       expect(container).toMatchSnapshot();
     });
   });
@@ -43,7 +62,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('loads children component when import object', async () => {
+  it('loads children component when import is empty', async () => {
     render(
       <PluggableComponent
         id="test-pluggable"
@@ -57,6 +76,71 @@ describe('PluggableComponent', () => {
       const defaultComponent = screen.getByTestId('plugin');
       expect(screen.getByText('Plugin Loaded')).toBeInTheDocument();
       expect(defaultComponent).toBeInTheDocument();
+    });
+  });
+
+  it('returns null when do not have children and import is invalid', async () => {
+    render(
+      <PluggableComponent
+        id="test-pluggable"
+        as="invalid-module"
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('plugin')).not.toBeInTheDocument();
+    });
+  });
+
+  test('updates component when props change', async () => {
+    const { rerender } = render(
+      <PluggableComponent
+        id="test-pluggable"
+        as="communications-app-test-component"
+        title="Testing title component"
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Testing title component')).toBeInTheDocument();
+    });
+
+    rerender(
+      <PluggableComponent
+        id="test-pluggable"
+        as="communications-app-test-component"
+        title="Testing a new title component"
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Testing a new title component')).toBeInTheDocument();
+    });
+  });
+
+  it('updates component when children change', async () => {
+    const { getByText, getByTestId } = render(
+      <PluggableComponent
+        id="test-pluggable"
+        as="default-children"
+      >
+        <ToggleContentComponent />
+      </PluggableComponent>,
+    );
+
+    await waitFor(() => {
+      const toggleContent = screen.queryByTestId('toggle-content');
+      expect(toggleContent).not.toBeInTheDocument();
+    });
+
+    const toggleButton = getByText('Toggle Content');
+    fireEvent.click(toggleButton);
+
+    // Now, after toggling the content, we expect it to be visible inside PluggableComponent
+    await waitFor(() => {
+      const toggleContent = getByTestId('toggle-content');
+      expect(toggleContent).toBeInTheDocument();
+      expect(toggleContent).toHaveTextContent('Toggle On');
     });
   });
 });

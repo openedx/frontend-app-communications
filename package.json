@@ -48,6 +48,7 @@
     "@loadable/component": "^5.15.3",
     "@openedx-plugins/communications-app-check-box-form": "file:plugins/communications-app/CheckBoxForm",
     "@openedx-plugins/communications-app-input-form": "file:plugins/communications-app/InputForm",
+    "@openedx-plugins/communications-app-test-component": "file:plugins/communications-app/TestComponent",
     "@tinymce/tinymce-react": "3.14.0",
     "axios": "0.27.2",
     "classnames": "2.3.2",

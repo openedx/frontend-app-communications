@@ -2,59 +2,11 @@
 
 exports[`PluggableComponent renders correctly 1`] = `
 <div>
-  <div
-    class="pgn__form-group p-3 border border-success-300"
-    data-testid="plugin-input"
+  <button
+    data-testid="button-test"
+    type="button"
   >
-    <label
-      class="pgn__form-label h3 text-primary-500"
-      for="randomID"
-    >
-      Hello
-    </label>
-    <div
-      class="row container-fluid"
-    >
-      <div
-        class="pgn__form-control-decorator-group col-3"
-      >
-        <input
-          class="form-control is-valid"
-          id="randomID"
-        />
-      </div>
-      <p
-        class="col-8"
-      >
-        @openedx-plugins/communications-app-input-form
-      </p>
-    </div>
-    <div
-      class="pgn__form-control-description pgn__form-text pgn__form-text-valid"
-    >
-      <span
-        class="pgn__icon"
-      >
-        <svg
-          aria-hidden="true"
-          fill="none"
-          focusable="false"
-          height="24"
-          role="img"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"
-            fill="currentColor"
-          />
-        </svg>
-      </span>
-      <div>
-        You are correct
-      </div>
-    </div>
-  </div>
+    button title
+  </button>
 </div>
 `;
