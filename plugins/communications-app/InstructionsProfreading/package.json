@@ -1,7 +1,7 @@
 {
-  "name": "@openedx-plugins/communications-app-check-box-form",
+  "name": "@openedx-plugins/communications-app-instructions-pro-freading",
   "version": "1.0.0",
-  "description": "openedx input type checkbox form to use it in this mfe",
+  "description": "openedx instructions build email form to use it in this mfe",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

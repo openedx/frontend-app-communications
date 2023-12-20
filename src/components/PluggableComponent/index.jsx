@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import loadable from '@loadable/component';
 import PropTypes from 'prop-types';
@@ -11,6 +10,7 @@ import { isPluginAvailable } from './utils';
  *
  * @param {object} props - Component props
  * @param {React.ReactNode} props.children - Child elements to be passed to the plugin component
+ * @param {React.ReactNode} props.loadingComponent - Component to be rendered while the plugin is loading
  * @param {string} props.as - String indicating the module to import dynamically
  * @param {string} props.id - Identifier for the plugin
  * @param {object} props.pluggableComponentProps - Additional props to be passed to the component
@@ -18,15 +18,19 @@ import { isPluginAvailable } from './utils';
  */
 const PluggableComponent = ({
   children,
+  loadingComponent,
   as,
   id,
   ...pluggableComponentProps
 }) => {
   const [newComponent, setNewComponent] = useState(children || null);
   const loadedComponentRef = useRef(null);
+  const [isLoadingComponent, setIsLoadingComponent] = useState(false);
 
   useEffect(() => {
     const loadPluginComponent = async () => {
+      setIsLoadingComponent(true);
+
       try {
         const hasModuleInstalled = await isPluginAvailable(as);
 
@@ -46,10 +50,13 @@ const PluggableComponent = ({
         }
       } catch (error) {
         console.error(`Failed to load plugin ${as}:`, error);
+      } finally {
+        setIsLoadingComponent(false);
       }
     };
 
     loadPluginComponent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, as]);
 
   useEffect(() => {
@@ -57,6 +64,7 @@ const PluggableComponent = ({
       const updatedComponent = React.cloneElement(newComponent, pluggableComponentProps, children);
       setNewComponent(updatedComponent);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 
   useDeepCompareEffect(() => {
@@ -66,11 +74,16 @@ const PluggableComponent = ({
     }
   }, [pluggableComponentProps]);
 
-  return newComponent;
+  return isLoadingComponent && loadingComponent ? loadingComponent : newComponent;
+};
+
+PluggableComponent.defaultProps = {
+  loadingComponent: null,
 };
 
 PluggableComponent.propTypes = {
   children: PropTypes.node,
+  loadingComponent: PropTypes.node,
   as: PropTypes.string,
   id: PropTypes.string,
 };

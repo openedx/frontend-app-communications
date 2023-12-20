@@ -29,6 +29,7 @@ config.module.rules = [webpack5esmInteropRule, ...otherRules];
 
 const alias = {
   '@node_modules': path.resolve(__dirname, 'node_modules'),
+  '@communications-app': path.resolve(__dirname, '.'),
 };
 
 config.resolve.alias = { ...config.resolve.alias, ...alias };

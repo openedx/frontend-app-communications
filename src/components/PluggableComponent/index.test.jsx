@@ -92,7 +92,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  test('updates component when props change', async () => {
+  it('updates component when props change', async () => {
     const { rerender } = render(
       <PluggableComponent
         id="test-pluggable"
@@ -141,6 +141,30 @@ describe('PluggableComponent', () => {
       const toggleContent = getByTestId('toggle-content');
       expect(toggleContent).toBeInTheDocument();
       expect(toggleContent).toHaveTextContent('Toggle On');
+    });
+  });
+
+  it('renders loadingComponent while the plugin is loading', async () => {
+    jest.mock('./utils', () => ({
+      isPluginAvailable: jest.fn().mockImplementation(
+        () => new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(true);
+          }, 1000);
+        }),
+      ),
+    }));
+
+    await waitFor(() => {
+      const { getByText } = render(
+        <PluggableComponent
+          id="test-pluggable"
+          as="communications-app-test-component"
+          title="Test Pluggable"
+          loadingComponent={<div>Loading...</div>}
+        />,
+      );
+      expect(getByText('Loading...')).toBeInTheDocument();
     });
   });
 });

@@ -4,7 +4,7 @@ export const isPluginAvailable = async (pluginName) => {
   try {
     await import(`@node_modules/@openedx-plugins/${pluginName}`);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 };

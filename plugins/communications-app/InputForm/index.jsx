@@ -6,7 +6,12 @@ const InputForm = ({
 }) => {
   const feedbackType = isValid ? 'valid' : 'invalid';
   return (
-    <Form.Group isValid={isValid} controlId={controlId} data-testid="plugin-input" className="p-3 border border-success-300">
+    <Form.Group
+      isValid={isValid}
+      controlId={controlId}
+      data-testid="plugin-input"
+      className="p-3 border border-success-300"
+    >
       <Form.Label className="h3 text-primary-500">{label}</Form.Label>
       <Container className="row">
         <Form.Control className="col-3" />

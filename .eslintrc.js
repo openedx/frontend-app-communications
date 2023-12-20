@@ -8,6 +8,12 @@ module.exports = createConfig('eslint', {
       webpack: {
         config: path.resolve(__dirname, 'webpack.dev.config.js'),
       },
+      alias: {
+        map: [
+          ['@communications-app', '.'],
+        ],
+        extensions: ['.ts', '.js', '.jsx', '.json'],
+      },
     },
   },
   rules: {

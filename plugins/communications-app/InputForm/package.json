@@ -1,7 +1,7 @@
 {
   "name": "@openedx-plugins/communications-app-input-form",
   "version": "1.0.0",
-  "description": "edx input form to use it in this mfe",
+  "description": "openedx input form to use it in this mfe",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
