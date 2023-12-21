@@ -7,10 +7,10 @@ import React, {
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Alert, DataTable, Icon, IconButton, useToggle,
-} from '@openedx/paragon';
+} from '@edx/paragon';
 import {
   Delete, Info, Visibility, Edit,
-} from '@openedx/paragon/icons';
+} from '@edx/paragon/icons';
 import { useParams } from 'react-router-dom';
 import { BulkEmailContext } from '../../bulk-email-context';
 import { deleteScheduledEmailThunk, getScheduledBulkEmailThunk } from './data/thunks';

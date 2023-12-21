@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Form } from '@openedx/paragon';
+import { Form } from '@edx/paragon';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 
 function ScheduleEmailForm(props) {

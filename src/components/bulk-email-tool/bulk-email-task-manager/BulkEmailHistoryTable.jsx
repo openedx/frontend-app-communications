@@ -1,4 +1,4 @@
-import { Alert, DataTable } from '@openedx/paragon';
+import { Alert, DataTable } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 

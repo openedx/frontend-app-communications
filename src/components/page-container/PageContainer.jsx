@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 import Footer from '@edx/frontend-component-footer';
-import { Spinner } from '@openedx/paragon';
+import { Spinner } from '@edx/paragon';
 
 import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
 

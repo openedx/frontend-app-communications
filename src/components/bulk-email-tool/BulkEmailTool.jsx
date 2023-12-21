@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ErrorPage } from '@edx/frontend-platform/react';
-import { Container } from '@openedx/paragon';
+import { Container } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import NavigationTabs from '../navigation-tabs/NavigationTabs';

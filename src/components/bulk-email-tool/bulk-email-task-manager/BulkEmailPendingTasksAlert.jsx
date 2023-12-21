@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
-import { Hyperlink, Alert } from '@openedx/paragon';
-import { WarningFilled } from '@openedx/paragon/icons';
+import { Hyperlink, Alert } from '@edx/paragon';
+import { WarningFilled } from '@edx/paragon/icons';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
 export default function BulkEmailPendingTasksAlert(props) {

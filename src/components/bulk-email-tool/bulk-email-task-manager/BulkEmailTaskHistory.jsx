@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { Icon, Collapsible } from '@openedx/paragon';
-import { SpinnerSimple } from '@openedx/paragon/icons';
+import { Icon, Collapsible } from '@edx/paragon';
+import { SpinnerSimple } from '@edx/paragon/icons';
 import { getEmailTaskHistory } from './data/api';
 import messages from './messages';
 
