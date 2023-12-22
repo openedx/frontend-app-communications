@@ -11,6 +11,7 @@ import BuildEmailFormExtensible from './bulk-email-form/BuildEmailFormExtensible
 import { CourseMetadataContext } from '../page-container/PageContainer';
 import { BulkEmailProvider } from './bulk-email-context';
 import BackToInstructor from '../navigation-tabs/BackToInstructor';
+import PluggableComponent from '../PluggableComponent';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
@@ -36,7 +37,13 @@ export default function BulkEmailTool() {
                 <BuildEmailFormExtensible courseId={courseId} cohorts={courseMetadata.cohorts} />
               </div>
               <div className="row py-5">
-                <BulkEmailTaskManager courseId={courseId} />
+                <PluggableComponent
+                  id="build-email-task-manager"
+                  as="communications-app-build-email-task-manager"
+                  courseId={courseId}
+                >
+                  <BulkEmailTaskManager />
+                </PluggableComponent>
               </div>
             </Container>
           </BulkEmailProvider>
