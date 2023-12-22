@@ -2,44 +2,43 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import './styles.scss';
 
 const disableIsHasLearners = ['track', 'cohort'];
 
-const RecipientsForm = ({ formState, setFormState }) => {
-  const {
-    isFormSubmitted, emailRecipients, isEditMode, cohorts: additionalCohorts,
-  } = formState ?? {};
+const RecipientsForm = (props) => {
+  const { cohorts: additionalCohorts } = props;
+  const formData = useSelector((state) => state.form);
+  const dispatch = useDispatch();
+  const { isEditMode, emailRecipients, isFormSubmitted } = formData;
 
-  const { value: emailRecipientsInitial } = emailRecipients;
   const [selectedGroups, setSelectedGroups] = useState([]);
   const hasAllLearnersSelected = selectedGroups.some((group) => group === 'learners');
 
   const handleChangeCheckBoxes = ({ target: { value, checked } }) => {
-    const { value: emailRecipientsValue } = emailRecipients;
-
     let newValue;
 
     if (checked) {
-      const uniqueSet = new Set([...emailRecipientsValue, value]);
+      const uniqueSet = new Set([...emailRecipients, value]);
       newValue = Array.from(uniqueSet);
     } else {
-      newValue = emailRecipientsValue.filter((item) => item !== value);
+      newValue = emailRecipients.filter((item) => item !== value);
     }
 
     if (checked && value === 'learners') {
       newValue = newValue.filter(item => !disableIsHasLearners.some(disabled => item.includes(disabled)));
     }
 
-    setFormState({ ...formState, emailRecipients: { ...emailRecipients, value: newValue } });
+    dispatch(formActions.updateForm({ emailRecipients: newValue }));
     setSelectedGroups(newValue);
   };
 
   useEffect(() => {
-    setSelectedGroups(emailRecipientsInitial);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEditMode]);
+    setSelectedGroups(emailRecipients);
+  }, [isEditMode, emailRecipients.length, emailRecipients]);
 
   return (
     <Form.Group>
@@ -135,30 +134,28 @@ const RecipientsForm = ({ formState, setFormState }) => {
         </Form.Checkbox>
       </Form.CheckboxSet>
       { isFormSubmitted && selectedGroups.length === 0 && (
-      <Form.Control.Feedback
-        className="px-3"
-        hasIcon
-        type="invalid"
-      >
-        <FormattedMessage
-          id="bulk.email.form.recipients.error"
-          defaultMessage="At least one recipient is required"
-          description="An Error message located under the recipients list. Visible only on failure"
-        />
-      </Form.Control.Feedback>
+        <Form.Control.Feedback
+          className="px-3"
+          type="invalid"
+          hasIcon
+        >
+          <FormattedMessage
+            id="bulk.email.form.recipients.error"
+            defaultMessage="At least one recipient is required"
+            description="An Error message located under the recipients list. Visible only on failure"
+          />
+        </Form.Control.Feedback>
       )}
     </Form.Group>
   );
 };
 
 RecipientsForm.defaultProps = {
-  formState: {},
-  setFormState: () => {},
+  cohorts: [],
 };
 
 RecipientsForm.propTypes = {
-  formState: PropTypes.shape({}),
-  setFormState: PropTypes.func,
+  cohorts: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default RecipientsForm;

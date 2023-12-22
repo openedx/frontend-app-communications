@@ -19,15 +19,19 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import ScheduleEmailForm from '@communications-app/src/components/bulk-email-tool/bulk-email-form/ScheduleEmailForm';
 import useMobileResponsive from '@communications-app/src/utils/useMobileResponsive';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import messages from './messages';
 
 const formStatusToast = ['error', 'complete', 'completeSchedule'];
 
-const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
+const ScheduleSection = ({ openTaskAlert }) => {
   const intl = useIntl();
   const isMobile = useMobileResponsive();
   const [scheduleInputChanged, isScheduleInputChanged] = useState(false);
+  const formData = useSelector((state) => state.form);
+  const dispatch = useDispatch();
   const {
     isScheduled,
     scheduleDate = '',
@@ -35,7 +39,7 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
     isEditMode,
     formStatus,
     isScheduledSubmitted = false,
-  } = formState ?? {};
+  } = formData;
 
   const formStatusErrors = {
     error: intl.formatMessage(messages.ScheduleSectionSubmitFormError),
@@ -46,14 +50,19 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
   const handleChangeScheduled = () => {
     const newSchedule = !isScheduled;
     const newFormStatus = newSchedule ? 'schedule' : 'default';
-    setFormState({ ...formState, formStatus: newFormStatus, isScheduled: newSchedule });
+    // setFormState({ ...formState, formStatus: newFormStatus, isScheduled: newSchedule });
+    dispatch(formActions.updateForm({ formStatus: newFormStatus, isScheduled: newSchedule }));
   };
 
   const handleScheduleDate = ({ target: { name, value } }) => {
-    setFormState({ ...formState, [name]: value });
+    dispatch(formActions.updateForm({ [name]: value }));
     if (!scheduleInputChanged) {
       isScheduleInputChanged(true);
     }
+    /* setFormState({ ...formState, [name]: value });
+    if (!scheduleInputChanged) {
+      isScheduleInputChanged(true);
+    } */
   };
 
   const scheduleFields = isScheduledSubmitted ? scheduleDate.length > 0 && scheduleTime.length > 0
@@ -62,24 +71,11 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
   const checkIsValidSchedule = isScheduled ? scheduleFields : true;
 
   const handleResetFormValues = () => {
-    const { emailRecipients, subject, body } = formState ?? {};
-    const newRecipientsValue = { ...emailRecipients, value: [] };
-    const newSubjectValue = { ...subject, value: '' };
-    const newBodyValue = { ...body, value: '' };
+    dispatch(formActions.resetForm());
+  };
 
-    setFormState({
-      ...formState,
-      emailRecipients: newRecipientsValue,
-      subject: newSubjectValue,
-      body: newBodyValue,
-      scheduleDate: '',
-      scheduleTime: '',
-      isScheduled: false,
-      isEditMode: false,
-      formStatus: 'default',
-      isScheduleButtonClicked: false,
-      isScheduledSubmitted: false,
-    });
+  const handleCloseToast = () => {
+    dispatch(formActions.updateForm({ formStatus: 'default' }));
   };
 
   return (
@@ -90,7 +86,7 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
           name="scheduleEmailBox"
           checked={isScheduled}
           onChange={handleChangeScheduled}
-          disabled={formState === 'pending'}
+          disabled={formStatus === 'pending'}
         >
           {intl.formatMessage(messages.ScheduleSectionSubmitScheduleBox)}
         </Form.Checkbox>
@@ -124,11 +120,13 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
 
         <StatefulButton
           className="send-email-btn"
+          data-testid="send-email-btn"
           variant="primary"
           onClick={(event) => {
             event.preventDefault();
             if (formStatus === 'schedule' && !isScheduledSubmitted) {
-              setFormState({ ...formState, isScheduleButtonClicked: true });
+              dispatch(formActions.updateForm({ isScheduleButtonClicked: true }));
+              // setFormState({ ...formState, isScheduleButtonClicked: true });
             }
             openTaskAlert();
           }}
@@ -160,9 +158,9 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
 
         <Toast
           show={formStatusToast.includes(formStatus)}
-          onClose={() => { setFormState({ ...formState, formStatus: 'default' }); }}
+          onClose={handleCloseToast}
         >
-          {formStatusErrors[formStatus] || null}
+          {formStatusErrors[formStatus] || ''}
         </Toast>
       </div>
     </Form.Group>
@@ -170,14 +168,10 @@ const ScheduleSection = ({ formState, setFormState, openTaskAlert }) => {
 };
 
 ScheduleSection.defaultProps = {
-  formState: {},
-  setFormState: () => {},
   openTaskAlert: () => {},
 };
 
 ScheduleSection.propTypes = {
-  formState: PropTypes.shape({}),
-  setFormState: PropTypes.func,
   openTaskAlert: PropTypes.func,
 };
 

@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   ScheduleSectionSubmitFormError: {
     id: 'schedule.section.submit.error',
-    defaultMessage: 'An error occured while attempting to send the email.',
+    defaultMessage: 'An error occurred while attempting to send the email.',
     description: 'An Error message located under the submit button for the email form. Visible only on a failure.',
   },
   ScheduleSectionSubmitFormSuccess: {

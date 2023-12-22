@@ -1,48 +1,45 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import TaskAlertModal from '@communications-app/src/components/bulk-email-tool/task-alert-modal';
 import { getScheduledBulkEmailThunk } from '@communications-app/src/components/bulk-email-tool/bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
 import { BulkEmailContext } from '@communications-app/src/components/bulk-email-tool/bulk-email-context';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import { postBulkEmailInstructorTask, patchScheduledBulkEmailInstructorTask } from './api';
 import { AlertMessage, EditMessage } from './AlertTypes';
 
 const TaskAlertModalForm = ({
-  formState,
-  setFormState,
+  courseId,
   isTaskAlertOpen,
   closeTaskAlert,
 }) => {
   const [, dispatch] = useContext(BulkEmailContext);
+  const formData = useSelector((state) => state.form);
+  const dispatchForm = useDispatch();
 
   const {
     isScheduled,
-    emailRecipients = { value: [] },
+    emailRecipients,
     scheduleDate = '',
     scheduleTime = '',
     isEditMode = false,
     subject,
-    courseId = '',
     emailId = '',
     schedulingId = '',
     body,
     isScheduleButtonClicked = false,
     isFormSubmitted = false,
-  } = formState ?? {};
+  } = formData;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const changeFormStatus = useCallback((status) => setFormState({ ...formState, formStatus: status }), []);
+  const changeFormStatus = (status) => dispatchForm(formActions.updateForm({ formStatus: status }));
 
   const handlePostEmailTask = async () => {
-    const emailRecipientsValue = emailRecipients.value;
-    const emailSubject = subject.value;
-    const emailBody = body.value;
-
     const emailData = new FormData();
     emailData.append('action', 'send');
-    emailData.append('send_to', JSON.stringify(emailRecipientsValue));
-    emailData.append('subject', emailSubject);
-    emailData.append('message', emailBody);
+    emailData.append('send_to', JSON.stringify(emailRecipients));
+    emailData.append('subject', subject);
+    emailData.append('message', body);
 
     if (isScheduled) {
       emailData.append('schedule', new Date(`${scheduleDate} ${scheduleTime}`).toISOString());
@@ -61,9 +58,9 @@ const TaskAlertModalForm = ({
   };
 
   const handlePatchEmailTask = async () => {
-    const emailRecipientsValue = emailRecipients.value;
-    const emailSubject = subject.value;
-    const emailBody = body.value;
+    const emailRecipientsValue = emailRecipients;
+    const emailSubject = subject;
+    const emailBody = body;
 
     const emailData = {
       email: {
@@ -88,8 +85,8 @@ const TaskAlertModalForm = ({
 
   const createEmailTask = async () => {
     const isScheduleValid = isScheduled ? scheduleDate.length > 0 && scheduleTime.length > 0 : true;
-    const isFormValid = emailRecipients.value.length > 0 && subject.value.length > 0
-    && body.value.length > 0 && isScheduleValid;
+    const isFormValid = emailRecipients.length > 0 && subject.length > 0
+    && body.length > 0 && isScheduleValid;
 
     if (isFormValid && isEditMode) {
       await handlePatchEmailTask();
@@ -99,7 +96,9 @@ const TaskAlertModalForm = ({
       await handlePostEmailTask();
     }
 
-    dispatch(getScheduledBulkEmailThunk(courseId, 1));
+    if (isFormValid) {
+      dispatch(getScheduledBulkEmailThunk(courseId, 1));
+    }
   };
 
   return (
@@ -108,15 +107,15 @@ const TaskAlertModalForm = ({
       alertMessage={isEditMode
         ? (
           <EditMessage
-            subject={subject.value}
-            emailRecipients={emailRecipients.value}
+            subject={subject}
+            emailRecipients={emailRecipients}
             {...{ scheduleDate, scheduleTime, isScheduled }}
           />
         )
         : (
           <AlertMessage
-            subject={subject.value}
-            emailRecipients={emailRecipients.value}
+            subject={subject}
+            emailRecipients={emailRecipients}
             isScheduled={isScheduled}
           />
         )}
@@ -125,10 +124,12 @@ const TaskAlertModalForm = ({
 
         if (event.target.name === 'continue') {
           if (!isFormSubmitted) {
-            setFormState({ ...formState, isFormSubmitted: true });
+            // setFormState({ ...formState, isFormSubmitted: true });
+            dispatchForm(formActions.updateForm({ isFormSubmitted: true }));
           }
           if (isScheduleButtonClicked) {
-            setFormState({ ...formState, isScheduledSubmitted: true });
+            // setFormState({ ...formState, isScheduledSubmitted: true });
+            dispatchForm(formActions.updateForm({ isScheduledSubmitted: true }));
           }
 
           createEmailTask();
@@ -139,6 +140,7 @@ const TaskAlertModalForm = ({
 };
 
 TaskAlertModalForm.defaultProps = {
+  courseId: '',
   formState: {},
   setFormState: () => {},
   openTaskAlert: () => {},
@@ -147,6 +149,7 @@ TaskAlertModalForm.defaultProps = {
 };
 
 TaskAlertModalForm.propTypes = {
+  courseId: PropTypes.string,
   formState: PropTypes.shape({}),
   setFormState: PropTypes.func,
   openTaskAlert: PropTypes.func,

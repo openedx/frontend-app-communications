@@ -1,26 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import TextEditor from '@communications-app/src/components/bulk-email-tool/text-editor/TextEditor';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import messages from './messages';
 
-const BodyForm = ({ formState, setFormState }) => {
+const BodyForm = () => {
   const intl = useIntl();
-  const { body, isFormSubmitted = false } = formState ?? {};
+  const formData = useSelector((state) => state.form);
+  const dispatch = useDispatch();
+  const { body, isFormSubmitted = false } = formData;
+
   const handleChangeTextEditor = (value) => {
-    setFormState({ ...formState, body: { value } });
+    dispatch(formActions.updateForm({ body: value }));
   };
 
-  const bodyValidation = body.value.length > 0;
+  const bodyValidation = body.length > 0;
 
   return (
     <Form.Group controlId="emailBody">
       <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bodyFormFieldLabel)}</Form.Label>
       <TextEditor
         onChange={handleChangeTextEditor}
-        value={body.value}
+        value={body}
       />
       {isFormSubmitted && !bodyValidation && (
       <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -29,16 +33,6 @@ const BodyForm = ({ formState, setFormState }) => {
       )}
     </Form.Group>
   );
-};
-
-BodyForm.defaultProps = {
-  formState: {},
-  setFormState: () => {},
-};
-
-BodyForm.propTypes = {
-  formState: PropTypes.shape({}),
-  setFormState: PropTypes.func,
 };
 
 export default BodyForm;

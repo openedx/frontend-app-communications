@@ -1,18 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
 
 import messages from './messages';
 
-const SubjectForm = ({ formState, setFormState }) => {
+const SubjectForm = () => {
   const intl = useIntl();
-  const { subject, isFormSubmitted } = formState ?? {};
+  const formData = useSelector((state) => state.form);
+  const dispatch = useDispatch();
+  const { subject, isFormSubmitted } = formData;
+
   const handleChangeEmailSubject = ({ target: { value } }) => {
-    setFormState({ ...formState, subject: { value } });
+    dispatch(formActions.updateForm({ subject: value }));
   };
 
-  const subjectValidation = subject.value.length > 0;
+  const subjectValidation = subject.length > 0;
 
   return (
     <Form.Group controlId="emailSubject" className="my-5">
@@ -21,7 +25,7 @@ const SubjectForm = ({ formState, setFormState }) => {
         name="emailSubject"
         className="w-lg-50"
         onChange={handleChangeEmailSubject}
-        value={subject.value}
+        value={subject}
       />
       { isFormSubmitted && !subjectValidation && (
       <Form.Control.Feedback className="px-3" hasIcon type="invalid">
@@ -30,16 +34,6 @@ const SubjectForm = ({ formState, setFormState }) => {
       ) }
     </Form.Group>
   );
-};
-
-SubjectForm.defaultProps = {
-  formState: {},
-  setFormState: () => {},
-};
-
-SubjectForm.propTypes = {
-  formState: PropTypes.shape({}),
-  setFormState: PropTypes.func,
 };
 
 export default SubjectForm;
