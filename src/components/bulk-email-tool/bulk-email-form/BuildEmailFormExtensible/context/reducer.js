@@ -36,15 +36,14 @@ export const reducer = produce((draft, action) => {
   switch (action.type) {
     case ActionTypes.UPDATE_FORM: {
       Object.assign(draft.form, action.updates);
-      break; // No explicit return needed due to 'produce' creating a draft
+      break;
     }
+
     case ActionTypes.RESET_FORM: {
-      // Resets to initial form state
       return INITIAL_STATE;
     }
-    // Add other case handlers if needed
+
     default:
-      // No changes, return the current state
       break;
   }
 }, INITIAL_STATE);
