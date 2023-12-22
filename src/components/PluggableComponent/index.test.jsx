@@ -21,7 +21,7 @@ describe('PluggableComponent', () => {
   beforeEach(() => {
     jest.resetModules();
   });
-  it('renders correctly', async () => {
+  test('renders correctly', async () => {
     const handleClickMock = jest.fn();
     const props = {
       title: 'button title',
@@ -48,7 +48,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('loads children component when import is invalid', async () => {
+  test('loads children component when import is invalid', async () => {
     render(
       <PluggableComponent id="est-pluggable" as="invalid import">
         <div data-testid="plugin">Plugin Loaded</div>
@@ -62,7 +62,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('loads children component when import is empty', async () => {
+  test('loads children component when import is empty', async () => {
     render(
       <PluggableComponent
         id="test-pluggable"
@@ -79,7 +79,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('returns null when do not have children and import is invalid', async () => {
+  test('returns null when do not have children and import is invalid', async () => {
     render(
       <PluggableComponent
         id="test-pluggable"
@@ -92,7 +92,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('updates component when props change', async () => {
+  test('updates component when props change', async () => {
     const { rerender } = render(
       <PluggableComponent
         id="test-pluggable"
@@ -118,7 +118,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('updates component when children change', async () => {
+  test('updates component when children change', async () => {
     const { getByText, getByTestId } = render(
       <PluggableComponent
         id="test-pluggable"
@@ -136,7 +136,6 @@ describe('PluggableComponent', () => {
     const toggleButton = getByText('Toggle Content');
     fireEvent.click(toggleButton);
 
-    // Now, after toggling the content, we expect it to be visible inside PluggableComponent
     await waitFor(() => {
       const toggleContent = getByTestId('toggle-content');
       expect(toggleContent).toBeInTheDocument();
@@ -144,7 +143,7 @@ describe('PluggableComponent', () => {
     });
   });
 
-  it('renders loadingComponent while the plugin is loading', async () => {
+  test('renders loadingComponent while the plugin is loading', async () => {
     jest.mock('./utils', () => ({
       isPluginAvailable: jest.fn().mockImplementation(
         () => new Promise((resolve) => {
