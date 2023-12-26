@@ -124,11 +124,10 @@ const TaskAlertModalForm = ({
 
         if (event.target.name === 'continue') {
           if (!isFormSubmitted) {
-            // setFormState({ ...formState, isFormSubmitted: true });
             dispatchForm(formActions.updateForm({ isFormSubmitted: true }));
           }
+
           if (isScheduleButtonClicked) {
-            // setFormState({ ...formState, isScheduledSubmitted: true });
             dispatchForm(formActions.updateForm({ isScheduledSubmitted: true }));
           }
 

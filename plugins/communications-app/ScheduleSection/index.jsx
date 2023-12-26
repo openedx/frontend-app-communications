@@ -50,7 +50,6 @@ const ScheduleSection = ({ openTaskAlert }) => {
   const handleChangeScheduled = () => {
     const newSchedule = !isScheduled;
     const newFormStatus = newSchedule ? 'schedule' : 'default';
-    // setFormState({ ...formState, formStatus: newFormStatus, isScheduled: newSchedule });
     dispatch(formActions.updateForm({ formStatus: newFormStatus, isScheduled: newSchedule }));
   };
 
@@ -59,10 +58,6 @@ const ScheduleSection = ({ openTaskAlert }) => {
     if (!scheduleInputChanged) {
       isScheduleInputChanged(true);
     }
-    /* setFormState({ ...formState, [name]: value });
-    if (!scheduleInputChanged) {
-      isScheduleInputChanged(true);
-    } */
   };
 
   const scheduleFields = isScheduledSubmitted ? scheduleDate.length > 0 && scheduleTime.length > 0
@@ -126,7 +121,6 @@ const ScheduleSection = ({ openTaskAlert }) => {
             event.preventDefault();
             if (formStatus === 'schedule' && !isScheduledSubmitted) {
               dispatch(formActions.updateForm({ isScheduleButtonClicked: true }));
-              // setFormState({ ...formState, isScheduleButtonClicked: true });
             }
             openTaskAlert();
           }}

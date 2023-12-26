@@ -7,7 +7,6 @@ const withProvider = ({
   initialState,
 }) => (WrappedComponent) => {
   function ProviderWrapper(props) {
-    // TODO: Validate singleton?
     const [state, dispatch] = useReducer(reducer, initialState);
     return (
       <DispatchContext.Provider value={dispatch}>
