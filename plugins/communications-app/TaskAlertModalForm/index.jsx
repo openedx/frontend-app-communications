@@ -33,6 +33,7 @@ const TaskAlertModalForm = ({
   } = formData;
 
   const changeFormStatus = (status) => dispatchForm(formActions.updateForm({ formStatus: status }));
+  const handleResetFormValues = () => dispatchForm(formActions.resetForm());
 
   const handlePostEmailTask = async () => {
     const emailData = new FormData();
@@ -51,7 +52,7 @@ const TaskAlertModalForm = ({
       await postBulkEmailInstructorTask(emailData, courseId);
       const newFormStatus = isScheduled ? 'completeSchedule' : 'complete';
       changeFormStatus(newFormStatus);
-      setTimeout(() => changeFormStatus('default'), 3000);
+      setTimeout(() => handleResetFormValues(), 3000);
     } catch {
       changeFormStatus('error');
     }
@@ -77,7 +78,7 @@ const TaskAlertModalForm = ({
     try {
       await patchScheduledBulkEmailInstructorTask(emailData, courseId, schedulingId);
       changeFormStatus('completeSchedule');
-      setTimeout(() => changeFormStatus('default'), 3000);
+      setTimeout(() => handleResetFormValues(), 3000);
     } catch {
       changeFormStatus('error');
     }
@@ -101,6 +102,22 @@ const TaskAlertModalForm = ({
     }
   };
 
+  const handleCloseTaskAlert = (event) => {
+    closeTaskAlert();
+
+    if (event.target.name === 'continue') {
+      if (!isFormSubmitted) {
+        dispatchForm(formActions.updateForm({ isFormSubmitted: true }));
+      }
+
+      if (isScheduleButtonClicked) {
+        dispatchForm(formActions.updateForm({ isScheduledSubmitted: true }));
+      }
+
+      createEmailTask();
+    }
+  };
+
   return (
     <TaskAlertModal
       isOpen={isTaskAlertOpen}
@@ -119,21 +136,7 @@ const TaskAlertModalForm = ({
             isScheduled={isScheduled}
           />
         )}
-      close={(event) => {
-        closeTaskAlert();
-
-        if (event.target.name === 'continue') {
-          if (!isFormSubmitted) {
-            dispatchForm(formActions.updateForm({ isFormSubmitted: true }));
-          }
-
-          if (isScheduleButtonClicked) {
-            dispatchForm(formActions.updateForm({ isScheduledSubmitted: true }));
-          }
-
-          createEmailTask();
-        }
-      }}
+      close={handleCloseTaskAlert}
     />
   );
 };

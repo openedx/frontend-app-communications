@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {
@@ -73,6 +73,40 @@ const ScheduleSection = ({ openTaskAlert }) => {
     dispatch(formActions.updateForm({ formStatus: 'default' }));
   };
 
+  const handleClickStatefulButton = (event) => {
+    event.preventDefault();
+    if (formStatus === 'schedule' && !isScheduledSubmitted) {
+      dispatch(formActions.updateForm({ isScheduleButtonClicked: true }));
+    }
+    openTaskAlert();
+  };
+
+  const statefulButtonIcons = useMemo(() => ({
+    default: <Icon src={Send} />,
+    schedule: <Icon src={Event} />,
+    reschedule: <Icon src={Event} />,
+    pending: <Icon src={SpinnerSimple} className="icon-spin" />,
+    complete: <Icon src={Check} />,
+    completeSchedule: <Icon src={Check} />,
+    error: <Icon src={Cancel} />,
+  }), []);
+
+  const statefulButtonLabels = useMemo(() => ({
+    default: intl.formatMessage(messages.ScheduleSectionSubmitButtonDefault),
+    schedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonSchedule),
+    reschedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonReschedule),
+    pending: intl.formatMessage(messages.ScheduleSectionSubmitButtonPending),
+    complete: intl.formatMessage(messages.ScheduleSectionSubmitButtonComplete),
+    completeSchedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonCompleteSchedule),
+    error: intl.formatMessage(messages.ScheduleSectionSubmitButtonError),
+  }), [intl]);
+
+  const statefulButtonDisableStates = useMemo(() => [
+    'pending',
+    'complete',
+    'completeSchedule',
+  ], []);
+
   return (
     <Form.Group>
       {getConfig().SCHEDULE_EMAIL_SECTION && (
@@ -117,37 +151,11 @@ const ScheduleSection = ({ openTaskAlert }) => {
           className="send-email-btn"
           data-testid="send-email-btn"
           variant="primary"
-          onClick={(event) => {
-            event.preventDefault();
-            if (formStatus === 'schedule' && !isScheduledSubmitted) {
-              dispatch(formActions.updateForm({ isScheduleButtonClicked: true }));
-            }
-            openTaskAlert();
-          }}
+          onClick={handleClickStatefulButton}
           state={formStatus}
-          icons={{
-            default: <Icon src={Send} />,
-            schedule: <Icon src={Event} />,
-            reschedule: <Icon src={Event} />,
-            pending: <Icon src={SpinnerSimple} className="icon-spin" />,
-            complete: <Icon src={Check} />,
-            completeSchedule: <Icon src={Check} />,
-            error: <Icon src={Cancel} />,
-          }}
-          labels={{
-            default: intl.formatMessage(messages.ScheduleSectionSubmitButtonDefault),
-            schedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonSchedule),
-            reschedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonReschedule),
-            pending: intl.formatMessage(messages.ScheduleSectionSubmitButtonPending),
-            complete: intl.formatMessage(messages.ScheduleSectionSubmitButtonComplete),
-            completeSchedule: intl.formatMessage(messages.ScheduleSectionSubmitButtonCompleteSchedule),
-            error: intl.formatMessage(messages.ScheduleSectionSubmitButtonError),
-          }}
-          disabledStates={[
-            'pending',
-            'complete',
-            'completeSchedule',
-          ]}
+          icons={statefulButtonIcons}
+          labels={statefulButtonLabels}
+          disabledStates={statefulButtonDisableStates}
         />
 
         <Toast

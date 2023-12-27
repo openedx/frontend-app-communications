@@ -5,7 +5,7 @@ const messages = defineMessages({
   bulkEmailSubjectLabel: {
     id: 'bulk.email.subject.label',
     defaultMessage: 'Subject',
-    description: 'Email subject line input label. Meant to have colon or equivilant punctuation.',
+    description: 'Email subject line input label. Meant to have colon or equivalent punctuation.',
   },
   bulkEmailFormSubjectError: {
     id: 'bulk.email.form.subject.error',

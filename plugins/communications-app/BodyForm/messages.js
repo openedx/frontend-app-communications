@@ -5,7 +5,7 @@ const messages = defineMessages({
   bodyFormFieldLabel: {
     id: 'body.form.field.label',
     defaultMessage: 'Body',
-    description: 'Email Body label. Meant to have colon or equivilant punctuation.',
+    description: 'Email Body label. Meant to have colon or equivalent punctuation.',
   },
   bodyFormFieldError: {
     id: 'body.form.field.error',

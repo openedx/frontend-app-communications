@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 import { Form, Container } from '@edx/paragon';
 
 const InputForm = ({
-  isValid, controlId, label, feedbackText,
+  isValid,
+  controlId,
+  label,
+  feedbackText,
 }) => {
   const feedbackType = isValid ? 'valid' : 'invalid';
   return (

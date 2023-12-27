@@ -8,9 +8,9 @@ import { actionCreators as formActions } from '@communications-app/src/component
 import './styles.scss';
 
 const disableIsHasLearners = ['track', 'cohort'];
+const recipientsFormDescription = 'A selectable choice from a list of potential email recipients';
 
-const RecipientsForm = (props) => {
-  const { cohorts: additionalCohorts } = props;
+const RecipientsForm = ({ cohorts: additionalCohorts }) => {
   const formData = useSelector((state) => state.form);
   const dispatch = useDispatch();
   const { isEditMode, emailRecipients, isFormSubmitted } = formData;
@@ -65,7 +65,7 @@ const RecipientsForm = (props) => {
           <FormattedMessage
             id="bulk.email.form.recipients.myself"
             defaultMessage="Myself"
-            description="A selectable choice from a list of potential email recipients"
+            description={recipientsFormDescription}
           />
         </Form.Checkbox>
         <Form.Checkbox
@@ -76,7 +76,7 @@ const RecipientsForm = (props) => {
           <FormattedMessage
             id="bulk.email.form.recipients.staff"
             defaultMessage="Staff/Administrators"
-            description="A selectable choice from a list of potential email recipients"
+            description={recipientsFormDescription}
           />
         </Form.Checkbox>
         <Form.Checkbox
@@ -88,7 +88,7 @@ const RecipientsForm = (props) => {
           <FormattedMessage
             id="bulk.email.form.recipients.verified"
             defaultMessage="Learners in the verified certificate track"
-            description="A selectable choice from a list of potential email recipients"
+            description={recipientsFormDescription}
           />
         </Form.Checkbox>
         {
@@ -118,7 +118,7 @@ const RecipientsForm = (props) => {
           <FormattedMessage
             id="bulk.email.form.recipients.audit"
             defaultMessage="Learners in the audit track"
-            description="A selectable choice from a list of potential email recipients"
+            description={recipientsFormDescription}
           />
         </Form.Checkbox>
         <Form.Checkbox
@@ -129,7 +129,7 @@ const RecipientsForm = (props) => {
           <FormattedMessage
             id="bulk.email.form.recipients.learners"
             defaultMessage="All Learners"
-            description="A selectable choice from a list of potential email recipients"
+            description={recipientsFormDescription}
           />
         </Form.Checkbox>
       </Form.CheckboxSet>

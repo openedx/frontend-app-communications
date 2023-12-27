@@ -16,7 +16,7 @@ const SubjectForm = () => {
     dispatch(formActions.updateForm({ subject: value }));
   };
 
-  const subjectValidation = subject.length > 0;
+  const isSubjectValid = subject.length > 0;
 
   return (
     <Form.Group controlId="emailSubject" className="my-5">
@@ -27,7 +27,7 @@ const SubjectForm = () => {
         onChange={handleChangeEmailSubject}
         value={subject}
       />
-      { isFormSubmitted && !subjectValidation && (
+      { isFormSubmitted && !isSubjectValid && (
       <Form.Control.Feedback className="px-3" hasIcon type="invalid">
         {intl.formatMessage(messages.bulkEmailFormSubjectError)}
       </Form.Control.Feedback>

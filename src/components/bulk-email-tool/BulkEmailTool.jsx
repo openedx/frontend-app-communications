@@ -40,9 +40,8 @@ export default function BulkEmailTool() {
                 <PluggableComponent
                   id="build-email-task-manager"
                   as="communications-app-build-email-task-manager"
-                  courseId={courseId}
                 >
-                  <BulkEmailTaskManager />
+                  <BulkEmailTaskManager courseId={courseId} />
                 </PluggableComponent>
               </div>
             </Container>

@@ -17,7 +17,7 @@ const BodyForm = () => {
     dispatch(formActions.updateForm({ body: value }));
   };
 
-  const bodyValidation = body.length > 0;
+  const isBodyValid = body.length > 0;
 
   return (
     <Form.Group controlId="emailBody">
@@ -26,7 +26,7 @@ const BodyForm = () => {
         onChange={handleChangeTextEditor}
         value={body}
       />
-      {isFormSubmitted && !bodyValidation && (
+      {isFormSubmitted && !isBodyValid && (
       <Form.Control.Feedback className="px-3" hasIcon type="invalid">
         {intl.formatMessage(messages.bodyFormFieldError)}
       </Form.Control.Feedback>
