@@ -60,16 +60,19 @@ const BuildEmailFormExtensible = ({ courseId, cohorts }) => {
           id="build-email-form-recipients-field"
           as="communications-app-recipients-checks"
           cohorts={cohorts}
+          courseId={courseId}
         />
 
         <PluggableComponent
           id="build-email-form-subject-field"
           as="communications-app-subject-form"
+          courseId={courseId}
         />
 
         <PluggableComponent
           id="build-email-form-body-field"
           as="communications-app-body-email-form"
+          courseId={courseId}
           loadingComponent={(
             <Spinner
               id="loading-test"
@@ -83,11 +86,13 @@ const BuildEmailFormExtensible = ({ courseId, cohorts }) => {
         <PluggableComponent
           id="build-email-form-instructions-form"
           as="communications-app-instructions-pro-freading"
+          courseId={courseId}
         />
 
         <PluggableComponent
           id="build-email-form-schedule-section"
           as="communications-app-schedule-section"
+          courseId={courseId}
           openTaskAlert={openTaskAlert}
         />
 
