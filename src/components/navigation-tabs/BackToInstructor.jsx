@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Button, Icon } from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
+import { Button, Icon } from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 
 export default function BackToInstructor(props) {
   const { courseId } = props;

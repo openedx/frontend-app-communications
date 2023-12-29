@@ -7,8 +7,8 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
   Button, Collapsible, Icon,
-} from '@edx/paragon';
-import { SpinnerSimple } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { SpinnerSimple } from '@openedx/paragon/icons';
 import messages from './messages';
 import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
