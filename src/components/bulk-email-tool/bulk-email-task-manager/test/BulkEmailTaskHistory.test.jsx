@@ -51,7 +51,7 @@ describe('BulkEmailTaskHistory component', () => {
       expect(await screen.findByText('State')).toBeTruthy();
       expect(await screen.findByText('Status')).toBeTruthy();
       expect(await screen.findByText('Task Progress')).toBeTruthy();
-      expect(await screen.findAllByText('Showing 1 of 1.')).toBeTruthy();
+      expect(await screen.findAllByText('Showing 1 - 1 of 1.')).toBeTruthy();
       // verification of row contents
       const { tasks } = taskHistoryData;
       const task = tasks[0];

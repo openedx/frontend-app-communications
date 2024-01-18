@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Form, Icon, StatefulButton, Toast, useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
