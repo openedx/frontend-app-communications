@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { ActionRow, Button, ModalDialog } from '@edx/paragon';
+import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';

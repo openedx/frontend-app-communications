@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Nav } from '@edx/paragon';
+import { Nav } from '@openedx/paragon';
 
 export default function NavigationTabs(props) {
   const { tabData } = props;
