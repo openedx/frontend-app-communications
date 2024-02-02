@@ -166,4 +166,47 @@ describe('PluggableComponent', () => {
       expect(getByText('Loading...')).toBeInTheDocument();
     });
   });
+
+  test('renders multiple plugins', async () => {
+    const MockPluginComponent = () => <div data-testid="plugin-test">Mocked Plugin Component</div>;
+
+    // Mock the dynamic import to resolve with the MockPluginComponent
+    jest.mock('@node_modules/@openedx-plugins/communications-app-test-component', () => MockPluginComponent, { virtual: true });
+
+    const { getByTestId } = render(
+      <PluggableComponent
+        id="test-pluggable"
+        as=""
+        plugins={[{ id: 'plugin-test-id', name: 'communications-app-test-component' }]}
+      />,
+    );
+
+    await waitFor(() => {
+      const pluginComponent = getByTestId('plugin-test');
+      expect(pluginComponent).toBeInTheDocument();
+      expect(pluginComponent).toHaveTextContent('Mocked Plugin Component');
+    });
+  });
+
+  test('renders multiple plugins with prefix', async () => {
+    const MockPluginComponent = () => <div data-testid="plugin-test">Mocked Plugin Component</div>;
+
+    // Mock the dynamic import to resolve with the MockPluginComponent
+    jest.mock('@node_modules/@openedx-plugins/communications-app-test-component', () => MockPluginComponent, { virtual: true });
+
+    const { getByTestId } = render(
+      <PluggableComponent
+        id="test-pluggable"
+        as=""
+        pluginsPrefix="communications-app-test"
+        plugins={[]}
+      />,
+    );
+
+    await waitFor(() => {
+      const pluginComponent = getByTestId('plugin-test');
+      expect(pluginComponent).toBeInTheDocument();
+      expect(pluginComponent).toHaveTextContent('Mocked Plugin Component');
+    });
+  });
 });

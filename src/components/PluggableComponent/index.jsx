@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { isPluginAvailable } from './utils';
+import { usePlugins } from './hooks';
 
 /**
  * PluggableComponent - A component that allows dynamic loading and replacement of child components.
@@ -13,7 +14,14 @@ import { isPluginAvailable } from './utils';
  * @param {React.ReactNode} props.loadingComponent - Component to be rendered while the plugin is loading
  * @param {string} props.as - String indicating the module to import dynamically
  * @param {string} props.id - Identifier for the plugin
- * @param {object} props.pluggableComponentProps - Additional props to be passed to the component
+ * @param {object} props.pluggableComponentProps - Additional props to be passed to the dynamically loaded component
+ * @param {string} props.pluginsPrefix - Prefix used to identify plugins. This is used without the 'plugins' prop.
+ * @param {Array<Object>} props.plugins -
+  *  An array of plugin configurations.
+  *  Each configuration is an object that may include plugin-specific properties.
+ * @param {object} props.containerPluginsProps -
+  * Props to be spread on the container that wraps multiple plugin components.
+  * Useful for passing classNames or styles for layout.
  * @returns {React.ReactNode} - Rendered component
  */
 const PluggableComponent = ({
@@ -21,11 +29,16 @@ const PluggableComponent = ({
   loadingComponent,
   as,
   id,
+  pluginsPrefix,
+  plugins,
+  containerPluginsProps,
   ...pluggableComponentProps
 }) => {
   const [newComponent, setNewComponent] = useState(children || null);
   const loadedComponentRef = useRef(null);
   const [isLoadingComponent, setIsLoadingComponent] = useState(false);
+  const pluginComponents = usePlugins(plugins, pluggableComponentProps, pluginsPrefix, loadingComponent);
+  const hasConfigForMultiplePlugins = pluginsPrefix || plugins.length;
 
   useEffect(() => {
     const loadPluginComponent = async () => {
@@ -55,7 +68,11 @@ const PluggableComponent = ({
       }
     };
 
-    loadPluginComponent();
+    const hasNoPlugins = !pluginsPrefix && !plugins.length;
+
+    if (hasNoPlugins) {
+      loadPluginComponent();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, as]);
 
@@ -74,11 +91,33 @@ const PluggableComponent = ({
     }
   }, [pluggableComponentProps]);
 
-  return isLoadingComponent && loadingComponent ? loadingComponent : newComponent;
+  if (hasConfigForMultiplePlugins) {
+    return (
+      <div {...containerPluginsProps}>
+        {Object.entries(pluginComponents).map(([pluginKey, Component]) => (
+          <React.Fragment key={pluginKey}>
+            {Component}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  }
+
+  if (isLoadingComponent && loadingComponent) {
+    return loadingComponent;
+  }
+
+  return newComponent;
 };
 
 PluggableComponent.defaultProps = {
   loadingComponent: null,
+  plugins: [],
+  pluginsPrefix: '',
+  containerPluginsProps: {},
+  children: undefined,
+  as: '',
+  id: '',
 };
 
 PluggableComponent.propTypes = {
@@ -86,6 +125,12 @@ PluggableComponent.propTypes = {
   loadingComponent: PropTypes.node,
   as: PropTypes.string,
   id: PropTypes.string,
+  pluginsPrefix: PropTypes.string,
+  containerPluginsProps: PropTypes.shape({}),
+  plugins: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+  })),
 };
 
 export default PluggableComponent;
