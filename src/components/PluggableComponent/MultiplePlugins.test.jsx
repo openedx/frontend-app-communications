@@ -1,54 +1,34 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { usePlugins } from './hooks';
+import MultiplePlugins from './MultiplePlugins';
 
-describe('usePlugins', () => {
-  beforeEach(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-  });
-
+describe('MultiplePlugins', () => {
   const mockPlugins = [
     { id: 'plugin1', name: 'Plugin1' },
     { id: 'plugin2', name: 'Plugin2' },
   ];
 
+  beforeEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
+
   /* eslint-disable react/prop-types */
-  const ComponentsContainer = ({
-    plugins = [],
-    pluggableComponentProps = {},
-    prefix = '',
-    loadingComponent,
-  }) => {
-    const pluginComponents = usePlugins(
-      plugins,
-      pluggableComponentProps,
-      prefix,
-      loadingComponent,
-    );
-
-    return (
-      <>
-        {Object.entries(pluginComponents).map(([pluginKey, Component]) => (
-          <div key={pluginKey} data-testid={pluginKey}>
-            {Component}
-          </div>
-        ))}
-      </>
-    );
-  };
-
-  const renderComponent = (overrideProps) => render(<ComponentsContainer {...overrideProps} />);
-
   test('initializes with loading components for each plugin', async () => {
-    const { getByTestId } = renderComponent({
-      plugins: mockPlugins,
-      pluggableComponentProps: {},
-      loadingComponent: <div>Loading...</div>,
-    });
+    const { getAllByText } = render(
+      <MultiplePlugins
+        plugins={mockPlugins}
+        pluggableComponentProps={{}}
+        loadingComponent={<div>Loading...</div>}
+      />,
+    );
 
-    expect(getByTestId('plugin1')).toHaveTextContent('Loading...');
-    expect(getByTestId('plugin2')).toHaveTextContent('Loading...');
+    const [pluginLoading1, pluginLoading2] = getAllByText('Loading...');
+
+    expect(pluginLoading1).toBeInTheDocument();
+    expect(pluginLoading1).toHaveTextContent('Loading...');
+    expect(pluginLoading2).toBeInTheDocument();
+    expect(pluginLoading2).toHaveTextContent('Loading...');
   });
 
   test('loads a plugins list successfully', async () => {
@@ -56,17 +36,16 @@ describe('usePlugins', () => {
       { id: 'plugin1', name: 'communications-app-test-component' },
     ];
 
-    const MockPluginComponent = () => <div>Mocked Plugin Component</div>;
+    const MockPluginComponent = () => <div data-testid="plugin1">Mocked Plugin Component</div>;
 
     jest.mock(
       '@node_modules/@openedx-plugins/communications-app-test-component',
       () => MockPluginComponent,
     );
 
-    const { getByTestId } = renderComponent({
-      plugins: mockValidPlugins,
-      pluggableComponentProps: {},
-    });
+    const { getByTestId } = render(
+      <MultiplePlugins plugins={mockValidPlugins} pluggableComponentProps={{}} />,
+    );
 
     await waitFor(() => {
       const pluginComponent = getByTestId('plugin1');
@@ -76,17 +55,19 @@ describe('usePlugins', () => {
   });
 
   test('loads a plugin successfully with prefix', async () => {
-    const MockPluginComponent = () => <div>Mocked Plugin Component</div>;
+    const MockPluginComponent = () => <div data-testid="communications-app-test-component">Mocked Plugin Component</div>;
 
     jest.mock(
       '@node_modules/@openedx-plugins/communications-app-test-component',
       () => MockPluginComponent,
     );
 
-    const { getByTestId } = renderComponent({
-      pluggableComponentProps: {},
-      prefix: 'communications-app-test',
-    });
+    const { getByTestId } = render(
+      <MultiplePlugins
+        pluggableComponentProps={{}}
+        prefix="communications-app-test"
+      />,
+    );
 
     await waitFor(() => {
       const pluginComponent = getByTestId('communications-app-test-component');
@@ -96,23 +77,15 @@ describe('usePlugins', () => {
   });
 
   test('loads a plugin successfully with prefix changing component props', async () => {
-    // eslint-disable-next-line react/prop-types
-    const MockPluginComponent = (props) => {
-      console.log('props', props);
-      return <div data-testid="mock-plugin-props">{props.title}</div>;
-    };
+    const MockPluginComponent = (props) => <div data-testid="mock-plugin-props">{props.title}</div>;
 
     jest.mock(
       '@node_modules/@openedx-plugins/communications-app-test-component',
       () => MockPluginComponent,
     );
 
-    const ComponentsContainerUpdater = (overrideProps) => (
-      <ComponentsContainer {...overrideProps} />
-    );
-
     const { getByTestId, rerender } = render(
-      <ComponentsContainerUpdater
+      <MultiplePlugins
         prefix="communications-app-test"
         pluggableComponentProps={{ title: 'Initial Title' }}
       />,
@@ -126,7 +99,7 @@ describe('usePlugins', () => {
     });
 
     rerender(
-      <ComponentsContainerUpdater
+      <MultiplePlugins
         prefix="communications-app-test"
         pluggableComponentProps={{ title: 'Title updated' }}
       />,

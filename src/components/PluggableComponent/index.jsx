@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { isPluginAvailable } from './utils';
-import { usePlugins } from './hooks';
+import MultiplePlugins from './MultiplePlugins';
 
 /**
  * PluggableComponent - A component that allows dynamic loading and replacement of child components.
@@ -37,7 +37,6 @@ const PluggableComponent = ({
   const [newComponent, setNewComponent] = useState(children || null);
   const loadedComponentRef = useRef(null);
   const [isLoadingComponent, setIsLoadingComponent] = useState(false);
-  const pluginComponents = usePlugins(plugins, pluggableComponentProps, pluginsPrefix, loadingComponent);
   const hasConfigForMultiplePlugins = pluginsPrefix || plugins.length;
 
   useEffect(() => {
@@ -93,13 +92,15 @@ const PluggableComponent = ({
 
   if (hasConfigForMultiplePlugins) {
     return (
-      <div {...containerPluginsProps}>
-        {Object.entries(pluginComponents).map(([pluginKey, Component]) => (
-          <React.Fragment key={pluginKey}>
-            {Component}
-          </React.Fragment>
-        ))}
-      </div>
+      <MultiplePlugins
+        prefix={pluginsPrefix}
+        {...{
+          plugins,
+          pluggableComponentProps,
+          loadingComponent,
+          containerPluginsProps,
+        }}
+      />
     );
   }
 
