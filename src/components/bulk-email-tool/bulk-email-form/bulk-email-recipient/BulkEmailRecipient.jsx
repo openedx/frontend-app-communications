@@ -20,7 +20,7 @@ export default function BulkEmailRecipient(props) {
     additionalCohorts,
     courseModes,
   } = props;
-  const isCourseModes = courseModes && courseModes.length > 1;
+  const hasCourseModes = courseModes && courseModes.length > 1;
   return (
     <Form.Group>
       <Form.Label>
@@ -58,7 +58,7 @@ export default function BulkEmailRecipient(props) {
         </Form.Checkbox>
         {
           // additional modes
-          isCourseModes
+          hasCourseModes
           && courseModes.map((courseMode) => (
             <Form.Checkbox
               key={`track:${courseMode.slug}`}
