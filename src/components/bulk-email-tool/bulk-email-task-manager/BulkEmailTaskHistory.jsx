@@ -41,6 +41,17 @@ function BulkEmailTaskHistory({ intl }) {
     setShowHistoricalTaskContentTable(true);
   }
 
+  function transformDataForTable() {
+    let tableData = [];
+    if (emailTaskHistoryData) {
+      tableData = emailTaskHistoryData.map((item) => ({
+        ...item,
+        created: new Date(item.created).toLocaleString(),
+      }));
+    }
+    return tableData;
+  }
+
   const tableColumns = [
     {
       Header: `${intl.formatMessage(messages.taskHistoryTableColumnHeaderTaskType)}`,
@@ -95,7 +106,7 @@ function BulkEmailTaskHistory({ intl }) {
           {showHistoricalTaskContentTable ? (
             <BulkEmailTaskManagerTable
               errorRetrievingData={errorRetrievingData}
-              tableData={emailTaskHistoryData}
+              tableData={transformDataForTable()}
               alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
               alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
               columns={tableColumns}
