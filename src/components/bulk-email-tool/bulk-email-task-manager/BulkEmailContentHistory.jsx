@@ -52,21 +52,13 @@ function BulkEmailContentHistory({ intl }) {
    * display bug in the table.
    */
   function transformDataForTable() {
-    let tableData = [];
-    if (emailHistoryData) {
-      tableData = emailHistoryData.map((item) => {
-        const [, day, year, time] = item.created.match(/(\d+), (\d+) at (.+) UTC/);
-        const utcDateTimeString = `${year}-02-${day}T${time}Z`;
-        const localDateTime = new Date(utcDateTimeString).toLocaleString();
-        return {
-          ...item,
-          subject: item.email.subject,
-          sent_to: item.sent_to.join(', '),
-          created: localDateTime,
-        };
-      });
-    }
-    return tableData;
+    const tableData = emailHistoryData?.map((item) => ({
+      ...item,
+      subject: item.email.subject,
+      sent_to: item.sent_to.join(', '),
+      created: new Date(item.created).toLocaleString(),
+    }));
+    return tableData || [];
   }
 
   /**

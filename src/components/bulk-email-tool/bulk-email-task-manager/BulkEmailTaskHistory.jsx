@@ -42,14 +42,11 @@ function BulkEmailTaskHistory({ intl }) {
   }
 
   function transformDataForTable() {
-    let tableData = [];
-    if (emailTaskHistoryData) {
-      tableData = emailTaskHistoryData.map((item) => ({
-        ...item,
-        created: new Date(item.created).toLocaleString(),
-      }));
-    }
-    return tableData;
+    const tableData = emailTaskHistoryData?.map((item) => ({
+      ...item,
+      created: new Date(item.created).toLocaleString(),
+    }));
+    return tableData || [];
   }
 
   const tableColumns = [
