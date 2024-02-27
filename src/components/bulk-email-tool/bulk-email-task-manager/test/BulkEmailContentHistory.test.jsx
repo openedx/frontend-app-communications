@@ -66,7 +66,8 @@ describe('BulkEmailContentHistory component', () => {
       // verify table contents
       const { emails } = emailHistoryData;
       const email = emails[0];
-      expect(await screen.findByText(email.created)).toBeTruthy();
+      const createdDate = new Date(email.created).toLocaleString();
+      expect(await screen.findByText(createdDate)).toBeTruthy();
       expect(await screen.findByText(email.number_sent)).toBeTruthy();
       expect(await screen.findByText(email.requester)).toBeTruthy();
       expect(await screen.findByText(email.sent_to.join(', '))).toBeTruthy();
@@ -103,7 +104,8 @@ describe('BulkEmailContentHistory component', () => {
       expect(await screen.findByText('Message:')).toBeTruthy();
       expect(await screen.findAllByText(email.email.subject)).toBeTruthy();
       expect(await screen.findAllByText(email.requester)).toBeTruthy();
-      expect(await screen.findAllByText(email.created)).toBeTruthy();
+      const createdDate = new Date(email.created).toLocaleString();
+      expect(await screen.findAllByText(createdDate)).toBeTruthy();
       expect(await screen.findAllByText(email.sent_to.join(', '))).toBeTruthy();
       // .replace() call strips the HTML tags from the string
       expect(await screen.findByText(email.email.html_message.replace(/<[^>]*>?/gm, ''))).toBeTruthy();
