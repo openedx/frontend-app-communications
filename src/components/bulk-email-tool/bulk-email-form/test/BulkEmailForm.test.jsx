@@ -12,6 +12,7 @@ import * as bulkEmailFormApi from '../data/api';
 import { BulkEmailContext, BulkEmailProvider } from '../../bulk-email-context';
 import { formatDate } from '../../../../utils/formatDateAndTime';
 import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
+import courseModeFactory from '../data/__factories__/bulkEmailFormCourseMode.factory';
 
 jest.mock('../../text-editor/TextEditor');
 
@@ -20,12 +21,17 @@ const dispatchMock = jest.fn();
 
 const tomorrow = new Date();
 tomorrow.setDate(new Date().getDate() + 1);
+const courseMode = courseModeFactory();
 
 function renderBulkEmailForm() {
   const { cohorts } = cohortFactory.build();
   return (
     <BulkEmailProvider>
-      <BulkEmailForm courseId="test" cohorts={cohorts} />
+      <BulkEmailForm
+        courseId="test"
+        cohorts={cohorts}
+        courseModes={courseMode}
+      />
     </BulkEmailProvider>
   );
 }
@@ -33,7 +39,7 @@ function renderBulkEmailForm() {
 function renderBulkEmailFormContext(value) {
   return (
     <BulkEmailContext.Provider value={[value, dispatchMock]}>
-      <BulkEmailForm courseId="test" />
+      <BulkEmailForm courseId="test" courseMode={courseMode} />
     </BulkEmailContext.Provider>
   );
 }
@@ -96,8 +102,8 @@ describe('bulk-email-form', () => {
   test('Checking "All Learners" disables each learner group', async () => {
     render(renderBulkEmailForm());
     fireEvent.click(screen.getByRole('checkbox', { name: 'All Learners' }));
-    const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the verified certificate track' });
-    const auditLearners = screen.getByRole('checkbox', { name: 'Learners in the audit track' });
+    const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the Verified Certificate Track' });
+    const auditLearners = screen.getByRole('checkbox', { name: 'Learners in the Audit Track' });
     const { cohorts } = cohortFactory.build();
     cohorts.forEach(cohort => expect(screen.getByRole('checkbox', { name: `Cohort: ${cohort}` })).toBeDisabled());
     expect(verifiedLearners).toBeDisabled();
