@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -51,7 +51,7 @@ function BulkEmailContentHistory({ intl }) {
    * up a level (the `subject` field). We also convert the `sent_to` data to be a String rather than an array to fix a
    * display bug in the table.
    */
-  function transformDataForTable() {
+  const transformDataForTable = useMemo(() => {
     const tableData = emailHistoryData?.map((item) => ({
       ...item,
       subject: item.email.subject,
@@ -59,7 +59,7 @@ function BulkEmailContentHistory({ intl }) {
       created: new Date(item.created).toLocaleString(),
     }));
     return tableData || [];
-  }
+  }, [emailHistoryData]);
 
   /**
    * This function is responsible for setting the current `messageContent` state data. This will be the contents of a
@@ -100,7 +100,7 @@ function BulkEmailContentHistory({ intl }) {
    * contents of a previously sent message.
    */
   const additionalColumns = () => {
-    const tableData = transformDataForTable();
+    const tableData = transformDataForTable;
 
     return [
       {
@@ -137,7 +137,7 @@ function BulkEmailContentHistory({ intl }) {
           {showHistoricalEmailContentTable ? (
             <BulkEmailTaskManagerTable
               errorRetrievingData={errorRetrievingData}
-              tableData={transformDataForTable()}
+              tableData={transformDataForTable}
               tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
               alertWarningMessage={intl.formatMessage(messages.noEmailData)}
               alertErrorMessage={intl.formatMessage(messages.errorFetchingEmailHistoryData)}
