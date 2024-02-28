@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
@@ -41,13 +41,13 @@ function BulkEmailTaskHistory({ intl }) {
     setShowHistoricalTaskContentTable(true);
   }
 
-  function transformDataForTable() {
+  const transformDataForTable = useMemo(() => {
     const tableData = emailTaskHistoryData?.map((item) => ({
       ...item,
       created: new Date(item.created).toLocaleString(),
     }));
     return tableData || [];
-  }
+  }, [emailTaskHistoryData]);
 
   const tableColumns = [
     {
@@ -103,7 +103,7 @@ function BulkEmailTaskHistory({ intl }) {
           {showHistoricalTaskContentTable ? (
             <BulkEmailTaskManagerTable
               errorRetrievingData={errorRetrievingData}
-              tableData={transformDataForTable()}
+              tableData={transformDataForTable}
               alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
               alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}
               columns={tableColumns}
