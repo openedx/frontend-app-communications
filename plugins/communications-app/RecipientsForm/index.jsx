@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form } from '@edx/paragon';
+import { Form } from '@openedx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
 import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
@@ -10,10 +10,11 @@ import './styles.scss';
 const disableIsHasLearners = ['track', 'cohort'];
 const recipientsFormDescription = 'A selectable choice from a list of potential email recipients';
 
-const RecipientsForm = ({ cohorts: additionalCohorts }) => {
+const RecipientsForm = ({ cohorts: additionalCohorts, courseModes }) => {
   const formData = useSelector((state) => state.form);
   const dispatch = useDispatch();
   const { isEditMode, emailRecipients, isFormSubmitted } = formData;
+  const hasCourseModes = courseModes.length > 1;
 
   const [selectedGroups, setSelectedGroups] = useState([]);
   const hasAllLearnersSelected = selectedGroups.some((group) => group === 'learners');
@@ -92,6 +93,24 @@ const RecipientsForm = ({ cohorts: additionalCohorts }) => {
           />
         </Form.Checkbox>
         {
+          // additional modes
+          hasCourseModes
+          && courseModes.map((courseMode) => (
+            <Form.Checkbox
+              key={`track:${courseMode.slug}`}
+              value={`track:${courseMode.slug}`}
+              disabled={hasAllLearnersSelected}
+              className="col col-lg-4 col-sm-6 col-12"
+            >
+              <FormattedMessage
+                id="bulk.email.form.mode.label"
+                defaultMessage="Learners in the {courseModeName} Track"
+                values={{ courseModeName: courseMode.name }}
+              />
+            </Form.Checkbox>
+          ))
+        }
+        {
             // additional cohorts
             additionalCohorts
             && additionalCohorts.map((cohort) => (
@@ -152,10 +171,17 @@ const RecipientsForm = ({ cohorts: additionalCohorts }) => {
 
 RecipientsForm.defaultProps = {
   cohorts: [],
+  courseModes: [],
 };
 
 RecipientsForm.propTypes = {
   cohorts: PropTypes.arrayOf(PropTypes.string),
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
 export default RecipientsForm;

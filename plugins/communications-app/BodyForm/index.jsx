@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from '@edx/paragon';
+import { Form } from '@openedx/paragon';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import TextEditor from '@communications-app/src/components/bulk-email-tool/text-editor/TextEditor';
 import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';

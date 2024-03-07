@@ -6,7 +6,7 @@ import {
   Form,
   Spinner,
   useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { BulkEmailContext } from '../../bulk-email-context';
 import useMobileResponsive from '../../../../utils/useMobileResponsive';
 import PluggableComponent from '../../../PluggableComponent';
@@ -14,13 +14,14 @@ import PluggableComponent from '../../../PluggableComponent';
 import { withContextProvider, useDispatch } from './context';
 import { actionCreators as formActions } from './context/reducer';
 
-const BuildEmailFormExtensible = ({ courseId, cohorts }) => {
+const BuildEmailFormExtensible = ({ courseId, cohorts, courseModes }) => {
   const isMobile = useMobileResponsive();
   const [{ editor }] = useContext(BulkEmailContext);
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
   const dispatch = useDispatch();
 
   useDeepCompareEffect(() => {
+    /* istanbul ignore next */
     if (editor.editMode) {
       const newRecipientsValue = editor.emailRecipients;
       const newSubjectValue = editor.emailSubject;
@@ -61,6 +62,7 @@ const BuildEmailFormExtensible = ({ courseId, cohorts }) => {
           as="communications-app-recipients-checks"
           cohorts={cohorts}
           courseId={courseId}
+          courseModes={courseModes}
         />
 
         <PluggableComponent
@@ -103,11 +105,18 @@ const BuildEmailFormExtensible = ({ courseId, cohorts }) => {
 
 BuildEmailFormExtensible.defaultProps = {
   cohorts: [],
+  courseModes: [],
 };
 
 BuildEmailFormExtensible.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
 export default withContextProvider(BuildEmailFormExtensible);

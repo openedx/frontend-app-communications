@@ -8,7 +8,7 @@
   "peerDependencies": {
     "@edx/frontend-app-communications": "*",
     "@edx/frontend-platform": "*",
-    "@edx/paragon": "*",
+    "@openedx/paragon": "*",
     "prop-types": "*",
     "react": "*"
   },

@@ -7,14 +7,14 @@ import {
   Form,
   Icon,
   Toast,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   SpinnerSimple,
   Cancel,
   Send,
   Event,
   Check,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import ScheduleEmailForm from '@communications-app/src/components/bulk-email-tool/bulk-email-form/ScheduleEmailForm';

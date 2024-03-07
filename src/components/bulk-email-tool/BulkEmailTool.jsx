@@ -34,9 +34,9 @@ export default function BulkEmailTool() {
                 </h1>
               </div>
               <div className="row">
-                <BuildEmailFormExtensible 
-                  courseId={courseId} 
-                  cohorts={courseMetadata.cohorts} 
+                <BuildEmailFormExtensible
+                  courseId={courseId}
+                  cohorts={courseMetadata.cohorts}
                   courseModes={courseMetadata.courseModes}
                 />
               </div>

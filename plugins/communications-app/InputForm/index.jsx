@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Form, Container } from '@edx/paragon';
+import { Form, Container } from '@openedx/paragon';
 
 const InputForm = ({
   isValid,
