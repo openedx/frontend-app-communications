@@ -39,7 +39,7 @@ export default function PageContainer(props) {
       }
 
       const {
-        org, number, title, tabs, originalUserIsStaff,
+        org, number, title, tabs, originalUserIsStaff, courseModes,
       } = metadataResponse;
       const { cohorts } = cohortsResponse;
 
@@ -48,6 +48,7 @@ export default function PageContainer(props) {
         number,
         title,
         originalUserIsStaff,
+        courseModes,
         tabs: [...tabs],
         cohorts: cohorts.map(({ name }) => name),
       });

@@ -29,6 +29,8 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+global.Date.prototype.toLocaleDateString = jest.fn();
+
 export function initializeMockApp() {
   mergeConfig({
     // MICROBA-1505: Remove this when we remove the flag from config
