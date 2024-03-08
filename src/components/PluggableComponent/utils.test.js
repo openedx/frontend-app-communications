@@ -13,7 +13,7 @@ jest.mock('../../../package.json', () => ({
 describe('Utils', () => {
   describe('isPluginAvailable util', () => {
     test('returns true if a plugin is installed', async () => {
-      const checkBoxPlugin = await isPluginAvailable('communications-app-check-box-form');
+      const checkBoxPlugin = await isPluginAvailable('communications-app-test-component');
       expect(checkBoxPlugin).toBe(true);
     });
 
