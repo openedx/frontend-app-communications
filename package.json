@@ -46,8 +46,6 @@
     "@fortawesome/react-fontawesome": "0.2.0",
     "@loadable/component": "^5.15.3",
     "@openedx-plugins/communications-app-body-email-form": "file:plugins/communications-app/BodyForm",
-    "@openedx-plugins/communications-app-check-box-form": "file:plugins/communications-app/CheckBoxForm",
-    "@openedx-plugins/communications-app-input-form": "file:plugins/communications-app/InputForm",
     "@openedx-plugins/communications-app-instructions-pro-freading": "file:plugins/communications-app/InstructionsProfreading",
     "@openedx-plugins/communications-app-recipients-checks": "file:plugins/communications-app/RecipientsForm",
     "@openedx-plugins/communications-app-schedule-section": "file:plugins/communications-app/ScheduleSection",
