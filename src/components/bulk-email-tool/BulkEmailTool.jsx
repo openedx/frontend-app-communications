@@ -7,7 +7,7 @@ import { Container } from '@openedx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import NavigationTabs from '../navigation-tabs/NavigationTabs';
-import BuildEmailFormExtensible from './bulk-email-form/BuildEmailFormExtensible';
+import BulkEmailForm from './bulk-email-form/BulkEmailForm';
 import { CourseMetadataContext } from '../page-container/PageContainer';
 import { BulkEmailProvider } from './bulk-email-context';
 import BackToInstructor from '../navigation-tabs/BackToInstructor';
@@ -34,7 +34,7 @@ export default function BulkEmailTool() {
                 </h1>
               </div>
               <div className="row">
-                <BuildEmailFormExtensible
+                <BulkEmailForm
                   courseId={courseId}
                   cohorts={courseMetadata.cohorts}
                   courseModes={courseMetadata.courseModes}

@@ -11,7 +11,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { BulkEmailProvider } from '../../bulk-email-context';
 import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
 
-import BuildEmailFormExtensible from '.';
+import BulkEmailForm from '.';
 
 // eslint-disable-next-line react/prop-types
 jest.mock('../../text-editor/TextEditor', () => ({ value, onChange }) => (
@@ -30,7 +30,7 @@ jest.mock('@edx/frontend-platform', () => ({ getConfig: jest.fn() }));
 
 getConfig.mockReturnValue({ LMS_BASE_URL: 'http://localhost', SCHEDULE_EMAIL_SECTION: true });
 
-describe('BuildEmailFormExtensible', () => {
+describe('BulkEmailForm', () => {
   const { cohorts } = cohortFactory.build();
 
   // eslint-disable-next-line react/prop-types
@@ -40,17 +40,17 @@ describe('BuildEmailFormExtensible', () => {
     </IntlProvider>
   );
 
-  const RenderBuildEmailFormExtensible = () => (
+  const RenderBulkEmailForm = () => (
     <IntlProviderWrapper>
       <BulkEmailProvider>
-        <BuildEmailFormExtensible courseId="test" cohorts={cohorts} />
+        <BulkEmailForm courseId="test" cohorts={cohorts} />
       </BulkEmailProvider>
     </IntlProviderWrapper>
 
   );
 
   test('renders the form and shows initial loading states', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(() => {
       expect(screen.getByText('Send to')).toBeTruthy();
       expect(screen.getByText('Subject')).toBeTruthy();
@@ -59,7 +59,7 @@ describe('BuildEmailFormExtensible', () => {
     });
   });
   test('it shows a warning when clicking submit', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(async () => {
       fireEvent.click(screen.getByText('Send email'));
       const warning = await screen.findByText('CAUTION!', { exact: false });
@@ -68,7 +68,7 @@ describe('BuildEmailFormExtensible', () => {
   });
 
   test('Prevent form POST if invalid', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(async () => {
       fireEvent.click(screen.getByText('Send email'));
       expect(await screen.findByRole('button', { name: /continue/i })).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe('BuildEmailFormExtensible', () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(100);
 
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
 
     await waitFor(async () => {
       expect(screen.getByText('Send email')).toBeTruthy();
@@ -106,7 +106,7 @@ describe('BuildEmailFormExtensible', () => {
   });
 
   test('Checking "All Learners" disables each learner group', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(async () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'All Learners' }));
       const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the verified certificate track' });
@@ -118,7 +118,7 @@ describe('BuildEmailFormExtensible', () => {
   });
 
   test('Shows scheduling form when checkbox is checked and submit is changed', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(async () => {
       const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
       fireEvent.click(scheduleCheckbox);
@@ -129,7 +129,7 @@ describe('BuildEmailFormExtensible', () => {
   });
 
   test('Prevents sending email when scheduling inputs are empty', async () => {
-    render(<RenderBuildEmailFormExtensible />);
+    render(<RenderBulkEmailForm />);
     await waitFor(async () => {
       const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
       fireEvent.click(scheduleCheckbox);

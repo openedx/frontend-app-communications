@@ -1,6 +1,6 @@
 import { reducer, actionCreators, INITIAL_STATE } from './reducer';
 
-describe('BuildEmailFormExtensible reducer tests', () => {
+describe('BulkEmailForm reducer tests', () => {
   test('should update the form correctly', () => {
     const state = reducer(INITIAL_STATE, actionCreators.updateForm({ emailId: 'example@email.com', newKey: 'test' }));
     expect(state.form.emailId).toBe('example@email.com');

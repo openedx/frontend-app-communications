@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import TaskAlertModal from '@communications-app/src/components/bulk-email-tool/task-alert-modal';
 import { getScheduledBulkEmailThunk } from '@communications-app/src/components/bulk-email-tool/bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
 import { BulkEmailContext } from '@communications-app/src/components/bulk-email-tool/bulk-email-context';
-import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context';
-import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BuildEmailFormExtensible/context/reducer';
+import { useSelector, useDispatch } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BulkEmailForm/context';
+import { actionCreators as formActions } from '@communications-app/src/components/bulk-email-tool/bulk-email-form/BulkEmailForm/context/reducer';
 
 import { postBulkEmailInstructorTask, patchScheduledBulkEmailInstructorTask } from './api';
 import { AlertMessage, EditMessage } from './AlertTypes';

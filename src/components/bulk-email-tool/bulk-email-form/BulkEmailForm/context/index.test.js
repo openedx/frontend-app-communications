@@ -7,7 +7,7 @@ import {
   useSelector, useDispatch, StateContext, DispatchContext,
 } from '.';
 
-describe('BuildEmailFormExtensible stateContext', () => {
+describe('BulkEmailForm stateContext', () => {
   test('useSelector returns the state', () => {
     const { result } = renderHook(() => useSelector((state) => state));
     expect(result.current).toEqual(INITIAL_STATE);

@@ -14,7 +14,7 @@ import PluggableComponent from '../../../PluggableComponent';
 import { withContextProvider, useDispatch } from './context';
 import { actionCreators as formActions } from './context/reducer';
 
-const BuildEmailFormExtensible = ({ courseId, cohorts, courseModes }) => {
+const BulkEmailForm = ({ courseId, cohorts, courseModes }) => {
   const isMobile = useMobileResponsive();
   const [{ editor }] = useContext(BulkEmailContext);
   const [isTaskAlertOpen, openTaskAlert, closeTaskAlert] = useToggle(false);
@@ -103,12 +103,12 @@ const BuildEmailFormExtensible = ({ courseId, cohorts, courseModes }) => {
   );
 };
 
-BuildEmailFormExtensible.defaultProps = {
+BulkEmailForm.defaultProps = {
   cohorts: [],
   courseModes: [],
 };
 
-BuildEmailFormExtensible.propTypes = {
+BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
   courseModes: PropTypes.arrayOf(
@@ -119,4 +119,4 @@ BuildEmailFormExtensible.propTypes = {
   ),
 };
 
-export default withContextProvider(BuildEmailFormExtensible);
+export default withContextProvider(BulkEmailForm);
