@@ -1,3 +1,4 @@
+const path = require('path');
 const { createConfig } = require('@openedx/frontend-build');
 
 const config = createConfig('webpack-prod');
@@ -17,5 +18,12 @@ const webpack5esmInteropRule = {
 const otherRules = config.module.rules;
 
 config.module.rules = [webpack5esmInteropRule, ...otherRules];
+
+const alias = {
+  '@node_modules': path.resolve(__dirname, 'node_modules'),
+  '@communications-app': path.resolve(__dirname, '.'),
+};
+
+config.resolve.alias = { ...config.resolve.alias, ...alias };
 
 module.exports = config;

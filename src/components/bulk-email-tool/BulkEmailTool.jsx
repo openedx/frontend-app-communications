@@ -7,10 +7,11 @@ import { Container } from '@openedx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import NavigationTabs from '../navigation-tabs/NavigationTabs';
-import BulkEmailForm from './bulk-email-form';
+import BulkEmailForm from './bulk-email-form/BulkEmailForm';
 import { CourseMetadataContext } from '../page-container/PageContainer';
 import { BulkEmailProvider } from './bulk-email-context';
 import BackToInstructor from '../navigation-tabs/BackToInstructor';
+import PluggableComponent from '../PluggableComponent';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
@@ -40,7 +41,12 @@ export default function BulkEmailTool() {
                 />
               </div>
               <div className="row py-5">
-                <BulkEmailTaskManager courseId={courseId} />
+                <PluggableComponent
+                  id="build-email-task-manager"
+                  as="communications-app-build-email-task-manager"
+                >
+                  <BulkEmailTaskManager courseId={courseId} />
+                </PluggableComponent>
               </div>
             </Container>
           </BulkEmailProvider>
