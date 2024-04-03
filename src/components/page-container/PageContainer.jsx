@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 import Footer from '@edx/frontend-component-footer';
-import { Spinner } from '@edx/paragon';
+import { Spinner } from '@openedx/paragon';
 
 import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
 
@@ -39,7 +39,7 @@ export default function PageContainer(props) {
       }
 
       const {
-        org, number, title, tabs, originalUserIsStaff,
+        org, number, title, tabs, originalUserIsStaff, courseModes,
       } = metadataResponse;
       const { cohorts } = cohortsResponse;
 
@@ -48,6 +48,7 @@ export default function PageContainer(props) {
         number,
         title,
         originalUserIsStaff,
+        courseModes,
         tabs: [...tabs],
         cohorts: cohorts.map(({ name }) => name),
       });

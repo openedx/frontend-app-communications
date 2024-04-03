@@ -51,11 +51,12 @@ describe('BulkEmailTaskHistory component', () => {
       expect(await screen.findByText('State')).toBeTruthy();
       expect(await screen.findByText('Status')).toBeTruthy();
       expect(await screen.findByText('Task Progress')).toBeTruthy();
-      expect(await screen.findAllByText('Showing 1 of 1.')).toBeTruthy();
+      expect(await screen.findAllByText('Showing 1 - 1 of 1.')).toBeTruthy();
       // verification of row contents
       const { tasks } = taskHistoryData;
       const task = tasks[0];
-      expect(await screen.findByText(task.created)).toBeTruthy();
+      const createdDate = new Date(task.created).toLocaleString();
+      expect(await screen.findByText(createdDate)).toBeTruthy();
       expect(await screen.findByText(task.duration_sec)).toBeTruthy();
       expect(await screen.findByText(task.requester)).toBeTruthy();
       expect(await screen.findByText(task.status)).toBeTruthy();

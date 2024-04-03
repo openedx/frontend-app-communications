@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ErrorPage } from '@edx/frontend-platform/react';
-import { Container } from '@edx/paragon';
+import { Container } from '@openedx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import NavigationTabs from '../navigation-tabs/NavigationTabs';
@@ -33,7 +33,11 @@ export default function BulkEmailTool() {
                 </h1>
               </div>
               <div className="row">
-                <BulkEmailForm courseId={courseId} cohorts={courseMetadata.cohorts} />
+                <BulkEmailForm
+                  courseId={courseId}
+                  cohorts={courseMetadata.cohorts}
+                  courseModes={courseMetadata.courseModes}
+                />
               </div>
               <div className="row py-5">
                 <BulkEmailTaskManager courseId={courseId} />
