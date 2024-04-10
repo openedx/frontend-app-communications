@@ -52,6 +52,7 @@
     "jquery": "3.6.1",
     "popper.js": "1.16.1",
     "prop-types": "15.8.1",
+    "raw-loader": "4.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-helmet": "^6.1.0",
