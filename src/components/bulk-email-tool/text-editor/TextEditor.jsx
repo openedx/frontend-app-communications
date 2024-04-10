@@ -17,13 +17,24 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/codesample';
 import '@edx/tinymce-language-selector';
 
-import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
-import contentCss from 'tinymce/skins/content/default/content.css';
+/* eslint import/no-webpack-loader-syntax: off */
+// eslint-disable-next-line import/no-unresolved
+import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.css';
+// eslint-disable-next-line import/no-unresolved
+import contentCss from '!!raw-loader!tinymce/skins/content/default/content.css';
 
 export default function TextEditor(props) {
   const {
     onChange, onKeyUp, onInit, disabled, value,
   } = props;
+
+  let contentStyle;
+  // In the test environment this causes an error so set styles to empty since they aren't needed for testing.
+  try {
+    contentStyle = [contentCss, contentUiCss].join('\n');
+  } catch (err) {
+    contentStyle = '';
+  }
 
   return (
     <Editor
@@ -38,7 +49,7 @@ export default function TextEditor(props) {
           'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link image code ',
         skin: false,
         content_css: false,
-        content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
+        content_style: contentStyle,
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
         image_advtab: true,
