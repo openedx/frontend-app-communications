@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
-import Footer from '@edx/frontend-component-footer';
+import { FooterSlot } from '@edx/frontend-component-footer';
 import { Spinner } from '@openedx/paragon';
 
 import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
@@ -72,7 +72,7 @@ export default function PageContainer(props) {
               {children}
             </main>
           </div>
-          <Footer />
+          <FooterSlot />
         </>
       </CourseMetadataContext.Provider>
     );
