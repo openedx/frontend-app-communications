@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
-import { FooterSlot } from '@edx/frontend-component-footer';
+import FooterSlot from '@openedx/frontend-slot-footer';
 import { Spinner } from '@openedx/paragon';
 
 import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
