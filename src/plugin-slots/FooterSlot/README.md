@@ -6,7 +6,7 @@
 
 This slot is used to replace/modify/hide the footer.
 
-The implementation of the `FooterSlot` component lives in [the `frontend-component-footer` repository](https://github.com/openedx/frontend-component-footer/tree/master/src/components/footer-slot). 
+The implementation of the `FooterSlot` component lives in [the `frontend-slot-footer` repository](https://github.com/openedx/frontend-slot-footer/).
 
 ## Example
 
@@ -18,7 +18,7 @@ with a simple custom footer
 
 ![Screenshot of Custom Footer](./images/custom_footer.png)
 
-```js
+```jsx
 import { DIRECT_PLUGIN, PLUGIN_OPERATIONS } from '@openedx/frontend-plugin-framework';
 
 const config = {
