@@ -9,14 +9,14 @@ import messages from './messages';
 import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table';
 import BulkEmailPendingTasksAlert from './BulkEmailPendingTasksAlert';
 
-function BulkEmailTaskManager({ courseId }) {
+function BulkEmailTaskManager({ courseId, courseModes }) {
   const intl = useIntl();
   return (
     <div className="w-100">
       {getConfig().SCHEDULE_EMAIL_SECTION && (
         <div>
           <h2 className="h3 text-primary-500">{intl.formatMessage(messages.scheduledEmailsTableHeader)}</h2>
-          <BulkEmailScheduledEmailsTable />
+          <BulkEmailScheduledEmailsTable courseModes={courseModes} />
         </div>
       )}
       <div>
@@ -36,6 +36,12 @@ function BulkEmailTaskManager({ courseId }) {
 
 BulkEmailTaskManager.propTypes = {
   courseId: PropTypes.string.isRequired,
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default BulkEmailTaskManager;
