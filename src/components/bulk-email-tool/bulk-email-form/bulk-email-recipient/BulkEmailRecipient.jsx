@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from '@openedx/paragon';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { RECIPIENTS_DISPLAY_NAMES } from '../../utils';
 
 import './bulkEmailRecepient.scss';
 
@@ -41,7 +42,7 @@ export default function BulkEmailRecipient(props) {
         <Form.Checkbox key="myself" value="myself" className="mt-2.5 col col-lg-4 col-sm-6 col-12">
           <FormattedMessage
             id="bulk.email.form.recipients.myself"
-            defaultMessage="Myself"
+            defaultMessage={RECIPIENTS_DISPLAY_NAMES.myself}
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
@@ -52,7 +53,7 @@ export default function BulkEmailRecipient(props) {
         >
           <FormattedMessage
             id="bulk.email.form.recipients.staff"
-            defaultMessage="Staff/Administrators"
+            defaultMessage={RECIPIENTS_DISPLAY_NAMES.staff}
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
@@ -99,7 +100,7 @@ export default function BulkEmailRecipient(props) {
         >
           <FormattedMessage
             id="bulk.email.form.recipients.learners"
-            defaultMessage="All Learners"
+            defaultMessage={RECIPIENTS_DISPLAY_NAMES.learners}
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
