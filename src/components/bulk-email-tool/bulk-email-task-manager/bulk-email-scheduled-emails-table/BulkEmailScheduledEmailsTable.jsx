@@ -4,6 +4,7 @@
 import React, {
   useCallback, useContext, useState, useEffect,
 } from 'react';
+import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Alert, DataTable, Icon, IconButton, useToggle,
@@ -19,8 +20,9 @@ import ViewEmailModal from '../ViewEmailModal';
 import { copyToEditor } from '../../bulk-email-form/data/actions';
 import TaskAlertModal from '../../task-alert-modal';
 import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
+import { getDisplayText, getRecipientFromDisplayText } from '../../utils';
 
-function flattenScheduledEmailsArray(emails) {
+function flattenScheduledEmailsArray(emails, courseModes) {
   return emails.map((email) => ({
     schedulingId: email.id,
     emailId: email.courseEmail.id,
@@ -28,11 +30,12 @@ function flattenScheduledEmailsArray(emails) {
     taskDue: new Date(email.taskDue).toLocaleString(),
     taskDueUTC: email.taskDue,
     ...email.courseEmail,
-    targets: email.courseEmail.targets.join(', '),
+    targets: email.courseEmail.targets
+      .map((recipient) => getDisplayText(recipient, courseModes)).join(', '),
   }));
 }
 
-function BulkEmailScheduledEmailsTable({ intl }) {
+function BulkEmailScheduledEmailsTable({ intl, courseModes }) {
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
   const [tableData, setTableData] = useState([]);
@@ -44,8 +47,8 @@ function BulkEmailScheduledEmailsTable({ intl }) {
   const [currentTask, setCurrentTask] = useState({});
 
   useEffect(() => {
-    setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results));
-  }, [scheduledEmailsTable.results]);
+    setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results, courseModes));
+  }, [scheduledEmailsTable.results, courseModes]);
 
   const fetchTableData = useCallback((args) => {
     dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
@@ -96,7 +99,8 @@ function BulkEmailScheduledEmailsTable({ intl }) {
       },
     } = row;
     const dateTime = new Date(taskDueUTC);
-    const emailRecipients = targets.replaceAll('-', ':').split(', ');
+    const emailRecipients = targets
+      .split(', ').map((recipient) => getRecipientFromDisplayText(recipient, courseModes));
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
     dispatch(
@@ -198,6 +202,12 @@ function BulkEmailScheduledEmailsTable({ intl }) {
 
 BulkEmailScheduledEmailsTable.propTypes = {
   intl: intlShape.isRequired,
+  courseModes: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default injectIntl(BulkEmailScheduledEmailsTable);
