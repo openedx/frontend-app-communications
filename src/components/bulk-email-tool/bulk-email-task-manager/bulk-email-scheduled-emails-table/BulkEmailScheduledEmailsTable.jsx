@@ -20,9 +20,9 @@ import ViewEmailModal from '../ViewEmailModal';
 import { copyToEditor } from '../../bulk-email-form/data/actions';
 import TaskAlertModal from '../../task-alert-modal';
 import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
-import { getDisplayText, getRecipientFromDisplayText } from '../../utils';
+import { getDisplayTextFromRecipient, getRecipientFromDisplayText } from '../../utils';
 
-function flattenScheduledEmailsArray(emails, courseModes) {
+function flattenScheduledEmailsArray(emails) {
   return emails.map((email) => ({
     schedulingId: email.id,
     emailId: email.courseEmail.id,
@@ -30,8 +30,7 @@ function flattenScheduledEmailsArray(emails, courseModes) {
     taskDue: new Date(email.taskDue).toLocaleString(),
     taskDueUTC: email.taskDue,
     ...email.courseEmail,
-    targets: email.courseEmail.targets
-      .map((recipient) => getDisplayText(recipient, courseModes)).join(', '),
+    targets: email.courseEmail.targets.map(getDisplayTextFromRecipient).join(', '),
   }));
 }
 
@@ -100,8 +99,7 @@ function BulkEmailScheduledEmailsTable({ courseModes }) {
       },
     } = row;
     const dateTime = new Date(taskDueUTC);
-    const emailRecipients = targets
-      .split(', ').map((recipient) => getRecipientFromDisplayText(recipient, courseModes));
+    const emailRecipients = targets.replaceAll('-', ':').split(', ').map(getRecipientFromDisplayText);
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
     dispatch(
