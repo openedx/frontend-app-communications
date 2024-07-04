@@ -28,7 +28,7 @@ import {
 } from './data/actions';
 import { editScheduledEmailThunk, postBulkEmailThunk } from './data/thunks';
 import { getScheduledBulkEmailThunk } from '../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
-import { getDisplayText } from '../utils';
+import { getDisplayTextFromRecipient } from '../utils';
 
 import './bulkEmailForm.scss';
 
@@ -220,7 +220,7 @@ function BulkEmailForm(props) {
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
       <ul className="list-unstyled">
         {editor.emailRecipients.map((group) => (
-          <li key={group}>{getDisplayText(group, courseModes)}</li>
+          <li key={group}>{getDisplayTextFromRecipient(group)}</li>
         ))}
       </ul>
       {!isScheduled && (
@@ -247,7 +247,7 @@ function BulkEmailForm(props) {
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
       <ul className="list-unstyled">
         {editor.emailRecipients.map((group) => (
-          <li key={group}>{getDisplayText(group, courseModes)}</li>
+          <li key={group}>{getDisplayTextFromRecipient(group)}</li>
         ))}
       </ul>
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
