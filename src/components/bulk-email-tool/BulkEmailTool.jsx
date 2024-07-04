@@ -40,10 +40,7 @@ export default function BulkEmailTool() {
                 />
               </div>
               <div className="row py-5">
-                <BulkEmailTaskManager
-                  courseId={courseId}
-                  courseModes={courseMetadata.courseModes}
-                />
+                <BulkEmailTaskManager courseId={courseId} />
               </div>
             </Container>
           </BulkEmailProvider>
