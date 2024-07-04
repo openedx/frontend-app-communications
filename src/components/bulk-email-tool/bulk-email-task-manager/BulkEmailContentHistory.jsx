@@ -13,7 +13,6 @@ import messages from './messages';
 import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
-import { HISTORY_RECIPIENTS_DISPLAY_NAMES } from '../utils';
 
 function BulkEmailContentHistory({ intl }) {
   const { courseId } = useParams();
@@ -56,7 +55,7 @@ function BulkEmailContentHistory({ intl }) {
     const tableData = emailHistoryData?.map((item) => ({
       ...item,
       subject: item.email.subject,
-      sent_to: item.sent_to.map((recipient) => HISTORY_RECIPIENTS_DISPLAY_NAMES[recipient] || recipient).join(', '),
+      sent_to: item.sent_to.join(', '),
       created: new Date(item.created).toLocaleString(),
     }));
     return tableData || [];
