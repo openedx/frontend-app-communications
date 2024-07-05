@@ -13,6 +13,7 @@ import { BulkEmailProvider } from '../../../bulk-email-context';
 import BulkEmailScheduledEmailsTable from '..';
 import scheduledEmailsFactory from './__factories__/scheduledEmails.factory';
 import * as actions from '../../../bulk-email-form/data/actions';
+import { RECIPIENTS_DISPLAY_NAMES } from '../../../utils';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -42,7 +43,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
       .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1));
     render(renderBulkEmailScheduledEmailsTable());
-    expect(await screen.findByText('learners')).toBeTruthy();
+    expect(await screen.findByText(RECIPIENTS_DISPLAY_NAMES.learners)).toBeTruthy();
     expect(await screen.findByText('subject')).toBeTruthy();
     expect(await screen.findByText('edx')).toBeTruthy();
     expect(await screen.findByLabelText('View')).toBeTruthy();
