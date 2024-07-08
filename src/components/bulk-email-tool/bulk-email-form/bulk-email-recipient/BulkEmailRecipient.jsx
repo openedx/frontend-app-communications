@@ -52,7 +52,7 @@ export default function BulkEmailRecipient(props) {
         >
           <FormattedMessage
             id="bulk.email.form.recipients.staff"
-            defaultMessage="Staff/Administrators"
+            defaultMessage="Staff and instructors"
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
@@ -99,7 +99,7 @@ export default function BulkEmailRecipient(props) {
         >
           <FormattedMessage
             id="bulk.email.form.recipients.learners"
-            defaultMessage="All Learners"
+            defaultMessage="All students"
             description="A selectable choice from a list of potential email recipients"
           />
         </Form.Checkbox>
