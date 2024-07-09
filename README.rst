@@ -1,5 +1,5 @@
 frontend-app-communications
-#############################
+###########################
 
 |license-badge| |status-badge| |ci-badge| |codecov-badge|
 
@@ -7,52 +7,56 @@ frontend-app-communications
 Purpose
 *******
 
-A tool used by course teams to communicate with their learners. The interface for anything related to instructor to learner communications. Instructor bulk email, for example.
+A tool used by course teams to communicate with their learners. The interface for anything related to instructor-to-learner communications. Instructor bulk email, for example.
 
 Getting started
-------------
+---------------
 
-For now, this repo is not intergrated with devstack. You'll be running the app locally and not through docker. This does make setup a little easier.
+For now, this repo is not integrated with devstack. You'll be running the app locally and not through docker. This does make setup a little easier.
 
 Cloning and Startup
 ===================
 
-   1. Clone your new repo:
+1. Clone your new repo:
 
-   ``git clone https://github.com/edx/frontend-app-communications.git``
+.. code-block:: bash
 
-   2. Use node v18.x.
+   git clone https://github.com/edx/frontend-app-communications.git
 
-      The current version of the micro-frontend build scripts support node 18.
-      Using other major versions of node *may* work, but this is unsupported.  For
-      convenience, this repository includes an .nvmrc file to help in setting the
-      correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
+2. Use node v18.x.
 
-   3. Install npm dependencies:
+   The current version of the micro-frontend build scripts supports node 18.
+   Using other major versions of node *may* work, but this is unsupported.  For
+   convenience, this repository includes a ``.nvmrc`` file to help in setting the
+   correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
 
-   ``cd frontend-app-communications && npm install``
+3. Install npm dependencies:
 
-   4. Update the application port to use for local development:
+.. code-block:: bash
 
-      Default port is 1984. If this does not work for you, update the line
-      `PORT=1984` to your port in all .env.* files
+   cd frontend-app-communications && npm install
 
-   5. Start the devserver. The app will be running at ``localhost:1984``, or whatever port you change it too.
+4. Update the application port to use for local development:
 
-      .. code-block::
+   The default port is 1984. If this does not work for you, update the line
+   ``PORT=1984`` to your port in all ``.env.*`` files
 
-         npm start
+5. Start the devserver. The app will be running at ``localhost:1984``, or whatever port you change it too.
+
+   .. code-block:: bash
+
+      npm start
 
 
 Environment Variables/Setup Notes
 ---------------------------------
 
-If you wish to add new environment varibles for local testing, they should be listed in 2 places:
+If you wish to add new environment variables for local testing, they should be listed in 2 places:
 
 1. In ``.env.development``
 2. Added to the ``mergeConfig`` found in ``src/index.jsx``
 
-.. code-block::
+.. code-block:: jsx
 
    initialize({
       config: () => {
@@ -61,13 +65,13 @@ If you wish to add new environment varibles for local testing, they should be li
        }, 'CommuncationsAppConfig');
 
 Running Tests
----------------------------
+-------------
 
 Tests use `jest` and `react-test-library`. To run all the tests for this repo:
 
-   .. code-block::
+.. code-block::
 
-      npm test
+   npm test
 
 Plugins
 =======
@@ -82,7 +86,7 @@ The production build is created with ``npm run build``.
 Internationalization
 ====================
 
-Please see refer to the `frontend-platform i18n howto`_ for documentation on
+Please refer to the `frontend-platform i18n howto`_ for documentation on
 internationalization.
 
 .. _frontend-platform i18n howto: https://github.com/openedx/frontend-platform/blob/master/docs/how_tos/i18n.rst
