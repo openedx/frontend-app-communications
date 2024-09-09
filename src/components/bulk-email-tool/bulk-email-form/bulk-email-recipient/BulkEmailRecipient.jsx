@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from '@edx/paragon';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
+import { getDisplayTextFromRecipient } from '../../utils';
+import { DEFAULT_RECIPIENTS_GROUPS } from '../../constants';
 
 import './bulkEmailRecepient.scss';
-
-const DEFAULT_GROUPS = {
-  SELF: 'myself',
-  STAFF: 'staff',
-  ALL_LEARNERS: 'learners',
-  VERIFIED: 'track:verified',
-  AUDIT: 'track:audit',
-};
 
 export default function BulkEmailRecipient(props) {
   const {
@@ -20,6 +14,7 @@ export default function BulkEmailRecipient(props) {
     additionalCohorts,
     courseModes,
   } = props;
+  const intl = useIntl();
   const hasCourseModes = courseModes && courseModes.length > 1;
   return (
     <Form.Group>
@@ -39,22 +34,14 @@ export default function BulkEmailRecipient(props) {
         value={selectedGroups}
       >
         <Form.Checkbox key="myself" value="myself" className="mt-2.5 col col-lg-4 col-sm-6 col-12">
-          <FormattedMessage
-            id="bulk.email.form.recipients.myself"
-            defaultMessage="Myself"
-            description="A selectable choice from a list of potential email recipients"
-          />
+          {getDisplayTextFromRecipient(intl, DEFAULT_RECIPIENTS_GROUPS.SELF)}
         </Form.Checkbox>
         <Form.Checkbox
           key="staff"
           value="staff"
           className="col col-lg-4 col-sm-6 col-12"
         >
-          <FormattedMessage
-            id="bulk.email.form.recipients.staff"
-            defaultMessage="Staff and instructors"
-            description="A selectable choice from a list of potential email recipients"
-          />
+          {getDisplayTextFromRecipient(intl, DEFAULT_RECIPIENTS_GROUPS.STAFF)}
         </Form.Checkbox>
         {
           // additional modes
@@ -63,7 +50,7 @@ export default function BulkEmailRecipient(props) {
             <Form.Checkbox
               key={`track:${courseMode.slug}`}
               value={`track:${courseMode.slug}`}
-              disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
+              disabled={selectedGroups.find((group) => group === DEFAULT_RECIPIENTS_GROUPS.ALL_LEARNERS)}
               className="col col-lg-4 col-sm-6 col-12"
             >
               <FormattedMessage
@@ -81,7 +68,7 @@ export default function BulkEmailRecipient(props) {
             <Form.Checkbox
               key={cohort}
               value={`cohort:${cohort}`}
-              disabled={selectedGroups.find((group) => group === DEFAULT_GROUPS.ALL_LEARNERS)}
+              disabled={selectedGroups.find((group) => group === DEFAULT_RECIPIENTS_GROUPS.ALL_LEARNERS)}
               className="col col-lg-4 col-sm-6 col-12"
             >
               <FormattedMessage
@@ -97,11 +84,7 @@ export default function BulkEmailRecipient(props) {
           value="learners"
           className="col col-lg-4 col-sm-6 col-12"
         >
-          <FormattedMessage
-            id="bulk.email.form.recipients.learners"
-            defaultMessage="All students"
-            description="A selectable choice from a list of potential email recipients"
-          />
+          {getDisplayTextFromRecipient(intl, DEFAULT_RECIPIENTS_GROUPS.ALL_LEARNERS)}
         </Form.Checkbox>
       </Form.CheckboxSet>
       {!props.isValid && (

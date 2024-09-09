@@ -13,7 +13,6 @@ import { BulkEmailContext, BulkEmailProvider } from '../../bulk-email-context';
 import { formatDate } from '../../../../utils/formatDateAndTime';
 import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
 import courseModeFactory from '../data/__factories__/bulkEmailFormCourseMode.factory';
-import { RECIPIENTS_DISPLAY_NAMES } from '../../utils';
 
 jest.mock('../../text-editor/TextEditor');
 
@@ -76,8 +75,8 @@ describe('bulk-email-form', () => {
       success: true,
     });
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByRole('checkbox', { name: RECIPIENTS_DISPLAY_NAMES.myself }));
-    expect(screen.getByRole('checkbox', { name: RECIPIENTS_DISPLAY_NAMES.myself })).toBeChecked();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
+    expect(screen.getByRole('checkbox', { name: 'Myself' })).toBeChecked();
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject' }), { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     fireEvent.click(screen.getByText('Send email'));
@@ -91,7 +90,7 @@ describe('bulk-email-form', () => {
     axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(500);
     render(renderBulkEmailForm());
     const subjectLine = screen.getByRole('textbox', { name: 'Subject' });
-    const recipient = screen.getByRole('checkbox', { name: RECIPIENTS_DISPLAY_NAMES.myself });
+    const recipient = screen.getByRole('checkbox', { name: 'Myself' });
     fireEvent.click(recipient);
     fireEvent.change(subjectLine, { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
@@ -100,9 +99,9 @@ describe('bulk-email-form', () => {
     fireEvent.click(await screen.findByRole('button', { name: /continue/i }));
     expect(await screen.findByText('An error occured while attempting to send the email.')).toBeInTheDocument();
   });
-  test('Checking "All Students" disables each learner group', async () => {
+  test('Checking "All learners" disables each learner group', async () => {
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByRole('checkbox', { name: RECIPIENTS_DISPLAY_NAMES.learners }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'All learners' }));
     const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the Verified Certificate Track' });
     const auditLearners = screen.getByRole('checkbox', { name: 'Learners in the Audit Track' });
     const { cohorts } = cohortFactory.build();
@@ -131,7 +130,7 @@ describe('bulk-email-form', () => {
   test('Adds scheduling data to POST requests when schedule is selected', async () => {
     const postBulkEmailInstructorTask = jest.spyOn(bulkEmailFormApi, 'postBulkEmailInstructorTask');
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByRole('checkbox', { name: RECIPIENTS_DISPLAY_NAMES.myself }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Myself' }));
     fireEvent.change(screen.getByRole('textbox', { name: 'Subject' }), { target: { value: 'test subject' } });
     fireEvent.change(screen.getByTestId('textEditor'), { target: { value: 'test body' } });
     const scheduleCheckbox = screen.getByText('Schedule this email for a future date');
