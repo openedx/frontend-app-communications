@@ -19,9 +19,9 @@ import ViewEmailModal from '../ViewEmailModal';
 import { copyToEditor } from '../../bulk-email-form/data/actions';
 import TaskAlertModal from '../../task-alert-modal';
 import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
-import { getDisplayTextFromRecipient, getRecipientFromDisplayText } from '../../utils';
+import { getDisplayTextFromRecipient } from '../../utils';
 
-function flattenScheduledEmailsArray(emails) {
+function flattenScheduledEmailsArray(intl, emails) {
   return emails.map((email) => ({
     schedulingId: email.id,
     emailId: email.courseEmail.id,
@@ -29,11 +29,12 @@ function flattenScheduledEmailsArray(emails) {
     taskDue: new Date(email.taskDue).toLocaleString(),
     taskDueUTC: email.taskDue,
     ...email.courseEmail,
-    targets: email.courseEmail.targets.map(getDisplayTextFromRecipient).join(', '),
+    targets: email.courseEmail.targets.join(', '),
+    targetsText: email.courseEmail.targets.map((mess) => getDisplayTextFromRecipient(intl, mess)).join(', '),
   }));
 }
 
-function BulkEmailScheduledEmailsTable({ intl, courseModes }) {
+function BulkEmailScheduledEmailsTable({ intl }) {
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
   const [tableData, setTableData] = useState([]);
@@ -45,8 +46,8 @@ function BulkEmailScheduledEmailsTable({ intl, courseModes }) {
   const [currentTask, setCurrentTask] = useState({});
 
   useEffect(() => {
-    setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results, courseModes));
-  }, [scheduledEmailsTable.results, courseModes]);
+    setTableData(flattenScheduledEmailsArray(intl, scheduledEmailsTable.results));
+  }, [intl, scheduledEmailsTable.results]);
 
   const fetchTableData = useCallback((args) => {
     dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
@@ -97,7 +98,7 @@ function BulkEmailScheduledEmailsTable({ intl, courseModes }) {
       },
     } = row;
     const dateTime = new Date(taskDueUTC);
-    const emailRecipients = targets.replaceAll('-', ':').split(', ').map(getRecipientFromDisplayText);
+    const emailRecipients = targets.replaceAll('-', ':').split(', ');
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
     dispatch(
@@ -155,7 +156,7 @@ function BulkEmailScheduledEmailsTable({ intl, courseModes }) {
             },
             {
               Header: intl.formatMessage(messages.bulkEmailScheduledEmailsTableSendTo),
-              accessor: 'targets',
+              accessor: 'targetsText',
             },
             {
               Header: intl.formatMessage(messages.bulkEmailScheduledEmailsTableSubject),
