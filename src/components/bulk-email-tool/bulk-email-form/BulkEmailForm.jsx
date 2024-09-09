@@ -220,7 +220,7 @@ function BulkEmailForm(props) {
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertRecipients, { subject: editor.emailSubject })}</p>
       <ul className="list-unstyled">
         {editor.emailRecipients.map((group) => (
-          <li key={group}>{getDisplayTextFromRecipient(group)}</li>
+          <li key={group}>{getDisplayTextFromRecipient(intl, group)}</li>
         ))}
       </ul>
       {!isScheduled && (
@@ -247,7 +247,7 @@ function BulkEmailForm(props) {
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingTo)}</p>
       <ul className="list-unstyled">
         {editor.emailRecipients.map((group) => (
-          <li key={group}>{getDisplayTextFromRecipient(group)}</li>
+          <li key={group}>{getDisplayTextFromRecipient(intl, group)}</li>
         ))}
       </ul>
       <p>{intl.formatMessage(messages.bulkEmailTaskAlertEditingWarning)}</p>
