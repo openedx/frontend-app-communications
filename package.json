@@ -65,8 +65,8 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.2.0",
-    "@openedx/frontend-build": "14.0.3",
     "@edx/reactifex": "^2.1.1",
+    "@openedx/frontend-build": "14.0.3",
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "axios-mock-adapter": "1.21.2",
