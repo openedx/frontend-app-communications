@@ -17,5 +17,6 @@ const RECIPIENTS_DISPLAY_NAMES = {
  */
 // eslint-disable-next-line import/prefer-default-export
 export const getDisplayTextFromRecipient = (intl, recipient) => (
-  intl.formatMessage(RECIPIENTS_DISPLAY_NAMES[recipient]) || recipient
+  const msg = RECIPIENTS_DISPLAY_NAMES[recipient];
+  return msg ? intl.formatMessage(msg) : recipient; // Fall back to the recipient key if no display name is found.
 );
