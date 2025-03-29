@@ -19,8 +19,9 @@ import ViewEmailModal from '../ViewEmailModal';
 import { copyToEditor } from '../../bulk-email-form/data/actions';
 import TaskAlertModal from '../../task-alert-modal';
 import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
+import { getDisplayTextFromRecipient } from '../../utils';
 
-function flattenScheduledEmailsArray(emails) {
+function flattenScheduledEmailsArray(intl, emails) {
   return emails.map((email) => ({
     schedulingId: email.id,
     emailId: email.courseEmail.id,
@@ -29,6 +30,7 @@ function flattenScheduledEmailsArray(emails) {
     taskDueUTC: email.taskDue,
     ...email.courseEmail,
     targets: email.courseEmail.targets.join(', '),
+    targetsText: email.courseEmail.targets.map((mess) => getDisplayTextFromRecipient(intl, mess)).join(', '),
   }));
 }
 
@@ -44,8 +46,8 @@ function BulkEmailScheduledEmailsTable({ intl }) {
   const [currentTask, setCurrentTask] = useState({});
 
   useEffect(() => {
-    setTableData(flattenScheduledEmailsArray(scheduledEmailsTable.results));
-  }, [scheduledEmailsTable.results]);
+    setTableData(flattenScheduledEmailsArray(intl, scheduledEmailsTable.results));
+  }, [intl, scheduledEmailsTable.results]);
 
   const fetchTableData = useCallback((args) => {
     dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
@@ -154,7 +156,7 @@ function BulkEmailScheduledEmailsTable({ intl }) {
             },
             {
               Header: intl.formatMessage(messages.bulkEmailScheduledEmailsTableSendTo),
-              accessor: 'targets',
+              accessor: 'targetsText',
             },
             {
               Header: intl.formatMessage(messages.bulkEmailScheduledEmailsTableSubject),
