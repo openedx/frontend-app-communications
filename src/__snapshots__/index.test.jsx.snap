@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app registry subscribe: APP_INIT_ERROR.  snapshot: displays an ErrorPage to root element 1`] = `
+<UNDEFINED>
+  <ErrorPage
+    message="test-error-message"
+  />
+</UNDEFINED>
+`;
+
+exports[`app registry subscribe: APP_READY.  links App to root element 1`] = `
+<UNDEFINED>
+  <AppProvider>
+    <HelmetWrapper
+      defer={true}
+      encodeSpecialCharacters={true}
+    >
+      <link
+        href="favicon-url"
+        rel="shortcut icon"
+        type="image/x-icon"
+      />
+    </HelmetWrapper>
+    <Routes>
+      <Route
+        element={
+          <AuthenticatedPageRoute>
+            <Page Container>
+              <Bulk Email Tool />
+            </Page Container>
+          </AuthenticatedPageRoute>
+        }
+        path="/courses/:courseId/bulk_email"
+      />
+    </Routes>
+  </AppProvider>
+</UNDEFINED>
+`;
