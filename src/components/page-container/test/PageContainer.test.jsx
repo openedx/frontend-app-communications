@@ -4,7 +4,7 @@
 import React from 'react';
 import { Factory } from 'rosie';
 import {
-  act, cleanup, initializeMockApp, render, screen,
+  cleanup, initializeMockApp, render, screen,
 } from '../../../setupTest';
 
 import PageContainer from '../PageContainer';
@@ -32,36 +32,32 @@ describe('PageContainer', () => {
   afterEach(cleanup);
 
   test('PageContainer renders properly when given course metadata', async () => {
-    await act(async () => {
-      const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
-      const courseMetadata = Factory.build('courseMetadata');
+    const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
+    const courseMetadata = Factory.build('courseMetadata');
 
-      getCohorts.mockImplementation(() => cohorts);
-      getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
+    getCohorts.mockImplementation(() => cohorts);
+    getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
 
-      render(<PageContainer />);
+    render(<PageContainer />);
 
-      // Look for the org, title, and number of the course, which should be displayed in the Header.
-      expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
-      expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
-    });
+    // Look for the org, title, and number of the course, which should be displayed in the Header.
+    expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
+    expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
   });
 
   test('PageContainer renders children nested within it.', async () => {
-    await act(async () => {
-      const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
-      const courseMetadata = Factory.build('courseMetadata');
+    const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
+    const courseMetadata = Factory.build('courseMetadata');
 
-      getCohorts.mockImplementation(() => cohorts);
-      getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
+    getCohorts.mockImplementation(() => cohorts);
+    getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
 
-      render(
-        <PageContainer>
-          <span>Test Text</span>
-        </PageContainer>,
-      );
+    render(
+      <PageContainer>
+        <span>Test Text</span>
+      </PageContainer>,
+    );
 
-      expect(await screen.findByText('Test Text')).toBeTruthy();
-    });
+    expect(await screen.findByText('Test Text')).toBeTruthy();
   });
 });

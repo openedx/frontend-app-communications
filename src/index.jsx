@@ -5,7 +5,8 @@ import {
   APP_INIT_ERROR, APP_READY, subscribe, initialize, mergeConfig, getConfig,
 } from '@edx/frontend-platform';
 import { AppProvider, AuthenticatedPageRoute, ErrorPage } from '@edx/frontend-platform/react';
-import ReactDOM from 'react-dom';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 
 import { Helmet } from 'react-helmet';
 import { Routes, Route } from 'react-router-dom';
@@ -16,30 +17,39 @@ import BulkEmailTool from './components/bulk-email-tool';
 import PageContainer from './components/page-container/PageContainer';
 
 subscribe(APP_READY, () => {
-  ReactDOM.render(
-    <AppProvider>
-      <Helmet>
-        <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
-      </Helmet>
-      <Routes>
-        <Route
-          path="/courses/:courseId/bulk_email"
-          element={(
-            <AuthenticatedPageRoute>
-              <PageContainer>
-                <BulkEmailTool />
-              </PageContainer>
-            </AuthenticatedPageRoute>
+  const root = createRoot(document.getElementById('root'));
+
+  root.render(
+    <StrictMode>
+      <AppProvider>
+        <Helmet>
+          <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+        </Helmet>
+        <Routes>
+          <Route
+            path="/courses/:courseId/bulk_email"
+            element={(
+              <AuthenticatedPageRoute>
+                <PageContainer>
+                  <BulkEmailTool />
+                </PageContainer>
+              </AuthenticatedPageRoute>
           )}
-        />
-      </Routes>
-    </AppProvider>,
-    document.getElementById('root'),
+          />
+        </Routes>
+      </AppProvider>
+    </StrictMode>,
   );
 });
 
 subscribe(APP_INIT_ERROR, (error) => {
-  ReactDOM.render(<ErrorPage message={error.message} />, document.getElementById('root'));
+  const root = createRoot(document.getElementById('root'));
+
+  root.render(
+    <StrictMode>
+      <ErrorPage message={error.message} />
+    </StrictMode>,
+  );
 });
 
 initialize({
