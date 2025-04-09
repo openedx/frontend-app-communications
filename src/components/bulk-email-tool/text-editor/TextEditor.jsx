@@ -17,8 +17,10 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/codesample';
 import '@edx/tinymce-language-selector';
 
-import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
-import contentCss from 'tinymce/skins/content/default/content.css';
+// eslint-disable-next-line import/no-unresolved, import/no-webpack-loader-syntax
+import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.css';
+// eslint-disable-next-line import/no-unresolved, import/no-webpack-loader-syntax
+import contentCss from '!!raw-loader!tinymce/skins/content/default/content.css';
 
 export default function TextEditor(props) {
   const {
@@ -38,7 +40,7 @@ export default function TextEditor(props) {
           'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link image code ',
         skin: false,
         content_css: false,
-        content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
+        content_style: `${contentUiCss}\n${contentCss}`,
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
         image_advtab: true,
