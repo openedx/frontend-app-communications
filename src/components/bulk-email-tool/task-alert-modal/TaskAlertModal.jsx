@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActionRow, AlertModal, Button } from '@openedx/paragon';
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 
 function TaskAlertModal(props) {
   const {
-    isOpen, close, alertMessage, intl,
+    isOpen, close, alertMessage,
   } = props;
-
+  const intl = useIntl();
   const messages = {
     taskAlertTitle: {
       id: 'bulk.email.task.alert.title',
@@ -57,7 +57,6 @@ TaskAlertModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
   alertMessage: PropTypes.node.isRequired,
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(TaskAlertModal);
+export default TaskAlertModal;

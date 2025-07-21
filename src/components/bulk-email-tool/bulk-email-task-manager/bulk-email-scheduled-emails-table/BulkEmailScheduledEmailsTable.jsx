@@ -4,7 +4,7 @@
 import React, {
   useCallback, useContext, useState, useEffect,
 } from 'react';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Alert, DataTable, Icon, IconButton, useToggle,
 } from '@openedx/paragon';
@@ -32,7 +32,8 @@ function flattenScheduledEmailsArray(emails) {
   }));
 }
 
-function BulkEmailScheduledEmailsTable({ intl }) {
+function BulkEmailScheduledEmailsTable() {
+  const intl = useIntl();
   const { courseId } = useParams();
   const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
   const [tableData, setTableData] = useState([]);
@@ -196,8 +197,4 @@ function BulkEmailScheduledEmailsTable({ intl }) {
   );
 }
 
-BulkEmailScheduledEmailsTable.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(BulkEmailScheduledEmailsTable);
+export default BulkEmailScheduledEmailsTable;
