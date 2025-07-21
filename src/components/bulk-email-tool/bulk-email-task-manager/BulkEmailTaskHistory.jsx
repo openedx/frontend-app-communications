@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { Icon, Collapsible } from '@openedx/paragon';
 import { SpinnerSimple } from '@openedx/paragon/icons';
@@ -11,7 +11,8 @@ import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 import './bulkEmailTaskHistory.scss';
 
-function BulkEmailTaskHistory({ intl }) {
+function BulkEmailTaskHistory() {
+  const intl = useIntl();
   const { courseId } = useParams();
 
   const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
@@ -117,8 +118,4 @@ function BulkEmailTaskHistory({ intl }) {
   );
 }
 
-BulkEmailTaskHistory.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(BulkEmailTaskHistory);
+export default BulkEmailTaskHistory;
