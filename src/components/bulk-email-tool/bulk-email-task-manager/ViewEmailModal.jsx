@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 import { BulkEmailContext } from '../bulk-email-context';
 import { copyToEditor } from '../bulk-email-form/data/actions';
 
 function ViewEmailModal({
-  intl, messageContent, isOpen, setModalOpen,
+  messageContent, isOpen, setModalOpen,
 }) {
+  const intl = useIntl();
   const [, dispatch] = useContext(BulkEmailContext);
   return (
     <div>
@@ -72,7 +73,6 @@ function ViewEmailModal({
 }
 
 ViewEmailModal.propTypes = {
-  intl: intlShape.isRequired,
   messageContent: PropTypes.shape({
     subject: PropTypes.string,
     requester: PropTypes.string,
@@ -86,4 +86,4 @@ ViewEmailModal.propTypes = {
   setModalOpen: PropTypes.func.isRequired,
 };
 
-export default injectIntl(ViewEmailModal);
+export default ViewEmailModal;
