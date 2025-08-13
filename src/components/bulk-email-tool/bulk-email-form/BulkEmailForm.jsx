@@ -8,7 +8,7 @@ import {
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
 } from '@openedx/paragon/icons';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
@@ -51,8 +51,8 @@ function BulkEmailForm(props) {
     courseId,
     cohorts,
     courseModes,
-    intl,
   } = props;
+  const intl = useIntl();
   const [{ editor }, dispatch] = useContext(BulkEmailContext);
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
@@ -392,7 +392,7 @@ BulkEmailForm.defaultProps = {
 BulkEmailForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   cohorts: PropTypes.arrayOf(PropTypes.string),
-  intl: intlShape.isRequired,
+
   courseModes: PropTypes.arrayOf(
     PropTypes.shape({
       slug: PropTypes.string.isRequired,
@@ -401,4 +401,4 @@ BulkEmailForm.propTypes = {
   ).isRequired,
 };
 
-export default injectIntl(BulkEmailForm);
+export default BulkEmailForm;

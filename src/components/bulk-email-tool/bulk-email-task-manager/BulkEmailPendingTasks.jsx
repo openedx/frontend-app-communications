@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { getInstructorTasks } from './data/api';
 import messages from './messages';
 import useInterval from '../../../utils/useInterval';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
-function BulkEmailPendingTasks({ intl }) {
+function BulkEmailPendingTasks() {
+  const intl = useIntl();
   const { courseId } = useParams();
 
   const [instructorTaskData, setInstructorTaskData] = useState();
@@ -89,8 +90,4 @@ function BulkEmailPendingTasks({ intl }) {
   );
 }
 
-BulkEmailPendingTasks.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(BulkEmailPendingTasks);
+export default BulkEmailPendingTasks;

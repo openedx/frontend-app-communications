@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import {
   Button, Collapsible, Icon,
@@ -14,7 +14,8 @@ import { getSentEmailHistory } from './data/api';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
 
-function BulkEmailContentHistory({ intl }) {
+function BulkEmailContentHistory() {
+  const intl = useIntl();
   const { courseId } = useParams();
   const [emailHistoryData, setEmailHistoryData] = useState();
   const [errorRetrievingData, setErrorRetrievingData] = useState(false);
@@ -154,7 +155,6 @@ function BulkEmailContentHistory({ intl }) {
 }
 
 BulkEmailContentHistory.propTypes = {
-  intl: intlShape.isRequired,
   row: PropTypes.shape({
     index: PropTypes.number,
   }),
@@ -164,4 +164,4 @@ BulkEmailContentHistory.defaultProps = {
   row: {},
 };
 
-export default injectIntl(BulkEmailContentHistory);
+export default BulkEmailContentHistory;
