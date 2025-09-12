@@ -23,6 +23,10 @@ jest.mock('react-router-dom', () => ({
     courseId: 'test-course-id',
   })),
 }));
+jest.mock('@edx/frontend-component-header', () => ({
+  __esModule: true,
+  default: () => null,
+}));
 
 describe('PageContainer', () => {
   beforeEach(() => jest.resetModules());
