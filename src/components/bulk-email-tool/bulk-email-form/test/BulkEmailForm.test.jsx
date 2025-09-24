@@ -39,7 +39,7 @@ function renderBulkEmailForm() {
 function renderBulkEmailFormContext(value) {
   return (
     <BulkEmailContext.Provider value={[value, dispatchMock]}>
-      <BulkEmailForm courseId="test" courseMode={courseMode} />
+      <BulkEmailForm courseId="test" courseModes={courseMode} />
     </BulkEmailContext.Provider>
   );
 }
