@@ -12,8 +12,8 @@
   "scripts": {
     "build": "fedx-scripts webpack",
     "i18n_extract": "fedx-scripts formatjs extract",
-    "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
-    "lint:fix": "fedx-scripts eslint --fix --ext .js --ext .jsx .",
+    "lint": "fedx-scripts eslint --ext .js --ext .jsx src/",
+    "lint:fix": "fedx-scripts eslint --fix --ext .js --ext .jsx src/",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "start": "fedx-scripts webpack-dev-server --progress",
     "dev": "PUBLIC_PATH=/communications/ MFE_CONFIG_API_URL='http://localhost:8000/api/mfe_config/v1' fedx-scripts webpack-dev-server --progress --host apps.local.openedx.io",
@@ -62,6 +62,7 @@
   "devDependencies": {
     "@edx/browserslist-config": "^1.2.0",
     "@edx/reactifex": "^2.1.1",
+    "@edx/typescript-config": "^1.1.0",
     "@openedx/frontend-build": "^14.6.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
