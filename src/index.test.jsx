@@ -3,7 +3,7 @@ import {
 } from '@edx/frontend-platform';
 
 // Jest needs this for module resolution
-import * as app from '.'; // eslint-disable-line no-unused-vars
+import * as app from '.'; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 // These need to be var not let so they get hoisted
 // and can be used by jest.mock (which is also hoisted)
