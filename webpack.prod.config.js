@@ -14,8 +14,13 @@ const webpack5esmInteropRule = {
   },
 };
 
+const rawAssetRule = {
+  resourceQuery: /raw/,
+  type: 'asset/source',
+};
+
 const otherRules = config.module.rules;
 
-config.module.rules = [webpack5esmInteropRule, ...otherRules];
+config.module.rules = [rawAssetRule, webpack5esmInteropRule, ...otherRules];
 
 module.exports = config;
