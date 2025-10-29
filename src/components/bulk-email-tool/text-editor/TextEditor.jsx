@@ -17,7 +17,7 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/codesample';
 import '@edx/tinymce-language-selector';
 
-import contentUiCss from 'tinymce/skins/ui/oxide/content.css';
+import contentUiCss from 'tinymce/skins/ui/oxide/content.css?raw';
 import contentCss from 'tinymce/skins/content/default/content.css?raw';
 
 export default function TextEditor(props) {
