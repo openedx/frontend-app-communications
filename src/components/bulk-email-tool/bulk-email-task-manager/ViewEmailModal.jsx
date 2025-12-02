@@ -34,7 +34,7 @@ function ViewEmailModal({
               <p className="pl-2">{messageContent.created}</p>
             </div>
             <div className="d-flex flex-row">
-              <p className="flex-shrink-0">{intl.formatMessage(messages.modalMessageSentTo)}</p>
+              <p>{intl.formatMessage(messages.modalMessageSentTo)}</p>
               <p className="pl-2">{messageContent.sent_to}</p>
             </div>
             <hr className="py-2" />
