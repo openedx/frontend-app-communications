@@ -4,15 +4,27 @@ frontend-app-communications
 |license-badge| |status-badge| |ci-badge| |codecov-badge|
 
 
+********
 Purpose
-*******
+********
 
 A tool used by course teams to communicate with their learners. The interface for anything related to instructor-to-learner communications. Instructor bulk email, for example.
 
-Getting started
----------------
+***************
+Getting Started
+***************
 
-For now, this repo is not integrated with devstack. You'll be running the app locally and not through docker. This does make setup a little easier.
+Prerequisites
+=============
+
+`Tutor`_ is currently recommended as a development environment for your
+new MFE. Please refer
+to the `relevant tutor-mfe documentation`_ to get started using it.
+
+.. _Tutor: https://github.com/overhangio/tutor
+
+.. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
+
 
 Cloning and Startup
 ===================
