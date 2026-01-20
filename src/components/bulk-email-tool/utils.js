@@ -1,7 +1,7 @@
 import { DEFAULT_RECIPIENTS_GROUPS } from './constants';
 import messages from './messages';
 
-const RECIPIENTS_DISPLAY_NAMES = {
+export const RECIPIENTS_DISPLAY_NAMES = {
   [DEFAULT_RECIPIENTS_GROUPS.SELF]: messages.bulkEmailRecipientsMyselfLabel,
   [DEFAULT_RECIPIENTS_GROUPS.STAFF]: messages.bulkEmailRecipientsStaffLabel,
   [DEFAULT_RECIPIENTS_GROUPS.ALL_LEARNERS]: messages.bulkEmailRecipientsLearnersLabel,
@@ -15,7 +15,6 @@ const RECIPIENTS_DISPLAY_NAMES = {
  * @returns {string} - The formatted display name for the recipient,
  * or the original recipient key if no display name is found.
  */
-// eslint-disable-next-line import/prefer-default-export
 export const getDisplayTextFromRecipient = (intl, recipient) => {
   const msg = RECIPIENTS_DISPLAY_NAMES[recipient];
   return msg ? intl.formatMessage(msg) : recipient; // Fall back to the recipient key if no display name is found.
