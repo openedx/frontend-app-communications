@@ -9,7 +9,6 @@ Purpose
 
 A tool used by course teams to communicate with their learners. The interface for anything related to instructor-to-learner communications. Instructor bulk email, for example.
 
-***************
 Getting Started
 ***************
 
