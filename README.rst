@@ -5,14 +5,24 @@ frontend-app-communications
 
 
 Purpose
-*******
+********
 
 A tool used by course teams to communicate with their learners. The interface for anything related to instructor-to-learner communications. Instructor bulk email, for example.
 
-Getting started
----------------
+Getting Started
+***************
 
-For now, this repo is not integrated with devstack. You'll be running the app locally and not through docker. This does make setup a little easier.
+Prerequisites
+=============
+
+`Tutor`_ is currently recommended as a development environment for your
+new MFE. Please refer
+to the `relevant tutor-mfe documentation`_ to get started using it.
+
+.. _Tutor: https://github.com/overhangio/tutor
+
+.. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
+
 
 Cloning and Startup
 ===================
@@ -23,9 +33,9 @@ Cloning and Startup
 
    git clone https://github.com/edx/frontend-app-communications.git
 
-2. Use node v18.x.
+2. Use the version of Node specified in the ``.nvmrc`` file.
 
-   The current version of the micro-frontend build scripts supports node 18.
+   The current version of the micro-frontend build scripts supports the version of Node found in ``.nvmrc``.
    Using other major versions of node *may* work, but this is unsupported.  For
    convenience, this repository includes a ``.nvmrc`` file to help in setting the
    correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
