@@ -4,7 +4,6 @@ frontend-app-communications
 |license-badge| |status-badge| |ci-badge| |codecov-badge|
 
 
-********
 Purpose
 ********
 
