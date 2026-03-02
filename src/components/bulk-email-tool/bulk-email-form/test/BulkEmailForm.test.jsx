@@ -99,9 +99,9 @@ describe('bulk-email-form', () => {
     fireEvent.click(await screen.findByRole('button', { name: /continue/i }));
     expect(await screen.findByText('An error occured while attempting to send the email.')).toBeInTheDocument();
   });
-  test('Checking "All Learners" disables each learner group', async () => {
+  test('Checking "All learners" disables each learner group', async () => {
     render(renderBulkEmailForm());
-    fireEvent.click(screen.getByRole('checkbox', { name: 'All Learners' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'All learners' }));
     const verifiedLearners = screen.getByRole('checkbox', { name: 'Learners in the Verified Certificate Track' });
     const auditLearners = screen.getByRole('checkbox', { name: 'Learners in the Audit Track' });
     const { cohorts } = cohortFactory.build();
