@@ -30,7 +30,7 @@ function flattenScheduledEmailsArray(intl, emails) {
     taskDueUTC: email.taskDue,
     ...email.courseEmail,
     targets: email.courseEmail.targets.join(', '),
-    targetsText: email.courseEmail.targets.map((mess) => getDisplayTextFromRecipient(intl, mess)).join(', '),
+    targetsText: email.courseEmail.targets.map((recipient) => getDisplayTextFromRecipient(intl, recipient)).join(', '),
   }));
 }
 
@@ -65,7 +65,7 @@ function BulkEmailScheduledEmailsTable() {
         email: {
           html_message: row.original.htmlMessage,
         },
-        sent_to: row.original.targets,
+        sent_to: row.original.targetsText,
       },
     });
   };

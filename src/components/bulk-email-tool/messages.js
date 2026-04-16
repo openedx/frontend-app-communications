@@ -2,7 +2,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   bulkEmailRecipientsMyselfLabel: {
-    id: 'bulk.email.recipients.myself.label',
+    id: 'bulk.email.form.recipients.myself',
     defaultMessage: 'Myself',
     description: 'Label for selecting the option to send a bulk email to oneself.',
   },
