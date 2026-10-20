@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -12,22 +12,14 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 import { getConfig } from '@edx/frontend-platform';
 import TextEditor from '../text-editor/TextEditor';
-import BulkEmailRecipient from './bulk-email-recipient';
-import TaskAlertModal from '../task-alert-modal';
+import BulkEmailRecipient from './bulk-email-recipient/BulkEmailRecipient';
+import TaskAlertModal from '../task-alert-modal/TaskAlertModal';
 import useTimeout from '../../../utils/useTimeout';
 import useMobileResponsive from '../../../utils/useMobileResponsive';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
-import { BulkEmailContext } from '../bulk-email-context';
-import {
-  addRecipient,
-  clearEditor,
-  clearErrorState,
-  handleEditorChange,
-  removeRecipient,
-} from './data/actions';
-import { editScheduledEmailThunk, postBulkEmailThunk } from './data/thunks';
-import { getScheduledBulkEmailThunk } from '../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/thunks';
+import { useBulkEmailEditor } from '../bulk-email-context/BulkEmailProvider';
+import { useEditScheduledEmail, usePostBulkEmail } from './data/apiHook';
 import { getDisplayTextFromRecipient } from '../utils';
 
 import './bulkEmailForm.scss';
@@ -54,7 +46,12 @@ function BulkEmailForm(props) {
     courseModes,
   } = props;
   const intl = useIntl();
-  const [{ editor }, dispatch] = useContext(BulkEmailContext);
+  const { editor, updateEditor, clearEditor } = useBulkEmailEditor();
+  const postBulkEmail = usePostBulkEmail(courseId);
+  const editScheduledEmail = useEditScheduledEmail(courseId);
+  const isSubmitting = postBulkEmail.isPending || editScheduledEmail.isPending;
+  const isSubmitError = postBulkEmail.isError || editScheduledEmail.isError;
+  const isSubmitSuccess = postBulkEmail.isSuccess || editScheduledEmail.isSuccess;
   const [emailFormStatus, setEmailFormStatus] = useState(FORM_SUBMIT_STATES.DEFAULT);
   const [emailFormValidation, setEmailFormValidation] = useState({
     // set these as true on initialization, to prevent invalid messages from prematurely showing
@@ -108,10 +105,10 @@ function BulkEmailForm(props) {
    * if false, reset the form completely, and wipe all email data form the form.
    */
   const resetEmailForm = (error) => {
-    if (error) {
-      dispatch(clearErrorState());
-    } else {
-      dispatch(clearEditor());
+    postBulkEmail.reset();
+    editScheduledEmail.reset();
+    if (!error) {
+      clearEditor();
     }
   };
 
@@ -120,26 +117,23 @@ function BulkEmailForm(props) {
    * states before reseting the form.
    */
   const delayedEmailFormReset = useTimeout(
-    () => resetEmailForm(editor.errorRetrievingData),
+    () => resetEmailForm(isSubmitError),
     3000,
   );
 
-  const onFormChange = (event) => dispatch(handleEditorChange(event.target.name, event.target.value));
+  const onFormChange = (event) => updateEditor({ [event.target.name]: event.target.value });
 
   const onRecipientChange = (event) => {
-    if (event.target.checked) {
-      dispatch(addRecipient(event.target.value));
-      // if "All Learners" is checked then we want to remove any cohorts, verified learners, and audit learners
-      if (event.target.value === 'learners') {
-        editor.emailRecipients.forEach(recipient => {
-          if (/^cohort/.test(recipient) || /^track/.test(recipient)) {
-            dispatch(removeRecipient(recipient));
-          }
-        });
-      }
-    } else {
-      dispatch(removeRecipient(event.target.value));
+    const { checked, value } = event.target;
+    if (!checked) {
+      updateEditor({ emailRecipients: editor.emailRecipients.filter((recipient) => recipient !== value) });
+      return;
     }
+    // "All Learners" replaces any cohorts, verified learners, and audit learners
+    const recipients = value === 'learners'
+      ? editor.emailRecipients.filter((recipient) => !/^cohort/.test(recipient) && !/^track/.test(recipient))
+      : editor.emailRecipients;
+    updateEditor({ emailRecipients: [...recipients, value] });
   };
 
   const validateDateTime = (date, time) => {
@@ -165,37 +159,37 @@ function BulkEmailForm(props) {
     return subjectValid && bodyValid && recipientsValid && scheduleValid;
   };
 
-  const createEmailTask = async () => {
+  const createEmailTask = () => {
     if (validateEmailForm()) {
       if (editor.editMode) {
-        const editedEmail = formatDataForFormAction(FORM_ACTIONS.PATCH);
-        await dispatch(editScheduledEmailThunk(editedEmail, courseId, editor.schedulingId));
+        editScheduledEmail.mutate({
+          emailData: formatDataForFormAction(FORM_ACTIONS.PATCH),
+          schedulingId: editor.schedulingId,
+        });
       } else {
-        const emailData = formatDataForFormAction(FORM_ACTIONS.POST);
-        await dispatch(postBulkEmailThunk(emailData, courseId));
+        postBulkEmail.mutate(formatDataForFormAction(FORM_ACTIONS.POST));
       }
-      dispatch(getScheduledBulkEmailThunk(courseId, 1));
     }
   };
 
   /**
    * State manager for the various states the form can be in at any given time.
-   * The states of the form are based off various pieces of the editor store, and
+   * The states of the form are based off the submit mutations and the editor store, and
    * calculates what state and whether to reset the form based on these booleans.
    * Any time the form needs to change state, the conditions for that state change should
    * placed here to prevent unecessary rerenders and implicit/flakey state update batching.
    */
   useEffect(() => {
-    if (editor.isLoading) {
+    if (isSubmitting) {
       setEmailFormStatus(FORM_SUBMIT_STATES.PENDING);
       return;
     }
-    if (editor.errorRetrievingData) {
+    if (isSubmitError) {
       setEmailFormStatus(FORM_SUBMIT_STATES.ERROR);
       delayedEmailFormReset();
       return;
     }
-    if (editor.formComplete) {
+    if (isSubmitSuccess) {
       if (isScheduled) {
         setEmailFormStatus(FORM_SUBMIT_STATES.COMPLETE_SCHEDULE);
       } else {
@@ -213,7 +207,7 @@ function BulkEmailForm(props) {
       setEmailFormStatus(FORM_SUBMIT_STATES.DEFAULT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isScheduled, editor.editMode, editor.isLoading, editor.errorRetrievingData, editor.formComplete]);
+  }, [isScheduled, editor.editMode, isSubmitting, isSubmitError, isSubmitSuccess]);
 
   const AlertMessage = () => (
     <>
@@ -294,7 +288,7 @@ function BulkEmailForm(props) {
         </Form.Group>
         <Form.Group controlId="emailBody">
           <Form.Label className="h3 text-primary-500">{intl.formatMessage(messages.bulkEmailBodyLabel)}</Form.Label>
-          <TextEditor onChange={(value) => dispatch(handleEditorChange('emailBody', value))} value={editor.emailBody} />
+          <TextEditor onChange={(value) => updateEditor({ emailBody: value })} value={editor.emailBody} />
           {!emailFormValidation.body && (
             <Form.Control.Feedback className="px-3" hasIcon type="invalid">
               {intl.formatMessage(messages.bulkEmailFormBodyError)}
@@ -331,7 +325,7 @@ function BulkEmailForm(props) {
               'border-top pt-2': isScheduled,
             })}
           >
-            {editor.editMode && <Button className="ml-2" variant="outline-brand" onClick={() => dispatch(clearEditor())}>Cancel</Button>}
+            {editor.editMode && <Button className="ml-2" variant="outline-brand" onClick={() => resetEmailForm(false)}>Cancel</Button>}
             <StatefulButton
               className="send-email-btn"
               variant="primary"

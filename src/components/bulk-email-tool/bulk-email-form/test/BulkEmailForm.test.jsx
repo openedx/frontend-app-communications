@@ -5,11 +5,11 @@ import React from 'react';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import MockAdapter from 'axios-mock-adapter';
 import {
-  render, screen, cleanup, fireEvent, initializeMockApp, getConfig,
+  render, screen, cleanup, fireEvent, initializeMockApp, getConfig, waitFor,
 } from '../../../../setupTest';
-import BulkEmailForm from '..';
+import BulkEmailForm from '../BulkEmailForm';
 import * as bulkEmailFormApi from '../data/api';
-import { BulkEmailContext, BulkEmailProvider } from '../../bulk-email-context';
+import BulkEmailProvider, { BulkEmailContext } from '../../bulk-email-context/BulkEmailProvider';
 import { formatDate } from '../../../../utils/formatDateAndTime';
 import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
 import courseModeFactory from '../data/__factories__/bulkEmailFormCourseMode.factory';
@@ -17,7 +17,6 @@ import courseModeFactory from '../data/__factories__/bulkEmailFormCourseMode.fac
 jest.mock('../../text-editor/TextEditor');
 
 const appendMock = jest.spyOn(FormData.prototype, 'append');
-const dispatchMock = jest.fn();
 
 const tomorrow = new Date();
 tomorrow.setDate(new Date().getDate() + 1);
@@ -36,9 +35,15 @@ function renderBulkEmailForm() {
   );
 }
 
-function renderBulkEmailFormContext(value) {
+function renderBulkEmailFormContext(editor) {
+  const value = {
+    editor,
+    updateEditor: jest.fn(),
+    copyToEditor: jest.fn(),
+    clearEditor: jest.fn(),
+  };
   return (
-    <BulkEmailContext.Provider value={[value, dispatchMock]}>
+    <BulkEmailContext.Provider value={value}>
       <BulkEmailForm courseId="test" courseModes={courseMode} />
     </BulkEmailContext.Provider>
   );
@@ -49,7 +54,10 @@ describe('bulk-email-form', () => {
     await initializeMockApp();
   });
   beforeEach(() => jest.resetModules());
-  afterEach(() => cleanup());
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
   test('it renders', () => {
     render(renderBulkEmailForm());
     expect(screen.getByText('Send email')).toBeTruthy();
@@ -144,25 +152,25 @@ describe('bulk-email-form', () => {
     const continueButton = await screen.findByRole('button', { name: /continue/i });
     fireEvent.click(continueButton);
     expect(appendMock).toHaveBeenCalledWith('schedule', expect.stringContaining(formatDate(tomorrow)));
-    expect(postBulkEmailInstructorTask).toHaveBeenCalledWith(expect.any(FormData), expect.stringContaining('test'));
+    await waitFor(() => {
+      expect(postBulkEmailInstructorTask).toHaveBeenCalledWith(expect.any(FormData), expect.stringContaining('test'));
+    });
   });
   test('will PATCH instead of POST when in edit mode', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onPatch().reply(200);
+    const patchScheduledBulkEmailInstructorTask = jest.spyOn(bulkEmailFormApi, 'patchScheduledBulkEmailInstructorTask');
+    const postBulkEmailInstructorTask = jest.spyOn(bulkEmailFormApi, 'postBulkEmailInstructorTask');
     render(
       renderBulkEmailFormContext({
-        editor: {
-          editMode: true,
-          emailBody: 'test',
-          emailSubject: 'test',
-          emailRecipients: ['test'],
-          scheduleDate: formatDate(tomorrow),
-          scheduleTime: '10:00',
-          schedulingId: 1,
-          emailId: 1,
-          isLoading: false,
-          errorRetrievingData: false,
-        },
+        editMode: true,
+        emailBody: 'test',
+        emailSubject: 'test',
+        emailRecipients: ['test'],
+        scheduleDate: formatDate(tomorrow),
+        scheduleTime: '10:00',
+        schedulingId: 1,
+        emailId: 1,
       }),
     );
     const submitButton = screen.getByText('Reschedule Email');
@@ -174,6 +182,13 @@ describe('bulk-email-form', () => {
     ).toBeInTheDocument();
     const continueButton = await screen.findByRole('button', { name: /continue/i });
     fireEvent.click(continueButton);
-    expect(dispatchMock).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(patchScheduledBulkEmailInstructorTask).toHaveBeenCalledWith(
+        expect.objectContaining({ email: expect.objectContaining({ id: 1, subject: 'test' }) }),
+        'test',
+        1,
+      );
+    });
+    expect(postBulkEmailInstructorTask).not.toHaveBeenCalled();
   });
 });

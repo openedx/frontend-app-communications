@@ -4,7 +4,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { Icon, Collapsible } from '@openedx/paragon';
 import { SpinnerSimple } from '@openedx/paragon/icons';
-import { getEmailTaskHistory } from './data/api';
+import { useEmailTaskHistory } from './data/apiHook';
 import messages from './messages';
 
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
@@ -14,41 +14,16 @@ import './bulkEmailTaskHistory.scss';
 function BulkEmailTaskHistory() {
   const intl = useIntl();
   const { courseId } = useParams();
-
-  const [emailTaskHistoryData, setEmailTaskHistoryData] = useState([]);
-  const [showHistoricalTaskContentTable, setShowHistoricalTaskContentTable] = useState(false);
-  const [errorRetrievingData, setErrorRetrievingData] = useState(false);
-
-  /**
-   * Async function that makes a REST API call to retrieve historical bulk email (Instructor) task data for display
-   * within this component.
-   */
-  async function fetchEmailTaskHistoryData() {
-    setErrorRetrievingData(false);
-    setShowHistoricalTaskContentTable(false);
-
-    let data = null;
-    try {
-      data = await getEmailTaskHistory(courseId);
-    } catch (error) {
-      setErrorRetrievingData(true);
-    }
-
-    if (data) {
-      const { tasks } = data;
-      setEmailTaskHistoryData(tasks);
-    }
-
-    setShowHistoricalTaskContentTable(true);
-  }
+  const [isOpen, setIsOpen] = useState(false);
+  const { data, isPending, isError } = useEmailTaskHistory(courseId, { enabled: isOpen });
 
   const transformDataForTable = useMemo(() => {
-    const tableData = emailTaskHistoryData?.map((item) => ({
+    const tableData = data?.tasks?.map((item) => ({
       ...item,
       created: new Date(item.created).toLocaleString(),
     }));
     return tableData || [];
-  }, [emailTaskHistoryData]);
+  }, [data]);
 
   const tableColumns = [
     {
@@ -98,12 +73,12 @@ function BulkEmailTaskHistory() {
         <Collapsible
           styling="card"
           title={intl.formatMessage(messages.emailTaskHistoryTableSectionButton)}
-          // eslint-disable-next-line react/jsx-no-bind
-          onOpen={fetchEmailTaskHistoryData}
+          onOpen={() => setIsOpen(true)}
+          onClose={() => setIsOpen(false)}
         >
-          {showHistoricalTaskContentTable ? (
+          {!isPending ? (
             <BulkEmailTaskManagerTable
-              errorRetrievingData={errorRetrievingData}
+              errorRetrievingData={isError}
               tableData={transformDataForTable}
               alertWarningMessage={intl.formatMessage(messages.noTaskHistoryData)}
               alertErrorMessage={intl.formatMessage(messages.errorFetchingTaskHistoryData)}

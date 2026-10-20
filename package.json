@@ -53,10 +53,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-redux": "7.2.9",
     "react-router": "6.15.0",
     "react-router-dom": "6.15.0",
-    "redux": "4.2.0",
     "regenerator-runtime": "0.13.11",
     "tinymce": "5.10.7"
   },

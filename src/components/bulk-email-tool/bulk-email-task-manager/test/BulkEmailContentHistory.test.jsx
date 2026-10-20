@@ -5,7 +5,7 @@ import React from 'react';
 import {
   render, screen, fireEvent, cleanup, initializeMockApp,
 } from '../../../../setupTest';
-import { BulkEmailProvider } from '../../bulk-email-context';
+import BulkEmailProvider from '../../bulk-email-context/BulkEmailProvider';
 import BulkEmailContentHistory from '../BulkEmailContentHistory';
 import { getSentEmailHistory } from '../data/api';
 import buildEmailContentHistoryData from '../data/__factories__/emailContentHistory.factory';
@@ -13,6 +13,10 @@ import buildEmailContentHistoryData from '../data/__factories__/emailContentHist
 jest.mock('../data/api', () => ({
   __esModule: true,
   getSentEmailHistory: jest.fn(() => {}),
+}));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn(() => ({ courseId: 'test-course-id' })),
 }));
 
 function renderBulkEmailContentHistory() {

@@ -9,10 +9,9 @@ import { getConfig } from '@edx/frontend-platform';
 import {
   render, screen, cleanup, fireEvent, initializeMockApp,
 } from '../../../../../setupTest';
-import { BulkEmailProvider } from '../../../bulk-email-context';
-import BulkEmailScheduledEmailsTable from '..';
+import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '../../../bulk-email-context/BulkEmailProvider';
+import BulkEmailScheduledEmailsTable from '../BulkEmailScheduledEmailsTable';
 import scheduledEmailsFactory from './__factories__/scheduledEmails.factory';
-import * as actions from '../../../bulk-email-form/data/actions';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -84,15 +83,22 @@ describe('BulkEmailScheduledEmailsTable', () => {
       scheduleTime: '00:00',
       schedulingId: 1,
     };
-    jest.spyOn(actions, 'copyToEditor');
-    jest.spyOn(actions, 'setEditMode');
+    const copyToEditor = jest.fn();
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
       .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1));
-    render(renderBulkEmailScheduledEmailsTable());
+    render(
+      <BulkEmailContext.Provider
+        value={{
+          editor: editorInitialState, updateEditor: jest.fn(), copyToEditor, clearEditor: jest.fn(),
+        }}
+      >
+        <BulkEmailScheduledEmailsTable />
+      </BulkEmailContext.Provider>,
+    );
     fireEvent.click(await screen.findByLabelText('Edit'));
-    expect(actions.copyToEditor).toHaveBeenCalledWith(editorObj);
+    expect(copyToEditor).toHaveBeenCalledWith(editorObj);
   });
   it('pops up alert on delete pressed', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
