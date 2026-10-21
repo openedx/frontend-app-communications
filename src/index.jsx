@@ -17,7 +17,12 @@ import './index.scss';
 import BulkEmailTool from './components/bulk-email-tool';
 import PageContainer from './components/page-container/PageContainer';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
 
 subscribe(APP_READY, () => {
   const root = createRoot(document.getElementById('root'));
