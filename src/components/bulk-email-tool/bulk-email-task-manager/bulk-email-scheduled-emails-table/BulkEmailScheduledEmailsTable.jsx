@@ -4,7 +4,7 @@
 import {
   useCallback, useMemo, useState,
 } from 'react';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import {
   Alert, DataTable, Icon, IconButton, useToggle,
 } from '@openedx/paragon';

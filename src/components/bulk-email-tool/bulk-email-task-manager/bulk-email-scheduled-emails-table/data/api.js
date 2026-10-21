@@ -1,11 +1,11 @@
-import { camelCaseObject, getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { logError } from '@edx/frontend-platform/logging';
+import {
+  camelCaseObject, getAuthenticatedHttpClient, getSiteConfig, logError,
+} from '@openedx/frontend-base';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function getScheduledBulkEmailIntructorTaskData(courseId, page = 1) {
   const endpointUrl = `${
-    getConfig().LMS_BASE_URL
+    getSiteConfig().lmsBaseUrl
   }/api/instructor_task/v1/schedules/${courseId}/bulk_email/?page=${page}`;
   try {
     const { data } = await getAuthenticatedHttpClient().get(endpointUrl);
@@ -17,7 +17,7 @@ export async function getScheduledBulkEmailIntructorTaskData(courseId, page = 1)
 }
 
 export async function deleteScheduledBulkEmailInstructorTask(courseId, scheduleId) {
-  const endpointUrl = `${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/${courseId}/bulk_email/${scheduleId}`;
+  const endpointUrl = `${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/${courseId}/bulk_email/${scheduleId}`;
   try {
     const { status } = await getAuthenticatedHttpClient().delete(endpointUrl);
     return status;

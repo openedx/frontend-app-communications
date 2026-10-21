@@ -1,4 +1,4 @@
-const { createConfig } = require('@openedx/frontend-build');
+const { createConfig } = require('@openedx/frontend-base/tools');
 
 const config = createConfig('webpack-dev');
 

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Form } from '@openedx/paragon';
-import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@openedx/frontend-base';
 import { getDisplayTextFromRecipient } from '../../utils';
 import { DEFAULT_RECIPIENTS_GROUPS } from '../../constants';
 

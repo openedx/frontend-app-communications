@@ -4,8 +4,7 @@
 import React from 'react';
 import MockAdapter from 'axios-mock-adapter';
 import { Factory } from 'rosie';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { getConfig } from '@edx/frontend-platform';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import {
   render, screen, cleanup, fireEvent, initializeMockApp, waitFor,
 } from '../../../../../setupTest';
@@ -17,6 +16,8 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn().mockReturnValue({ courseId: 'test-id' }),
 }));
+
+const schedulesUrl = `${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email`;
 
 function renderBulkEmailScheduledEmailsTable() {
   return (
@@ -38,7 +39,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('properly renders scheduled emails', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1));
     render(renderBulkEmailScheduledEmailsTable());
     expect(await screen.findByText('All learners')).toBeTruthy();
@@ -50,7 +51,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('shows an error when the fetch fails', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .reply(500, { response: 500 });
     render(renderBulkEmailScheduledEmailsTable());
     expect(
@@ -61,7 +62,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('pops up the modal when viewing an email', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1));
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('View'));
@@ -86,7 +87,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
     const copyToEditor = jest.fn();
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1));
     render(
       <BulkEmailContext.Provider
@@ -103,9 +104,9 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('pops up alert on delete pressed', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .replyOnce(200, scheduledEmailsFactory.build(1))
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .replyOnce(200, {
         next: null,
         previous: null,
@@ -115,7 +116,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
         start: 0,
         results: [],
       })
-      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .onDelete(`${schedulesUrl}/1`)
       .reply(204, []);
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('Delete'));
@@ -124,9 +125,9 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('Deletes an email when clicking continue on warning', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .replyOnce(200, scheduledEmailsFactory.build(1))
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${schedulesUrl}/?page=1`)
       .replyOnce(200, {
         next: null,
         previous: null,
@@ -136,7 +137,7 @@ describe('BulkEmailScheduledEmailsTable', () => {
         start: 0,
         results: [],
       })
-      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .onDelete(`${schedulesUrl}/1`)
       .reply(204, []);
     render(renderBulkEmailScheduledEmailsTable());
     fireEvent.click(await screen.findByLabelText('Delete'));

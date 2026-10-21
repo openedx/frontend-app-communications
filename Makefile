@@ -29,20 +29,26 @@ detect_changed_source_translations:
 	# Checking for changed translations...
 	git diff --exit-code $(i18n)
 
-pull_translations:
-	rm -rf src/i18n/messages
-	mkdir src/i18n/messages
-	cd src/i18n/messages \
-	   && atlas pull $(ATLAS_OPTIONS) \
-	            translations/frontend-component-header/src/i18n/messages:frontend-component-header  \
-	            translations/frontend-component-footer/src/i18n/messages:frontend-component-footer \
-	            translations/paragon/src/i18n/messages:paragon \
-	            translations/frontend-platform/src/i18n/messages:frontend-platform \
-	            translations/frontend-app-communications/src/i18n/messages:frontend-app-communications
-
-	$(intl_imports) frontend-component-header frontend-component-footer paragon frontend-platform frontend-app-communications
+pull_translations: | requirements
+	npm run translations:pull -- --atlas-options="$(ATLAS_OPTIONS)"
 
 # This target is used by Travis.
 validate-no-uncommitted-package-lock-changes:
 	# Checking for package-lock.json changes...
 	git diff --exit-code package-lock.json
+
+clean:
+	rm -rf dist
+
+build:
+	tsc --project tsconfig.build.json
+	find src -type f \( -name '*.scss' -o -path '*/assets/*' \) -exec sh -c '\
+	  for f in "$$@"; do \
+	    d="dist/$${f#src/}"; \
+	    mkdir -p "$$(dirname "$$d")"; \
+	    cp "$$f" "$$d"; \
+	  done' sh {} +
+	tsc-alias -p tsconfig.build.json
+
+build-ci:
+	SITE_CONFIG_PATH=site.config.ci.tsx openedx build

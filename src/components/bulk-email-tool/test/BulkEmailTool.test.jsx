@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Factory } from 'rosie';
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject } from '@openedx/frontend-base';
 import {
   render, screen, cleanup, initializeMockApp,
 } from '../../../setupTest';
@@ -33,7 +33,7 @@ describe('BulkEmailTool', () => {
    */
   function buildCourseMetadata(cohortData, courseData) {
     const {
-      org, number, title, tabs, originalUserIsStaff,
+      org, number, title, originalUserIsStaff,
     } = camelCaseObject(courseData);
     const { cohorts } = cohortData;
 
@@ -42,7 +42,6 @@ describe('BulkEmailTool', () => {
       number,
       title,
       originalUserIsStaff,
-      tabs: [...tabs],
       cohorts: cohorts.map(({ name }) => name),
     };
   }
@@ -64,13 +63,8 @@ describe('BulkEmailTool', () => {
     const courseInfo = Factory.build('courseMetadata');
     const courseMetadata = buildCourseMetadata(cohorts, courseInfo);
     renderBulkEmailTool(courseMetadata);
-    // verify all tab data expected is displayed within our component
-    expect(await screen.findByText('Course')).toBeTruthy();
-    expect(await screen.findByText('Discussion')).toBeTruthy();
-    expect(await screen.findByText('Wiki')).toBeTruthy();
-    expect(await screen.findByText('Progress')).toBeTruthy();
-    expect(await screen.findByText('Instructor')).toBeTruthy();
-    expect(await screen.findByText('Dates')).toBeTruthy();
+    expect(await screen.findByText('Send an email')).toBeTruthy();
+    expect(await screen.findByText('Back to Instructor Dashboard')).toBeTruthy();
   });
 
   test('BulkEmailTool renders error page on no staff user', async () => {

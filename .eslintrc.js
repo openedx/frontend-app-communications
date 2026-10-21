@@ -1,9 +1,19 @@
-/* eslint-disable import/no-extraneous-dependencies */
+// @ts-check
 
-const { createConfig } = require('@openedx/frontend-build');
+const { createLintConfig } = require('@openedx/frontend-base/tools');
 
-module.exports = createConfig('eslint', {
-  rules: {
-    'react/function-component-definition': 'off',
+module.exports = createLintConfig(
+  {
+    files: [
+      'src/**/*',
+      'site.config.*',
+    ],
+    ignores: [
+      'coverage/*',
+      'dist/*',
+      'node_modules/*',
+      '**/__mocks__/*',
+      '**/__snapshots__/*',
+    ],
   },
-});
+);

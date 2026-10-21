@@ -9,7 +9,11 @@ import { configure as configureI18n, IntlProvider } from '@edx/frontend-platform
 import { configure as configureLogging, MockLoggingService } from '@edx/frontend-platform/logging';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { configure as configureAuth, MockAuthService } from '@edx/frontend-platform/auth';
+import siteConfig from 'site.config';
+import { mergeSiteConfig } from '@openedx/frontend-base';
 import messages from './i18n';
+
+mergeSiteConfig(siteConfig);
 
 jest.mock('@edx/frontend-platform/react/hooks', () => ({
   ...jest.requireActual('@edx/frontend-platform/react/hooks'),
