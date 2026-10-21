@@ -18,7 +18,7 @@ function BulkEmailContentHistory() {
   const intl = useIntl();
   const { courseId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isPending, isError } = useSentEmailHistory(courseId, { enabled: isOpen });
+  const { data, isLoading, isError } = useSentEmailHistory(courseId, { enabled: isOpen });
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageContent, setMessageContent] = useState();
 
@@ -111,7 +111,7 @@ function BulkEmailContentHistory() {
           onOpen={() => setIsOpen(true)}
           onClose={() => setIsOpen(false)}
         >
-          {!isPending ? (
+          {!isLoading ? (
             <BulkEmailTaskManagerTable
               errorRetrievingData={isError}
               tableData={transformDataForTable}

@@ -15,7 +15,7 @@ function BulkEmailTaskHistory() {
   const intl = useIntl();
   const { courseId } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isPending, isError } = useEmailTaskHistory(courseId, { enabled: isOpen });
+  const { data, isLoading, isError } = useEmailTaskHistory(courseId, { enabled: isOpen });
 
   const transformDataForTable = useMemo(() => {
     const tableData = data?.tasks?.map((item) => ({
@@ -76,7 +76,7 @@ function BulkEmailTaskHistory() {
           onOpen={() => setIsOpen(true)}
           onClose={() => setIsOpen(false)}
         >
-          {!isPending ? (
+          {!isLoading ? (
             <BulkEmailTaskManagerTable
               errorRetrievingData={isError}
               tableData={transformDataForTable}
