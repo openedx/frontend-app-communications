@@ -11,28 +11,32 @@ exports[`app registry subscribe: APP_INIT_ERROR.  snapshot: displays an ErrorPag
 exports[`app registry subscribe: APP_READY.  links App to root element 1`] = `
 <UNDEFINED>
   <AppProvider>
-    <HelmetWrapper
-      defer={true}
-      encodeSpecialCharacters={true}
+    <QueryClientProvider
+      client={QueryClient {}}
     >
-      <link
-        href="favicon-url"
-        rel="shortcut icon"
-        type="image/x-icon"
-      />
-    </HelmetWrapper>
-    <Routes>
-      <Route
-        element={
-          <AuthenticatedPageRoute>
-            <Page Container>
-              <Bulk Email Tool />
-            </Page Container>
-          </AuthenticatedPageRoute>
-        }
-        path="/courses/:courseId/bulk_email"
-      />
-    </Routes>
+      <HelmetWrapper
+        defer={true}
+        encodeSpecialCharacters={true}
+      >
+        <link
+          href="favicon-url"
+          rel="shortcut icon"
+          type="image/x-icon"
+        />
+      </HelmetWrapper>
+      <Routes>
+        <Route
+          element={
+            <AuthenticatedPageRoute>
+              <Page Container>
+                <Bulk Email Tool />
+              </Page Container>
+            </AuthenticatedPageRoute>
+          }
+          path="/courses/:courseId/bulk_email"
+        />
+      </Routes>
+    </QueryClientProvider>
   </AppProvider>
 </UNDEFINED>
 `;
