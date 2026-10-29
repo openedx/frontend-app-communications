@@ -53,6 +53,38 @@ describe('scheduled emails api hooks', () => {
   });
 
   describe('useDeleteScheduledEmail', () => {
+    it('refetches the active page after deletion and refreshes the previous page when selected', async () => {
+      getScheduledBulkEmailIntructorTaskData.mockImplementation((courseId, page) => (
+        Promise.resolve({ ...mockScheduledEmails, currentPage: page })
+      ));
+      deleteScheduledBulkEmailInstructorTask.mockResolvedValue(204);
+      const { result, rerender } = renderHook(({ page }) => {
+        const { isSuccess, isPlaceholderData } = useScheduledEmails('test-course-id', page);
+        const deletion = useDeleteScheduledEmail('test-course-id');
+        return { isSuccess, isPlaceholderData, deletion };
+      }, {
+        wrapper: createQueryWrapper(),
+        initialProps: { page: 1 },
+      });
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      rerender({ page: 2 });
+      await waitFor(() => expect(getScheduledBulkEmailIntructorTaskData).toHaveBeenCalledWith('test-course-id', 2));
+      await waitFor(() => expect(result.current.isPlaceholderData).toBe(false));
+      getScheduledBulkEmailIntructorTaskData.mockClear();
+
+      act(() => result.current.deletion.mutate(1));
+
+      await waitFor(() => expect(result.current.deletion.isSuccess).toBe(true));
+      expect(getScheduledBulkEmailIntructorTaskData).toHaveBeenCalledTimes(1);
+      expect(getScheduledBulkEmailIntructorTaskData).toHaveBeenLastCalledWith('test-course-id', 2);
+
+      rerender({ page: 1 });
+
+      await waitFor(() => expect(getScheduledBulkEmailIntructorTaskData).toHaveBeenCalledTimes(2));
+      expect(getScheduledBulkEmailIntructorTaskData).toHaveBeenLastCalledWith('test-course-id', 1);
+    });
+
     it('deletes the scheduled email', async () => {
       deleteScheduledBulkEmailInstructorTask.mockResolvedValue(204);
 

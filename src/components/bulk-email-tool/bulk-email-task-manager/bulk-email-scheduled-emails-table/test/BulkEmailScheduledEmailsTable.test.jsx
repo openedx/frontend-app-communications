@@ -7,7 +7,7 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 import {
-  render, screen, cleanup, fireEvent, initializeMockApp,
+  render, screen, cleanup, fireEvent, initializeMockApp, waitFor,
 } from '../../../../../setupTest';
 import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '../../../bulk-email-context/BulkEmailProvider';
 import BulkEmailScheduledEmailsTable from '../BulkEmailScheduledEmailsTable';
@@ -143,5 +143,62 @@ describe('BulkEmailScheduledEmailsTable', () => {
     expect(await screen.findByText('Caution')).toBeInTheDocument();
     fireEvent.click(await screen.findByText('Continue'));
     expect(await screen.findByText('No results found')).toBeInTheDocument();
+  });
+
+  it('keeps the table usable after a failed delete and allows dismissing the error', async () => {
+    const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock
+      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .reply(200, scheduledEmailsFactory.build(1))
+      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .reply(500);
+    render(renderBulkEmailScheduledEmailsTable());
+
+    fireEvent.click(await screen.findByLabelText('Delete'));
+    fireEvent.click(await screen.findByText('Continue'));
+
+    const deleteError = await screen.findByText('An error occurred while deleting the scheduled email. Please try again.');
+    expect(screen.getByText('subject')).toBeInTheDocument();
+    expect(screen.getByRole('table')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
+    await waitFor(() => expect(deleteError).not.toBeInTheDocument());
+    expect(screen.getByRole('table')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText('View'));
+    expect(await screen.findByText('Message:')).toBeInTheDocument();
+  });
+
+  it('allows retrying a failed delete without reloading or dismissing the error', async () => {
+    const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock
+      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .replyOnce(200, scheduledEmailsFactory.build(1))
+      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .reply(200, {
+        next: null,
+        previous: null,
+        count: 0,
+        num_pages: 1,
+        current_page: 1,
+        start: 0,
+        results: [],
+      })
+      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .replyOnce(500)
+      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .reply(204, []);
+    render(renderBulkEmailScheduledEmailsTable());
+
+    fireEvent.click(await screen.findByLabelText('Delete'));
+    fireEvent.click(await screen.findByText('Continue'));
+    const deleteError = await screen.findByText('An error occurred while deleting the scheduled email. Please try again.');
+
+    fireEvent.click(screen.getByLabelText('Delete'));
+    fireEvent.click(await screen.findByText('Continue'));
+
+    expect(await screen.findByText('No results found')).toBeInTheDocument();
+    expect(deleteError).not.toBeInTheDocument();
+    expect(axiosMock.history.delete).toHaveLength(2);
   });
 });

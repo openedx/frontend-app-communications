@@ -18,8 +18,7 @@ export const useDeleteScheduledEmail = (courseId) => {
   return useMutation({
     mutationFn: (schedulingId) => deleteScheduledBulkEmailInstructorTask(courseId, schedulingId),
     onSuccess: () => {
-      // The table decides which page to refetch, since the current one may no longer exist.
-      queryClient.invalidateQueries({ queryKey: scheduledEmailsQueryKeys.byCourse(courseId), refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: scheduledEmailsQueryKeys.byCourse(courseId) });
     },
   });
 };

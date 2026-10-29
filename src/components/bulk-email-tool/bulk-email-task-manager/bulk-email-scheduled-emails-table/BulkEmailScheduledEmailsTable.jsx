@@ -39,10 +39,10 @@ function BulkEmailScheduledEmailsTable() {
   const { copyToEditor } = useBulkEmailEditor();
   const [currentPage, setCurrentPage] = useState(1);
   const {
-    data, isPending, isPlaceholderData, isError, refetch,
+    data, isPending, isPlaceholderData, isError,
   } = useScheduledEmails(courseId, currentPage);
   const {
-    mutate: deleteScheduledEmail, isPending: isDeleting, isError: isDeleteError,
+    mutate: deleteScheduledEmail, isPending: isDeleting, isError: isDeleteError, reset: resetDelete,
   } = useDeleteScheduledEmail(courseId);
   const [viewModal, setViewModal] = useState({
     isOpen: false,
@@ -72,7 +72,7 @@ function BulkEmailScheduledEmailsTable() {
       },
     });
   };
-  if (isError || isDeleteError) {
+  if (isError) {
     return (
       <div className="pb-4">
         <Alert variant="danger" icon={Info}>
@@ -91,8 +91,6 @@ function BulkEmailScheduledEmailsTable() {
       onSuccess: () => {
         if (page.length === 1 && pageIndex !== 0) {
           previousPage();
-        } else {
-          refetch();
         }
       },
     });
@@ -142,6 +140,12 @@ function BulkEmailScheduledEmailsTable() {
         />
       )}
       <div className="pb-4">
+        {isDeleteError && (
+          <Alert variant="danger" icon={Info} dismissible onClose={resetDelete}>
+            <Alert.Heading>{intl.formatMessage(messages.bulkEmailScheduledEmailsTableErrorHeader)}</Alert.Heading>
+            <p>{intl.formatMessage(messages.bulkEmailScheduledEmailsTableDeleteError)}</p>
+          </Alert>
+        )}
         <DataTable
           isLoading={isPending || isPlaceholderData || isDeleting}
           itemCount={data?.count ?? 0}
