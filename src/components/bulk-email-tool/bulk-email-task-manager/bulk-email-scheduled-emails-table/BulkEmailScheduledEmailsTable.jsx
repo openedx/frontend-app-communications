@@ -39,7 +39,7 @@ function BulkEmailScheduledEmailsTable() {
   const { copyToEditor } = useBulkEmailEditor();
   const [currentPage, setCurrentPage] = useState(1);
   const {
-    data, isFetching, isError, refetch,
+    data, isPending, isPlaceholderData, isError, refetch,
   } = useScheduledEmails(courseId, currentPage);
   const {
     mutate: deleteScheduledEmail, isPending: isDeleting, isError: isDeleteError,
@@ -143,7 +143,7 @@ function BulkEmailScheduledEmailsTable() {
       )}
       <div className="pb-4">
         <DataTable
-          isLoading={isFetching || isDeleting}
+          isLoading={isPending || isPlaceholderData || isDeleting}
           itemCount={data?.count ?? 0}
           pageCount={data?.numPages ?? 0}
           data={tableData}

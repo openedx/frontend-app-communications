@@ -9,7 +9,6 @@ export const useCourseMetadata = (courseId) => (
     enabled: !!courseId,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    retry: false,
   })
 );
 
@@ -18,5 +17,7 @@ export const useCohorts = (courseId) => (
     queryKey: cohortsQueryKeys.byCourse(courseId),
     queryFn: () => getCohorts(courseId),
     enabled: !!courseId,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 );
