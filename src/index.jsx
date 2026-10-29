@@ -14,7 +14,7 @@ import { Routes, Route } from 'react-router-dom';
 import messages from './i18n';
 
 import './index.scss';
-import BulkEmailTool from './components/bulk-email-tool';
+import BulkEmailTool from './components/bulk-email-tool/BulkEmailTool';
 import PageContainer from './components/page-container/PageContainer';
 
 const queryClient = new QueryClient({
