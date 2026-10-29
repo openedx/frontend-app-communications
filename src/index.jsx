@@ -7,14 +7,22 @@ import {
 import { AppProvider, AuthenticatedPageRoute, ErrorPage } from '@edx/frontend-platform/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Helmet } from 'react-helmet';
 import { Routes, Route } from 'react-router-dom';
 import messages from './i18n';
 
 import './index.scss';
-import BulkEmailTool from './components/bulk-email-tool';
+import BulkEmailTool from './components/bulk-email-tool/BulkEmailTool';
 import PageContainer from './components/page-container/PageContainer';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
 
 subscribe(APP_READY, () => {
   const root = createRoot(document.getElementById('root'));
@@ -22,21 +30,23 @@ subscribe(APP_READY, () => {
   root.render(
     <StrictMode>
       <AppProvider>
-        <Helmet>
-          <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
-        </Helmet>
-        <Routes>
-          <Route
-            path="/courses/:courseId/bulk_email"
-            element={(
-              <AuthenticatedPageRoute>
-                <PageContainer>
-                  <BulkEmailTool />
-                </PageContainer>
-              </AuthenticatedPageRoute>
-          )}
-          />
-        </Routes>
+        <QueryClientProvider client={queryClient}>
+          <Helmet>
+            <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+          </Helmet>
+          <Routes>
+            <Route
+              path="/courses/:courseId/bulk_email"
+              element={(
+                <AuthenticatedPageRoute>
+                  <PageContainer>
+                    <BulkEmailTool />
+                  </PageContainer>
+                </AuthenticatedPageRoute>
+            )}
+            />
+          </Routes>
+        </QueryClientProvider>
       </AppProvider>
     </StrictMode>,
   );

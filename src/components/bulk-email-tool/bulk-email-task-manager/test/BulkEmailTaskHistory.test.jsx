@@ -13,6 +13,10 @@ jest.mock('../data/api', () => ({
   __esModule: true,
   getEmailTaskHistory: jest.fn(() => {}),
 }));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn(() => ({ courseId: 'test-course-id' })),
+}));
 
 describe('BulkEmailTaskHistory component', () => {
   beforeEach(() => jest.resetModules());

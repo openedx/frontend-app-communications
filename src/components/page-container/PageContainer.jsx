@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
@@ -6,58 +6,48 @@ import { LearningHeader as Header } from '@edx/frontend-component-header';
 import { FooterSlot } from '@edx/frontend-component-footer';
 import { Spinner } from '@openedx/paragon';
 
-import { getCohorts, getCourseHomeCourseMetadata } from './data/api';
+import { useCohorts, useCourseMetadata } from './data/apiHook';
 
 import './PageContainer.scss';
 
 export const CourseMetadataContext = React.createContext();
 
+const defaultCourseMetadata = {
+  org: '',
+  number: '',
+  title: '',
+  originalUserIsStaff: false,
+  tabs: [],
+  cohorts: [],
+};
+
 export default function PageContainer(props) {
   const { children } = props;
   const { courseId } = useParams();
 
-  const [courseMetadata, setCourseMetadata] = useState();
+  const { data: metadata, isLoading: isLoadingMetadata } = useCourseMetadata(courseId);
+  const { data: cohortsData, isLoading: isLoadingCohorts } = useCohorts(courseId);
 
-  useEffect(() => {
-    async function fetchCourseMetadata() {
-      let metadataResponse;
-      let cohortsResponse;
-
-      try {
-        metadataResponse = await getCourseHomeCourseMetadata(courseId);
-        cohortsResponse = await getCohorts(courseId);
-      } catch (e) {
-        setCourseMetadata({
-          org: '',
-          number: '',
-          title: '',
-          originalUserIsStaff: false,
-          tabs: [],
-          cohorts: [],
-        });
-        return;
-      }
-
-      const {
-        org, number, title, tabs, originalUserIsStaff, courseModes,
-      } = metadataResponse;
-      const { cohorts } = cohortsResponse;
-
-      setCourseMetadata({
-        org,
-        number,
-        title,
-        originalUserIsStaff,
-        courseModes,
-        tabs: [...tabs],
-        cohorts: cohorts.map(({ name }) => name),
-      });
+  const courseMetadata = useMemo(() => {
+    const cohorts = cohortsData?.cohorts?.map(({ name }) => name) ?? [];
+    if (!metadata) {
+      return { ...defaultCourseMetadata, cohorts };
     }
-    fetchCourseMetadata();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const {
+      org, number, title, tabs, originalUserIsStaff, courseModes,
+    } = metadata;
+    return {
+      org,
+      number,
+      title,
+      originalUserIsStaff,
+      courseModes,
+      tabs: [...tabs],
+      cohorts,
+    };
+  }, [metadata, cohortsData]);
 
-  if (courseMetadata) {
+  if (!isLoadingMetadata && !isLoadingCohorts) {
     return (
       <CourseMetadataContext.Provider value={courseMetadata}>
         <>
