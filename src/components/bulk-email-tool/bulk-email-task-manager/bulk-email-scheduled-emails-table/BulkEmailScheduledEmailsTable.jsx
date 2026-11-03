@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unstable-nested-components */
 
-import React, {
-  useCallback, useContext, useState, useEffect,
+import {
+  useCallback, useMemo, useState,
 } from 'react';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
@@ -12,12 +12,11 @@ import {
   Delete, Info, Visibility, Edit,
 } from '@openedx/paragon/icons';
 import { useParams } from 'react-router-dom';
-import { BulkEmailContext } from '../../bulk-email-context';
-import { deleteScheduledEmailThunk, getScheduledBulkEmailThunk } from './data/thunks';
+import { useBulkEmailEditor } from '../../bulk-email-context/BulkEmailProvider';
+import { useDeleteScheduledEmail, useScheduledEmails } from './data/apiHook';
 import messages from './messages';
 import ViewEmailModal from '../ViewEmailModal';
-import { copyToEditor } from '../../bulk-email-form/data/actions';
-import TaskAlertModal from '../../task-alert-modal';
+import TaskAlertModal from '../../task-alert-modal/TaskAlertModal';
 import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
 import { getDisplayTextFromRecipient } from '../../utils';
 
@@ -37,8 +36,14 @@ function flattenScheduledEmailsArray(intl, emails) {
 function BulkEmailScheduledEmailsTable() {
   const intl = useIntl();
   const { courseId } = useParams();
-  const [{ scheduledEmailsTable }, dispatch] = useContext(BulkEmailContext);
-  const [tableData, setTableData] = useState([]);
+  const { copyToEditor } = useBulkEmailEditor();
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    data, isPending, isPlaceholderData, isError,
+  } = useScheduledEmails(courseId, currentPage);
+  const {
+    mutate: deleteScheduledEmail, isPending: isDeleting, isError: isDeleteError, reset: resetDelete,
+  } = useDeleteScheduledEmail(courseId);
   const [viewModal, setViewModal] = useState({
     isOpen: false,
     messageContent: {},
@@ -46,14 +51,12 @@ function BulkEmailScheduledEmailsTable() {
   const [isConfirmModalOpen, openConfirmModal, closeConfirmModal] = useToggle();
   const [currentTask, setCurrentTask] = useState({});
 
-  useEffect(() => {
-    setTableData(flattenScheduledEmailsArray(intl, scheduledEmailsTable.results));
-  }, [intl, scheduledEmailsTable.results]);
+  const tableData = useMemo(
+    () => flattenScheduledEmailsArray(intl, data?.results ?? []),
+    [intl, data],
+  );
 
-  const fetchTableData = useCallback((args) => {
-    dispatch(getScheduledBulkEmailThunk(courseId, args.pageIndex + 1));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const fetchTableData = useCallback(({ pageIndex }) => setCurrentPage(pageIndex + 1), []);
 
   const handleViewEmail = (row) => {
     setViewModal({
@@ -69,7 +72,7 @@ function BulkEmailScheduledEmailsTable() {
       },
     });
   };
-  if (scheduledEmailsTable.errorRetrievingData) {
+  if (isError) {
     return (
       <div className="pb-4">
         <Alert variant="danger" icon={Info}>
@@ -80,16 +83,17 @@ function BulkEmailScheduledEmailsTable() {
     );
   }
 
-  const handleDeleteEmail = async () => {
+  const handleDeleteEmail = () => {
     const {
       row, pageIndex, page, previousPage,
     } = currentTask;
-    await dispatch(deleteScheduledEmailThunk(courseId, row.original.schedulingId));
-    if (page.length === 1 && pageIndex !== 0) {
-      previousPage();
-    } else {
-      dispatch(getScheduledBulkEmailThunk(courseId, pageIndex + 1));
-    }
+    deleteScheduledEmail(row.original.schedulingId, {
+      onSuccess: () => {
+        if (page.length === 1 && pageIndex !== 0) {
+          previousPage();
+        }
+      },
+    });
   };
 
   const handleEditEmail = (row) => {
@@ -102,18 +106,16 @@ function BulkEmailScheduledEmailsTable() {
     const emailRecipients = targets.replaceAll('-', ':').split(', ');
     const scheduleDate = formatDate(dateTime);
     const scheduleTime = formatTime(dateTime);
-    dispatch(
-      copyToEditor({
-        emailId,
-        emailBody,
-        emailSubject,
-        emailRecipients,
-        scheduleDate,
-        scheduleTime,
-        schedulingId,
-        editMode: true,
-      }),
-    );
+    copyToEditor({
+      emailId,
+      emailBody,
+      emailSubject,
+      emailRecipients,
+      scheduleDate,
+      scheduleTime,
+      schedulingId,
+      editMode: true,
+    });
   };
   return (
     <>
@@ -138,10 +140,16 @@ function BulkEmailScheduledEmailsTable() {
         />
       )}
       <div className="pb-4">
+        {isDeleteError && (
+          <Alert variant="danger" icon={Info} dismissible onClose={resetDelete}>
+            <Alert.Heading>{intl.formatMessage(messages.bulkEmailScheduledEmailsTableErrorHeader)}</Alert.Heading>
+            <p>{intl.formatMessage(messages.bulkEmailScheduledEmailsTableDeleteError)}</p>
+          </Alert>
+        )}
         <DataTable
-          isLoading={scheduledEmailsTable.isLoading}
-          itemCount={scheduledEmailsTable.count}
-          pageCount={scheduledEmailsTable.numPages}
+          isLoading={isPending || isPlaceholderData || isDeleting}
+          itemCount={data?.count ?? 0}
+          pageCount={data?.numPages ?? 0}
           data={tableData}
           isPaginated
           manualPagination

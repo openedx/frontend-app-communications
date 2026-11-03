@@ -1,41 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { getInstructorTasks } from './data/api';
+import { usePendingInstructorTasks } from './data/apiHook';
 import messages from './messages';
-import useInterval from '../../../utils/useInterval';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 
 function BulkEmailPendingTasks() {
   const intl = useIntl();
   const { courseId } = useParams();
-
-  const [instructorTaskData, setInstructorTaskData] = useState();
-  const [errorRetrievingData, setErrorRetrievingData] = useState(false);
-
-  /**
-   * We use a custom hook (`useInterval`) here to setup a timer that will refresh the pending instructor task data
-   * displayed in the table of this component.
-   */
-  useInterval(() => {
-    async function fetchPendingInstructorTasksData() {
-      setErrorRetrievingData(false);
-
-      let data = null;
-      try {
-        data = await getInstructorTasks(courseId);
-        if (data) {
-          const { tasks } = data;
-          setInstructorTaskData(tasks);
-        }
-      } catch (error) {
-        setErrorRetrievingData(true);
-      }
-    }
-
-    fetchPendingInstructorTasksData();
-  }, 30000);
+  const { data, isError } = usePendingInstructorTasks(courseId);
 
   const tableColumns = [
     {
@@ -79,8 +53,8 @@ function BulkEmailPendingTasks() {
   return (
     <div className="pb-4">
       <BulkEmailTaskManagerTable
-        errorRetrievingData={errorRetrievingData}
-        tableData={instructorTaskData}
+        errorRetrievingData={isError}
+        tableData={data?.tasks}
         tableDescription={intl.formatMessage(messages.pendingTaskSectionInfo)}
         alertWarningMessage={intl.formatMessage(messages.noPendingTaskData)}
         alertErrorMessage={intl.formatMessage(messages.errorFetchingPendingTaskData)}

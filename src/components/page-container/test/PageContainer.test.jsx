@@ -35,22 +35,49 @@ describe('PageContainer', () => {
     const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
     const courseMetadata = Factory.build('courseMetadata');
 
-    getCohorts.mockImplementation(() => cohorts);
-    getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
+    getCohorts.mockResolvedValue(cohorts);
+    getCourseHomeCourseMetadata.mockResolvedValue(courseMetadata);
 
     render(<PageContainer />);
 
     // Look for the org, title, and number of the course, which should be displayed in the Header.
     expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
     expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
+    expect(getCourseHomeCourseMetadata).toHaveBeenCalledWith('test-course-id');
+    expect(getCohorts).toHaveBeenCalledWith('test-course-id');
   });
 
   test('PageContainer renders children nested within it.', async () => {
     const cohorts = { cohorts: [Factory.build('cohort'), Factory.build('cohort')] };
     const courseMetadata = Factory.build('courseMetadata');
 
-    getCohorts.mockImplementation(() => cohorts);
-    getCourseHomeCourseMetadata.mockImplementation(() => courseMetadata);
+    getCohorts.mockResolvedValue(cohorts);
+    getCourseHomeCourseMetadata.mockResolvedValue(courseMetadata);
+
+    render(
+      <PageContainer>
+        <span>Test Text</span>
+      </PageContainer>,
+    );
+
+    expect(await screen.findByText('Test Text')).toBeTruthy();
+  });
+
+  test('PageContainer keeps course metadata when only the cohorts call fails', async () => {
+    const courseMetadata = Factory.build('courseMetadata');
+
+    getCohorts.mockRejectedValue(new Error('API Error'));
+    getCourseHomeCourseMetadata.mockResolvedValue(courseMetadata);
+
+    render(<PageContainer />);
+
+    expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
+    expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
+  });
+
+  test('PageContainer still renders children when the API calls fail', async () => {
+    getCohorts.mockRejectedValue(new Error('API Error'));
+    getCourseHomeCourseMetadata.mockRejectedValue(new Error('API Error'));
 
     render(
       <PageContainer>

@@ -6,7 +6,7 @@ import { getConfig } from '@edx/frontend-platform';
 import BulkEmailContentHistory from './BulkEmailContentHistory';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
 import messages from './messages';
-import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table';
+import BulkEmailScheduledEmailsTable from './bulk-email-scheduled-emails-table/BulkEmailScheduledEmailsTable';
 import BulkEmailPendingTasksAlert from './BulkEmailPendingTasksAlert';
 
 function BulkEmailTaskManager({ courseId }) {

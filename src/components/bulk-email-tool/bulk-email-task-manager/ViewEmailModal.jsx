@@ -1,16 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import messages from './messages';
-import { BulkEmailContext } from '../bulk-email-context';
-import { copyToEditor } from '../bulk-email-form/data/actions';
+import { useBulkEmailEditor } from '../bulk-email-context/BulkEmailProvider';
 
 function ViewEmailModal({
   messageContent, isOpen, setModalOpen,
 }) {
   const intl = useIntl();
-  const [, dispatch] = useContext(BulkEmailContext);
+  const { copyToEditor } = useBulkEmailEditor();
   return (
     <div>
       <ModalDialog
@@ -52,12 +51,10 @@ function ViewEmailModal({
             </ModalDialog.CloseButton>
             <Button
               onClick={() => {
-                dispatch(
-                  copyToEditor({
-                    emailBody: messageContent.email.html_message,
-                    emailSubject: messageContent.subject,
-                  }),
-                );
+                copyToEditor({
+                  emailBody: messageContent.email.html_message,
+                  emailSubject: messageContent.subject,
+                });
                 setModalOpen(false);
               }}
               variant="primary"

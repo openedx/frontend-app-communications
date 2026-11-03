@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom';
 import React from 'react';
 import { render as rtlRender } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppProvider from '@edx/frontend-platform/react/AppProvider';
 import { configure as configureI18n, IntlProvider } from '@edx/frontend-platform/i18n';
 import { configure as configureLogging, MockLoggingService } from '@edx/frontend-platform/logging';
@@ -58,13 +59,33 @@ export function initializeMockApp() {
   return { loggingService, i18nService, authService };
 }
 
+export const createQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
+
+export const createQueryWrapper = () => {
+  const queryClient = createQueryClient();
+  // eslint-disable-next-line react/prop-types
+  function QueryWrapper({ children }) {
+    // eslint-disable-next-line react/jsx-filename-extension
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  }
+  return QueryWrapper;
+};
+
 function render(ui, options) {
+  const queryClient = createQueryClient();
   // eslint-disable-next-line react/prop-types
   function Wrapper({ children }) {
     return (
       // eslint-disable-next-line react/jsx-filename-extension
       <IntlProvider locale="en">
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </AppProvider>
       </IntlProvider>
     );
   }

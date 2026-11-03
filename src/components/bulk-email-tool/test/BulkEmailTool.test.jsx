@@ -13,10 +13,6 @@ import '../../page-container/data/__factories__/cohort.factory';
 import '../../page-container/data/__factories__/courseMetadata.factory';
 
 jest.mock('../text-editor/TextEditor');
-jest.mock('../bulk-email-task-manager/api', () => ({
-  getInstructorTasks: jest.fn(() => ({ tasks: {} })),
-  getEmailTaskHistory: jest.fn(() => ({ tasks: {} })),
-}));
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {
-  render, screen, cleanup, act, initializeMockApp,
+  render, screen, cleanup, initializeMockApp,
 } from '../../../../setupTest';
 import BulkEmailPendingTasks from '../BulkEmailPendingTasks';
 import { getInstructorTasks } from '../data/api';
@@ -11,17 +11,21 @@ import buildPendingInstructorTaskData from '../data/__factories__/pendingInstruc
 
 jest.mock('../data/api', () => ({
   __esModule: true,
-  getInstructorTasks: jest.fn(() => {}),
+  getInstructorTasks: jest.fn(),
+}));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: jest.fn(() => ({ courseId: 'test-course-id' })),
 }));
 
 describe('BulkEmailPendingTasks component', () => {
-  beforeEach(() => jest.resetModules());
   beforeAll(async () => {
     await initializeMockApp();
   });
   afterEach(cleanup);
 
   test('renders correctly', async () => {
+    getInstructorTasks.mockResolvedValue({ tasks: [] });
     render(<BulkEmailPendingTasks />);
 
     const alertMessage = await screen.findByText('No tasks currently running.');
@@ -30,19 +34,10 @@ describe('BulkEmailPendingTasks component', () => {
   });
 
   test('renders a table when running Instructor Task data is returned', async () => {
-    jest.useFakeTimers();
-
     const pendingInstructorTaskData = buildPendingInstructorTaskData(1);
-    getInstructorTasks.mockImplementation(() => pendingInstructorTaskData);
+    getInstructorTasks.mockResolvedValue(pendingInstructorTaskData);
 
-    act(() => {
-      render(<BulkEmailPendingTasks />);
-    });
-
-    act(() => {
-      // fast forward time by 31 seconds for the API call to be made to retrieve pending tasks
-      jest.advanceTimersByTime(31000);
-    });
+    render(<BulkEmailPendingTasks />);
 
     // verify component structure
     const tableDescription = await screen.findByText(
@@ -78,20 +73,9 @@ describe('BulkEmailPendingTasks component', () => {
   });
 
   test('renders an error Alert if an error occurs retrieving data', async () => {
-    jest.useFakeTimers();
+    getInstructorTasks.mockRejectedValue(new Error());
 
-    getInstructorTasks.mockImplementation(() => {
-      throw new Error();
-    });
-
-    act(() => {
-      render(<BulkEmailPendingTasks />);
-    });
-
-    act(() => {
-      // fast forward time by 31 seconds for the API call to be made to retrieve pending tasks
-      jest.advanceTimersByTime(31000);
-    });
+    render(<BulkEmailPendingTasks />);
 
     const alertMessage = await screen.findByText(
       'Error fetching running task data. This request will be retried automatically.',

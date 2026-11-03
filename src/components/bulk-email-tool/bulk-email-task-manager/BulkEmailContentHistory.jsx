@@ -10,57 +10,33 @@ import {
 } from '@openedx/paragon';
 import { SpinnerSimple } from '@openedx/paragon/icons';
 import messages from './messages';
-import { getSentEmailHistory } from './data/api';
+import { useSentEmailHistory } from './data/apiHook';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';
 import ViewEmailModal from './ViewEmailModal';
 
 function BulkEmailContentHistory() {
   const intl = useIntl();
   const { courseId } = useParams();
-  const [emailHistoryData, setEmailHistoryData] = useState();
-  const [errorRetrievingData, setErrorRetrievingData] = useState(false);
-  const [showHistoricalEmailContentTable, setShowHistoricalEmailContentTable] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { data, isLoading, isError } = useSentEmailHistory(courseId, { enabled: isOpen });
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [messageContent, setMessageContent] = useState();
 
   /**
-   * Async function that makes a REST API call to retrieve historical email message data sent by the bulk course email
-   * tool from edx-platform.
-   */
-  async function fetchSentEmailHistoryData() {
-    setErrorRetrievingData(false);
-    setShowHistoricalEmailContentTable(false);
-
-    let data = null;
-    try {
-      data = await getSentEmailHistory(courseId);
-    } catch (error) {
-      setErrorRetrievingData(true);
-    }
-
-    if (data) {
-      const { emails } = data;
-      setEmailHistoryData(emails);
-    }
-
-    setShowHistoricalEmailContentTable(true);
-  }
-
-  /**
-   * This utility function transforms the data stored in `emailHistoryData` to make it easier to display in the Paragon
+   * This utility function transforms the email history data to make it easier to display in the Paragon
    * DataTable component. Some of the information we want displayed is in an inner object so we extract it and move it
    * up a level (the `subject` field). We also convert the `sent_to` data to be a String rather than an array to fix a
    * display bug in the table.
    */
   const transformDataForTable = useMemo(() => {
-    const tableData = emailHistoryData?.map((item) => ({
+    const tableData = data?.emails?.map((item) => ({
       ...item,
       subject: item.email.subject,
       sent_to: item.sent_to.join(', '),
       created: new Date(item.created).toLocaleString(),
     }));
     return tableData || [];
-  }, [emailHistoryData]);
+  }, [data]);
 
   /**
    * This function is responsible for setting the current `messageContent` state data. This will be the contents of a
@@ -132,12 +108,12 @@ function BulkEmailContentHistory() {
           styling="card"
           title={intl.formatMessage(messages.emailHistoryTableSectionButton)}
           className="mb-3"
-          // eslint-disable-next-line react/jsx-no-bind
-          onOpen={fetchSentEmailHistoryData}
+          onOpen={() => setIsOpen(true)}
+          onClose={() => setIsOpen(false)}
         >
-          {showHistoricalEmailContentTable ? (
+          {!isLoading ? (
             <BulkEmailTaskManagerTable
-              errorRetrievingData={errorRetrievingData}
+              errorRetrievingData={isError}
               tableData={transformDataForTable}
               tableDescription={intl.formatMessage(messages.emailHistoryTableViewMessageInstructions)}
               alertWarningMessage={intl.formatMessage(messages.noEmailData)}
