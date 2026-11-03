@@ -2,7 +2,6 @@ import {
   camelCaseObject, getAuthenticatedHttpClient, getSiteConfig, logError,
 } from '@openedx/frontend-base';
 
-// eslint-disable-next-line import/prefer-default-export
 export async function getScheduledBulkEmailIntructorTaskData(courseId, page = 1) {
   const endpointUrl = `${
     getSiteConfig().lmsBaseUrl

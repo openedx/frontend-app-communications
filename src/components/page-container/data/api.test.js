@@ -1,4 +1,4 @@
-import { Factory } from 'rosie'; // eslint-disable-line import/no-extraneous-dependencies
+import { Factory } from 'rosie';
 import { camelCaseObject, getAuthenticatedHttpClient } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '../../../setupTest';
