@@ -5,7 +5,7 @@
   "description": "Frontend app communications",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/frontend-app-communications.git"
+    "url": "git+https://github.com/openedx/frontend-app-communications.git"
   },
   "exports": {
     ".": "./dist/index.js"
@@ -49,12 +49,12 @@
   },
   "author": "Open edX",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/edx/frontend-app-communications#readme",
+  "homepage": "https://github.com/openedx/frontend-app-communications#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/edx/frontend-app-communications/issues"
+    "url": "https://github.com/openedx/frontend-app-communications/issues"
   },
   "dependencies": {
     "@edx/openedx-atlas": "^0.6.0",
