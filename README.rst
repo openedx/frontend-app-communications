@@ -15,9 +15,9 @@ Getting Started
 Prerequisites
 =============
 
-`Tutor`_ is currently recommended as a development environment for your
-new MFE. Please refer
-to the `relevant tutor-mfe documentation`_ to get started using it.
+`Tutor`_ is recommended as the development environment for your new frontend
+app.  You can refer to the `relevant tutor-mfe documentation`_ to get started
+using it.
 
 .. _Tutor: https://github.com/overhangio/tutor
 
@@ -31,11 +31,11 @@ Cloning and Startup
 
 .. code-block:: bash
 
-   git clone https://github.com/edx/frontend-app-communications.git
+git clone https://github.com/openedx/frontend-app-communications.git
 
 2. Use the version of Node specified in the ``.nvmrc`` file.
 
-   The current version of the micro-frontend build scripts supports the version of Node found in ``.nvmrc``.
+   The current version of the frontend-base build scripts supports the version of Node found in ``.nvmrc``.
    Using other major versions of node *may* work, but this is unsupported.  For
    convenience, this repository includes a ``.nvmrc`` file to help in setting the
    correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
@@ -44,62 +44,86 @@ Cloning and Startup
 
 .. code-block:: bash
 
-   cd frontend-app-communications && npm install
+cd frontend-app-communications && npm install
 
 4. Update the application port to use for local development:
 
-   The default port is 1984. If this does not work for you, update the line
-   ``PORT=1984`` to your port in all ``.env.*`` files
+   The default port is 1984. If this does not work for you, update
+   ``PORT=1984`` in the ``dev`` script of ``package.json``.
 
-5. Start the devserver. The app will be running at ``localhost:1984``, or whatever port you change it too.
+5. Start the dev server:
 
    .. code-block:: bash
 
-      npm start
+      npm run dev
 
+   The app will be running at
+   ``http://apps.local.openedx.io:1984/communications/courses/<course-id>/bulk_email``,
+   or whatever port you set up.
 
-Environment Variables/Setup Notes
----------------------------------
+Configuration
+=============
 
-If you wish to add new environment variables for local testing, they should be listed in 2 places:
+This frontend app is built on `frontend-base`_ and is configured through the
+site config rather than ``.env`` files.  For local development, the site config
+lives in ``site.config.dev.tsx``.
 
-1. In ``.env.development``
-2. Added to the ``mergeConfig`` found in ``src/index.jsx``
+App-specific settings are passed in the ``config`` of the app entry and read at
+runtime with ``getAppConfig(appId)``:
 
-.. code-block:: jsx
+.. code-block:: tsx
 
-   initialize({
-      config: () => {
-       mergeConfig({
-       EXAMPLE_VALUE: true,
-       }, 'CommuncationsAppConfig');
+   apps: [
+     shellApp,
+     headerApp,
+     footerApp,
+     {
+       ...communicationsApp,
+       config: {
+         ...communicationsApp.config,
+         SCHEDULE_EMAIL_SECTION: true,
+       },
+     },
+   ],
+
+.. _frontend-base: https://github.com/openedx/frontend-base
+
+Developing against a local frontend-base
+========================================
+
+This frontend app supports `npm workspaces <https://docs.npmjs.com/cli/using-npm/workspaces>`_
+so you can develop against a local ``frontend-base`` checkout and see changes
+reflected automatically.  See the ``dev:packages`` script in ``package.json``
+and the workspace-related targets in the ``Makefile``.
 
 Running Tests
--------------
+=============
 
-Tests use `jest` and `react-test-library`. To run all the tests for this repo:
+Tests use `jest` and `react-testing-library`. To run all the tests for this repo:
 
-.. code-block::
+.. code-block:: bash
 
    npm test
 
-Plugins
+Production Build
+================
+
+This frontend app is published as a library to be consumed by a frontend-base
+site.  The build is created in ``dist/`` with ``npm run build``.
+
+Slots
 =======
-This MFE can be customized using `Frontend Plugin Framework <https://github.com/openedx/frontend-plugin-framework>`_.
 
-The parts of this MFE that can be customized in that manner are documented `here </src/plugin-slots>`_.
-
-**Production Build**
-
-The production build is created with ``npm run build``.
+This frontend app can be customized through the frontend-base slot mechanism
+(``<Slot />``).
 
 Internationalization
 ====================
 
-Please refer to the `frontend-platform i18n howto`_ for documentation on
+Please refer to the `frontend-base i18n howto`_ for documentation on
 internationalization.
 
-.. _frontend-platform i18n howto: https://github.com/openedx/frontend-platform/blob/master/docs/how_tos/i18n.rst
+.. _frontend-base i18n howto: https://github.com/openedx/frontend-base/blob/main/docs/how_tos/i18n.rst
 
 Getting Help
 ************
