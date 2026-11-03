@@ -2,8 +2,7 @@
  * @jest-environment jsdom
  */
 import React from 'react';
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
 import {
   render, screen, cleanup, fireEvent, initializeMockApp, waitFor,
@@ -106,7 +105,7 @@ describe('bulk-email-form', () => {
   });
   test('Shows Error on failed POST', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(500);
+    axiosMock.onPost(`${getSiteConfig().lmsBaseUrl}/courses/test/instructor/api/send_email`).reply(500);
     render(renderBulkEmailForm());
     const subjectLine = screen.getByRole('textbox', { name: 'Subject' });
     const recipient = screen.getByRole('checkbox', { name: 'Myself' });

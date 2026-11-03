@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { getConfig } from '@edx/frontend-platform';
+import { getAppConfig, useIntl } from '@openedx/frontend-base';
+import { appId } from '@src/constants';
 import BulkEmailContentHistory from './BulkEmailContentHistory';
 import BulkEmailTaskHistory from './BulkEmailTaskHistory';
 import messages from './messages';
@@ -13,7 +13,7 @@ function BulkEmailTaskManager({ courseId }) {
   const intl = useIntl();
   return (
     <div className="w-100">
-      {getConfig().SCHEDULE_EMAIL_SECTION && (
+      {getAppConfig(appId)?.SCHEDULE_EMAIL_SECTION && (
         <div>
           <h2 className="h3 text-primary-500">{intl.formatMessage(messages.scheduledEmailsTableHeader)}</h2>
           <BulkEmailScheduledEmailsTable />

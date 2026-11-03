@@ -8,9 +8,9 @@ import {
 import {
   SpinnerSimple, Cancel, Send, Event, Check,
 } from '@openedx/paragon/icons';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getAppConfig, useIntl } from '@openedx/frontend-base';
 import classNames from 'classnames';
-import { getConfig } from '@edx/frontend-platform';
+import { appId } from '../../../constants';
 import TextEditor from '../text-editor/TextEditor';
 import BulkEmailRecipient from './bulk-email-recipient/BulkEmailRecipient';
 import TaskAlertModal from '../task-alert-modal/TaskAlertModal';
@@ -299,7 +299,7 @@ function BulkEmailForm(props) {
           <p>{intl.formatMessage(messages.bulkEmailInstructionsProofreading)}</p>
         </div>
         <Form.Group>
-          {getConfig().SCHEDULE_EMAIL_SECTION && (
+          {getAppConfig(appId)?.SCHEDULE_EMAIL_SECTION && (
             <div className="mb-3">
               <Form.Checkbox
                 name="scheduleEmailBox"
