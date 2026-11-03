@@ -1,5 +1,5 @@
 import { Factory } from 'rosie';
-import { camelCaseObject, getAuthenticatedHttpClient } from '@openedx/frontend-base';
+import { camelCaseObject, getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '../../../setupTest';
 import * as api from './api';
@@ -19,5 +19,16 @@ describe('api', () => {
       .reply(200, courseMetadata);
     const data = await api.getCourseHomeCourseMetadata(courseId);
     expect(data).toEqual(camelCaseObject(courseMetadata));
+  });
+
+  test('getCohorts', async () => {
+    const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    const courseId = 'test-course-id';
+    const cohorts = { cohorts: [{ id: 1, name: 'cohort 1' }] };
+    axiosMock
+      .onGet(`${getSiteConfig().lmsBaseUrl}/courses/${courseId}/cohorts/`)
+      .reply(200, cohorts);
+    const data = await api.getCohorts(courseId);
+    expect(data).toEqual(cohorts);
   });
 });
