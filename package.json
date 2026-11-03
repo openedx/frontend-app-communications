@@ -43,7 +43,7 @@
     "lint:fix": "openedx lint --fix .",
     "prepack": "npm run clean && npm run build",
     "snapshot": "openedx test --updateSnapshot",
-    "test": "openedx test --coverage --passWithNoTests",
+    "test": "TZ=UTC openedx test --coverage --passWithNoTests",
     "translations:pull": "openedx translations:pull",
     "watch:build": "nodemon --exec 'npm run build'"
   },

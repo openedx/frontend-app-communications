@@ -132,7 +132,7 @@ describe('bulk-email-form', () => {
     { status: 500, buttonLabel: 'Error', preservesEditor: true },
   ])('Automatically resets after a $status POST response', async ({ status, buttonLabel, preservesEditor }) => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(status, {
+    axiosMock.onPost(`${getSiteConfig().lmsBaseUrl}/courses/test/instructor/api/send_email`).reply(status, {
       course_id: 'test',
       success: status === 200,
     });

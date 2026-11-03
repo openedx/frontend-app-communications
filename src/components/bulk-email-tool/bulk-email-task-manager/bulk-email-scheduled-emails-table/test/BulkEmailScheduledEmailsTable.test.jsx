@@ -149,9 +149,9 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('keeps the table usable after a failed delete and allows dismissing the error', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
       .reply(200, scheduledEmailsFactory.build(1))
-      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .onDelete(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
       .reply(500);
     render(renderBulkEmailScheduledEmailsTable());
 
@@ -173,9 +173,9 @@ describe('BulkEmailScheduledEmailsTable', () => {
   it('allows retrying a failed delete without reloading or dismissing the error', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
       .replyOnce(200, scheduledEmailsFactory.build(1))
-      .onGet(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
+      .onGet(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/?page=1`)
       .reply(200, {
         next: null,
         previous: null,
@@ -185,9 +185,9 @@ describe('BulkEmailScheduledEmailsTable', () => {
         start: 0,
         results: [],
       })
-      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .onDelete(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
       .replyOnce(500)
-      .onDelete(`${getConfig().LMS_BASE_URL}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
+      .onDelete(`${getSiteConfig().lmsBaseUrl}/api/instructor_task/v1/schedules/test-id/bulk_email/1`)
       .reply(204, []);
     render(renderBulkEmailScheduledEmailsTable());
 
