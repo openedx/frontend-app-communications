@@ -9,6 +9,7 @@ export const usePostBulkEmail = (courseId) => {
     mutationFn: (emailData) => postBulkEmailInstructorTask(emailData, courseId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: scheduledEmailsQueryKeys.byCourse(courseId) });
+      queryClient.invalidateQueries({ queryKey: instructorTasksQueryKeys.byCourse(courseId) });
     },
   });
 };

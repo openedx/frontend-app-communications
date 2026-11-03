@@ -1,7 +1,10 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
+import { QueryClient } from '@tanstack/react-query';
 import { createQueryWrapper } from '../../../../setupTest';
 import { useEditScheduledEmail, usePostBulkEmail } from './apiHook';
 import { patchScheduledBulkEmailInstructorTask, postBulkEmailInstructorTask } from './api';
+import { scheduledEmailsQueryKeys } from '../../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/queryKeys';
+import { instructorTasksQueryKeys } from '../../bulk-email-task-manager/data/queryKeys';
 
 jest.mock('./api');
 
@@ -23,6 +26,22 @@ describe('bulk-email-form api hooks', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(postBulkEmailInstructorTask).toHaveBeenCalledWith(emailData, 'test-course-id');
+    });
+
+    it('invalidates scheduled emails and instructor tasks on success', async () => {
+      postBulkEmailInstructorTask.mockResolvedValue({ status: 200 });
+      const invalidateSpy = jest.spyOn(QueryClient.prototype, 'invalidateQueries');
+
+      const { result } = renderHook(() => usePostBulkEmail('test-course-id'), {
+        wrapper: createQueryWrapper(),
+      });
+
+      act(() => result.current.mutate(new FormData()));
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true));
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: scheduledEmailsQueryKeys.byCourse('test-course-id') });
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: instructorTasksQueryKeys.byCourse('test-course-id') });
+      invalidateSpy.mockRestore();
     });
 
     it('handles API error', async () => {
