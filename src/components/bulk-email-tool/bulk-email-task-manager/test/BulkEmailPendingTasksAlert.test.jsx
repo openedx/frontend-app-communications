@@ -1,9 +1,7 @@
-import React from 'react';
-
-import BulkEmailPendingTasksAlert from '../BulkEmailPendingTasksAlert';
+import BulkEmailPendingTasksAlert from '@src/components/bulk-email-tool/bulk-email-task-manager/BulkEmailPendingTasksAlert';
 import {
   initializeMockApp, render, screen,
-} from '../../../../setupTest';
+} from '@src/setupTest';
 
 describe('Testing BulkEmailPendingTasksAlert Component', () => {
   beforeAll(async () => {

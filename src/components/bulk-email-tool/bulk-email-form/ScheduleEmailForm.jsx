@@ -1,9 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '@openedx/frontend-base';
 import { Form } from '@openedx/paragon';
-import useMobileResponsive from '../../../utils/useMobileResponsive';
+import useMobileResponsive from '@src/utils/useMobileResponsive';
 
 function ScheduleEmailForm(props) {
   const isMobile = useMobileResponsive();

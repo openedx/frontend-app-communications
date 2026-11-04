@@ -1,6 +1,6 @@
 import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
-import { initializeMockApp } from '../../../../setupTest';
+import { initializeMockApp } from '@src/setupTest';
 import { getEmailTaskHistory, getInstructorTasks, getSentEmailHistory } from './api';
 
 describe('bulk email task manager api', () => {

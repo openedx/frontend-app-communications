@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import { Factory } from 'rosie';
 import {
   cleanup, initializeMockApp, render, screen,
-} from '../../../setupTest';
+} from '@src/setupTest';
 
-import PageContainer, { CourseMetadataContext } from '../PageContainer';
-import { getCohorts, getCourseHomeCourseMetadata } from '../data/api';
-import '../data/__factories__/cohort.factory';
-import '../data/__factories__/courseMetadata.factory';
+import PageContainer, { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import { getCohorts, getCourseHomeCourseMetadata } from '@src/components/page-container/data/api';
+import '@src/components/page-container/data/__factories__/cohort.factory';
+import '@src/components/page-container/data/__factories__/courseMetadata.factory';
 
-jest.mock('../data/api', () => ({
+jest.mock('@src/components/page-container/data/api', () => ({
   __esModule: true,
   getCohorts: jest.fn(() => {}),
   getCourseHomeCourseMetadata: jest.fn(() => {}),

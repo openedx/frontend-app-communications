@@ -1,9 +1,7 @@
-import React from 'react';
-
 import BackToInstructor from './BackToInstructor';
 import {
   initializeMockApp, render, screen,
-} from '../../setupTest';
+} from '@src/setupTest';
 
 describe('Testing BackToInstructor Component', () => {
   beforeAll(async () => {

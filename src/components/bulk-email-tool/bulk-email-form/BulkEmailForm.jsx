@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -10,17 +10,17 @@ import {
 } from '@openedx/paragon/icons';
 import { getAppConfig, useIntl } from '@openedx/frontend-base';
 import classNames from 'classnames';
-import { appId } from '../../../constants';
-import TextEditor from '../text-editor/TextEditor';
+import { appId } from '@src/constants';
+import TextEditor from '@src/components/bulk-email-tool/text-editor/TextEditor';
+import TaskAlertModal from '@src/components/bulk-email-tool/task-alert-modal/TaskAlertModal';
+import { useBulkEmailEditor } from '@src/components/bulk-email-tool/bulk-email-context/BulkEmailProvider';
+import { getDisplayTextFromRecipient } from '@src/components/bulk-email-tool/utils';
+import useTimeout from '@src/utils/useTimeout';
+import useMobileResponsive from '@src/utils/useMobileResponsive';
 import BulkEmailRecipient from './bulk-email-recipient/BulkEmailRecipient';
-import TaskAlertModal from '../task-alert-modal/TaskAlertModal';
-import useTimeout from '../../../utils/useTimeout';
-import useMobileResponsive from '../../../utils/useMobileResponsive';
+import { useEditScheduledEmail, usePostBulkEmail } from './data/apiHook';
 import ScheduleEmailForm from './ScheduleEmailForm';
 import messages from './messages';
-import { useBulkEmailEditor } from '../bulk-email-context/BulkEmailProvider';
-import { useEditScheduledEmail, usePostBulkEmail } from './data/apiHook';
-import { getDisplayTextFromRecipient } from '../utils';
 
 import './bulkEmailForm.scss';
 

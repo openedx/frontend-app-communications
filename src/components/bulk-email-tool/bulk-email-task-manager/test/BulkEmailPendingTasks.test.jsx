@@ -1,15 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import {
   render, screen, cleanup, initializeMockApp,
-} from '../../../../setupTest';
-import BulkEmailPendingTasks from '../BulkEmailPendingTasks';
-import { getInstructorTasks } from '../data/api';
-import buildPendingInstructorTaskData from '../data/__factories__/pendingInstructorTask.factory';
+} from '@src/setupTest';
+import BulkEmailPendingTasks from '@src/components/bulk-email-tool/bulk-email-task-manager/BulkEmailPendingTasks';
+import { getInstructorTasks } from '@src/components/bulk-email-tool/bulk-email-task-manager/data/api';
+import buildPendingInstructorTaskData from '@src/components/bulk-email-tool/bulk-email-task-manager/data/__factories__/pendingInstructorTask.factory';
 
-jest.mock('../data/api', () => ({
+jest.mock('@src/components/bulk-email-tool/bulk-email-task-manager/data/api', () => ({
   __esModule: true,
   getInstructorTasks: jest.fn(),
 }));

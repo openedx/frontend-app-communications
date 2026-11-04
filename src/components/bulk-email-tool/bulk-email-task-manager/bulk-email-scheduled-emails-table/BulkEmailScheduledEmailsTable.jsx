@@ -12,13 +12,13 @@ import {
   Delete, Info, Visibility, Edit,
 } from '@openedx/paragon/icons';
 import { useParams } from 'react-router-dom';
-import { useBulkEmailEditor } from '../../bulk-email-context/BulkEmailProvider';
+import { useBulkEmailEditor } from '@src/components/bulk-email-tool/bulk-email-context/BulkEmailProvider';
+import ViewEmailModal from '@src/components/bulk-email-tool/bulk-email-task-manager/ViewEmailModal';
+import TaskAlertModal from '@src/components/bulk-email-tool/task-alert-modal/TaskAlertModal';
+import { formatDate, formatTime } from '@src/utils/formatDateAndTime';
+import { getDisplayTextFromRecipient } from '@src/components/bulk-email-tool/utils';
 import { useDeleteScheduledEmail, useScheduledEmails } from './data/apiHook';
 import messages from './messages';
-import ViewEmailModal from '../ViewEmailModal';
-import TaskAlertModal from '../../task-alert-modal/TaskAlertModal';
-import { formatDate, formatTime } from '../../../../utils/formatDateAndTime';
-import { getDisplayTextFromRecipient } from '../../utils';
 
 function flattenScheduledEmailsArray(intl, emails) {
   return emails.map((email) => ({

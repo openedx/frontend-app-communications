@@ -1,7 +1,7 @@
 import { Factory } from 'rosie';
 import { camelCaseObject, getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
-import { initializeMockApp } from '../../../setupTest';
+import { initializeMockApp } from '@src/setupTest';
 import * as api from './api';
 import './__factories__/courseMetadata.factory';
 

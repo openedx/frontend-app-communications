@@ -1,14 +1,12 @@
-import React from 'react';
-
 import { useParams } from 'react-router-dom';
 
 import { ErrorPage, FormattedMessage } from '@openedx/frontend-base';
 import { Container } from '@openedx/paragon';
+import { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import BackToInstructor from '@src/components/navigation-tabs/BackToInstructor';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
 import BulkEmailForm from './bulk-email-form/BulkEmailForm';
 import BulkEmailProvider from './bulk-email-context/BulkEmailProvider';
-import { CourseMetadataContext } from '../page-container/PageContainer';
-import BackToInstructor from '../navigation-tabs/BackToInstructor';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();

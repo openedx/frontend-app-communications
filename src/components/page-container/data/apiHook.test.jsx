@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { Factory } from 'rosie';
-import { createQueryWrapper } from '../../../setupTest';
+import { createQueryWrapper } from '@src/setupTest';
 import { useCohorts, useCourseMetadata } from './apiHook';
 import { getCohorts, getCourseHomeCourseMetadata } from './api';
 import './__factories__/cohort.factory';

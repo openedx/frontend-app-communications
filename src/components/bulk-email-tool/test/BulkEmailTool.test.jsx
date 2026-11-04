@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import { Factory } from 'rosie';
 import { camelCaseObject } from '@openedx/frontend-base';
 import {
   render, screen, cleanup, initializeMockApp,
-} from '../../../setupTest';
-import BulkEmailTool from '../BulkEmailTool';
-import { CourseMetadataContext } from '../../page-container/PageContainer';
-import '../../page-container/data/__factories__/cohort.factory';
-import '../../page-container/data/__factories__/courseMetadata.factory';
+} from '@src/setupTest';
+import BulkEmailTool from '@src/components/bulk-email-tool/BulkEmailTool';
+import { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import '@src/components/page-container/data/__factories__/cohort.factory';
+import '@src/components/page-container/data/__factories__/courseMetadata.factory';
 
-jest.mock('../text-editor/TextEditor');
+jest.mock('@src/components/bulk-email-tool/text-editor/TextEditor');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({

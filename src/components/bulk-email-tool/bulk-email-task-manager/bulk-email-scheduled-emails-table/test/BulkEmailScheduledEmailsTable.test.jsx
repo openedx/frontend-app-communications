@@ -1,15 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import MockAdapter from 'axios-mock-adapter';
 import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import {
   render, screen, cleanup, fireEvent, initializeMockApp, waitFor,
-} from '../../../../../setupTest';
-import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '../../../bulk-email-context/BulkEmailProvider';
-import BulkEmailScheduledEmailsTable from '../BulkEmailScheduledEmailsTable';
+} from '@src/setupTest';
+import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '@src/components/bulk-email-tool/bulk-email-context/BulkEmailProvider';
+import BulkEmailScheduledEmailsTable from '@src/components/bulk-email-tool/bulk-email-task-manager/bulk-email-scheduled-emails-table/BulkEmailScheduledEmailsTable';
 import scheduledEmailsFactory from './__factories__/scheduledEmails.factory';
 
 jest.mock('react-router-dom', () => ({
