@@ -1,4 +1,3 @@
-import React from 'react';
 import { getSiteConfig } from '@openedx/frontend-base';
 import {
   initializeMockApp, render, screen, waitFor,

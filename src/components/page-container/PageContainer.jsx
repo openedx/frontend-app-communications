@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { createContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ import { Spinner } from '@openedx/paragon';
 
 import { useCohorts, useCourseMetadata } from './data/apiHook';
 
-export const CourseMetadataContext = React.createContext();
+export const CourseMetadataContext = createContext();
 
 const defaultCourseMetadata = {
   org: '',
