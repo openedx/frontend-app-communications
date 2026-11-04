@@ -12,7 +12,7 @@ function BulkEmailTaskManager({ courseId }) {
   const intl = useIntl();
   return (
     <div className="w-100">
-      {getAppConfig(appId)?.SCHEDULE_EMAIL_SECTION && (
+      {getAppConfig(appId)?.scheduleEmailSection && (
         <div>
           <h2 className="h3 text-primary-500">{intl.formatMessage(messages.scheduledEmailsTableHeader)}</h2>
           <BulkEmailScheduledEmailsTable />

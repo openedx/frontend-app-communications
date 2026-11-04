@@ -15,7 +15,7 @@ const siteConfig: SiteConfig = {
   apps: [{
     appId,
     config: {
-      SCHEDULE_EMAIL_SECTION: true,
+      scheduleEmailSection: true,
     },
   }],
 };

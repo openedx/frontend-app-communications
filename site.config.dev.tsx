@@ -22,7 +22,7 @@ const siteConfig: SiteConfig = {
       ...communicationsApp,
       config: {
         ...communicationsApp.config,
-        SCHEDULE_EMAIL_SECTION: true,
+        scheduleEmailSection: true,
       },
     },
   ],

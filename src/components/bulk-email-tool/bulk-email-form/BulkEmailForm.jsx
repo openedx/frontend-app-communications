@@ -299,7 +299,7 @@ function BulkEmailForm(props) {
           <p>{intl.formatMessage(messages.bulkEmailInstructionsProofreading)}</p>
         </div>
         <Form.Group>
-          {getAppConfig(appId)?.SCHEDULE_EMAIL_SECTION && (
+          {getAppConfig(appId)?.scheduleEmailSection && (
             <div className="mb-3">
               <Form.Checkbox
                 name="scheduleEmailBox"

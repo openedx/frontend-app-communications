@@ -81,7 +81,7 @@ runtime with ``getAppConfig(appId)``:
        ...communicationsApp,
        config: {
          ...communicationsApp.config,
-         SCHEDULE_EMAIL_SECTION: true,
+         scheduleEmailSection: true,
        },
      },
    ],
