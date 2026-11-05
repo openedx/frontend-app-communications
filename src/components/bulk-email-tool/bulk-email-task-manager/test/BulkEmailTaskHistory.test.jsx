@@ -1,15 +1,14 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import {
   render, screen, fireEvent, cleanup, initializeMockApp,
-} from '../../../../setupTest';
-import BulkEmailTaskHistory from '../BulkEmailTaskHistory';
-import { getEmailTaskHistory } from '../data/api';
-import buildEmailTaskHistoryData from '../data/__factories__/emailTaskHistory.factory';
+} from '@src/setupTest';
+import BulkEmailTaskHistory from '@src/components/bulk-email-tool/bulk-email-task-manager/BulkEmailTaskHistory';
+import { getEmailTaskHistory } from '@src/components/bulk-email-tool/bulk-email-task-manager/data/api';
+import buildEmailTaskHistoryData from '@src/components/bulk-email-tool/bulk-email-task-manager/data/__factories__/emailTaskHistory.factory';
 
-jest.mock('../data/api', () => ({
+jest.mock('@src/components/bulk-email-tool/bulk-email-task-manager/data/api', () => ({
   __esModule: true,
   getEmailTaskHistory: jest.fn(() => {}),
 }));

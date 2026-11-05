@@ -1,21 +1,17 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import '@testing-library/jest-dom';
-import React from 'react';
 import { render as rtlRender } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import AppProvider from '@edx/frontend-platform/react/AppProvider';
-import { configure as configureI18n, IntlProvider } from '@edx/frontend-platform/i18n';
-import { configure as configureLogging, MockLoggingService } from '@edx/frontend-platform/logging';
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { configure as configureAuth, MockAuthService } from '@edx/frontend-platform/auth';
-import messages from './i18n';
+import { MemoryRouter } from 'react-router-dom';
+import siteConfig from 'site.config';
+import {
+  addAppConfigs,
+  initializeMockApp as initializeFrontendBaseMockApp,
+  IntlProvider,
+  mergeSiteConfig,
+} from '@openedx/frontend-base';
 
-jest.mock('@edx/frontend-platform/react/hooks', () => ({
-  ...jest.requireActual('@edx/frontend-platform/react/hooks'),
-  useTrackColorSchemeChoice: jest.fn(),
-  useParagonTheme: () => [{ isThemeLoaded: true }, jest.fn()],
-}));
+mergeSiteConfig(siteConfig);
+addAppConfigs();
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -34,9 +30,7 @@ Object.defineProperty(window, 'matchMedia', {
 global.Date.prototype.toLocaleDateString = jest.fn();
 
 export function initializeMockApp() {
-  mergeConfig({
-    // MICROBA-1505: Remove this when we remove the flag from config
-    SCHEDULE_EMAIL_SECTION: true,
+  return initializeFrontendBaseMockApp({
     authenticatedUser: {
       userId: 'abc123',
       username: 'Mock User',
@@ -44,19 +38,6 @@ export function initializeMockApp() {
       administrator: false,
     },
   });
-
-  const loggingService = configureLogging(MockLoggingService, {
-    config: getConfig(),
-  });
-
-  const i18nService = configureI18n({
-    config: getConfig(),
-    loggingService,
-    messages,
-  });
-
-  const authService = configureAuth(MockAuthService, { config: getConfig(), loggingService });
-  return { loggingService, i18nService, authService };
 }
 
 export const createQueryClient = () => new QueryClient({
@@ -70,7 +51,6 @@ export const createQueryWrapper = () => {
   const queryClient = createQueryClient();
   // eslint-disable-next-line react/prop-types
   function QueryWrapper({ children }) {
-    // eslint-disable-next-line react/jsx-filename-extension
     return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
   }
   return QueryWrapper;
@@ -81,11 +61,10 @@ function render(ui, options) {
   // eslint-disable-next-line react/prop-types
   function Wrapper({ children }) {
     return (
-      // eslint-disable-next-line react/jsx-filename-extension
       <IntlProvider locale="en">
-        <AppProvider>
+        <MemoryRouter>
           <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-        </AppProvider>
+        </MemoryRouter>
       </IntlProvider>
     );
   }

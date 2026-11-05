@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { createQueryWrapper } from '../../../../../setupTest';
+import { createQueryWrapper } from '@src/setupTest';
 import { useDeleteScheduledEmail, useScheduledEmails } from './apiHook';
 import { deleteScheduledBulkEmailInstructorTask, getScheduledBulkEmailIntructorTaskData } from './api';
 

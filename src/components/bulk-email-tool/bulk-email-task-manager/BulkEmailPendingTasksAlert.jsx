@@ -1,10 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getConfig } from '@edx/frontend-platform';
+import { FormattedMessage, getSiteConfig } from '@openedx/frontend-base';
 import { Hyperlink, Alert } from '@openedx/paragon';
 import { WarningFilled } from '@openedx/paragon/icons';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
 export default function BulkEmailPendingTasksAlert(props) {
   const { courseId } = props;
@@ -16,7 +14,7 @@ export default function BulkEmailPendingTasksAlert(props) {
         defaultMessage="To view all pending tasks, including email, visit&nbsp;"
       />
       <Hyperlink
-        destination={`${getConfig().LMS_BASE_URL}/courses/${courseId}/instructor#view-course-info`}
+        destination={`${getSiteConfig().lmsBaseUrl}/courses/${courseId}/instructor#view-course-info`}
         target="_blank"
         isInline
         showLaunchIcon={false}

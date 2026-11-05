@@ -1,16 +1,12 @@
-import React from 'react';
-
 import { useParams } from 'react-router-dom';
 
-import { ErrorPage } from '@edx/frontend-platform/react';
+import { ErrorPage, FormattedMessage } from '@openedx/frontend-base';
 import { Container } from '@openedx/paragon';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import BackToInstructor from '@src/components/navigation-tabs/BackToInstructor';
 import BulkEmailTaskManager from './bulk-email-task-manager/BulkEmailTaskManager';
-import NavigationTabs from '../navigation-tabs/NavigationTabs';
 import BulkEmailForm from './bulk-email-form/BulkEmailForm';
 import BulkEmailProvider from './bulk-email-context/BulkEmailProvider';
-import { CourseMetadataContext } from '../page-container/PageContainer';
-import BackToInstructor from '../navigation-tabs/BackToInstructor';
 
 export default function BulkEmailTool() {
   const { courseId } = useParams();
@@ -18,33 +14,30 @@ export default function BulkEmailTool() {
   return (
     <CourseMetadataContext.Consumer>
       {(courseMetadata) => (courseMetadata.originalUserIsStaff ? (
-        <>
-          <NavigationTabs courseId={courseId} tabData={courseMetadata.tabs} />
-          <BulkEmailProvider>
-            <Container size="md">
-              <BackToInstructor courseId={courseId} />
-              <div className="row pb-4.5">
-                <h1 className="text-primary-500">
-                  <FormattedMessage
-                    id="bulk.email.send.email.header"
-                    defaultMessage="Send an email"
-                    description="A label for email form"
-                  />
-                </h1>
-              </div>
-              <div className="row">
-                <BulkEmailForm
-                  courseId={courseId}
-                  cohorts={courseMetadata.cohorts}
-                  courseModes={courseMetadata.courseModes}
+        <BulkEmailProvider>
+          <Container size="md" className="pt-4">
+            <BackToInstructor courseId={courseId} />
+            <div className="row pb-4.5">
+              <h1 className="text-primary-500">
+                <FormattedMessage
+                  id="bulk.email.send.email.header"
+                  defaultMessage="Send an email"
+                  description="A label for email form"
                 />
-              </div>
-              <div className="row py-5">
-                <BulkEmailTaskManager courseId={courseId} />
-              </div>
-            </Container>
-          </BulkEmailProvider>
-        </>
+              </h1>
+            </div>
+            <div className="row">
+              <BulkEmailForm
+                courseId={courseId}
+                cohorts={courseMetadata.cohorts}
+                courseModes={courseMetadata.courseModes}
+              />
+            </div>
+            <div className="row py-5">
+              <BulkEmailTaskManager courseId={courseId} />
+            </div>
+          </Container>
+        </BulkEmailProvider>
       ) : (
         <ErrorPage />
       ))}

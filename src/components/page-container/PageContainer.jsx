@@ -1,23 +1,18 @@
-import React, { useMemo } from 'react';
+import { createContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
 
-import { LearningHeader as Header } from '@edx/frontend-component-header';
-import { FooterSlot } from '@edx/frontend-component-footer';
 import { Spinner } from '@openedx/paragon';
 
 import { useCohorts, useCourseMetadata } from './data/apiHook';
 
-import './PageContainer.scss';
-
-export const CourseMetadataContext = React.createContext();
+export const CourseMetadataContext = createContext();
 
 const defaultCourseMetadata = {
   org: '',
   number: '',
   title: '',
   originalUserIsStaff: false,
-  tabs: [],
   cohorts: [],
 };
 
@@ -34,7 +29,7 @@ export default function PageContainer(props) {
       return { ...defaultCourseMetadata, cohorts };
     }
     const {
-      org, number, title, tabs, originalUserIsStaff, courseModes,
+      org, number, title, originalUserIsStaff, courseModes,
     } = metadata;
     return {
       org,
@@ -42,7 +37,6 @@ export default function PageContainer(props) {
       title,
       originalUserIsStaff,
       courseModes,
-      tabs: [...tabs],
       cohorts,
     };
   }, [metadata, cohortsData]);
@@ -50,20 +44,11 @@ export default function PageContainer(props) {
   if (!isLoadingMetadata && !isLoadingCohorts) {
     return (
       <CourseMetadataContext.Provider value={courseMetadata}>
-        <>
-          <Header
-            className="learning-header"
-            courseOrg={courseMetadata.org}
-            courseNumber={courseMetadata.number}
-            courseTitle={courseMetadata.title}
-          />
-          <div className="pb-3 container">
-            <main id="main-content">
-              {children}
-            </main>
-          </div>
-          <FooterSlot />
-        </>
+        <div className="pb-3 container">
+          <main id="main-content">
+            {children}
+          </main>
+        </div>
       </CourseMetadataContext.Provider>
     );
   }

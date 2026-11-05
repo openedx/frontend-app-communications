@@ -1,8 +1,7 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
 async function getBulkCourseEmailData(courseId, endpoint) {
-  const endpointUrl = `${getConfig().LMS_BASE_URL}/courses/${courseId}/instructor/api/${endpoint}`;
+  const endpointUrl = `${getSiteConfig().lmsBaseUrl}/courses/${courseId}/instructor/api/${endpoint}`;
   // Yes, even though these edx-platform endpoints retrieve data, the Instructor Dashboard REST API's require a POST or
   // the call will fail with a 405 error...
   const { data } = await getAuthenticatedHttpClient().post(endpointUrl);

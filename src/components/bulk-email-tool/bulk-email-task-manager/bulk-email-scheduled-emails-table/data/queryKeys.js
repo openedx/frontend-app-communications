@@ -1,4 +1,4 @@
-import { appId } from '../../../../../constants';
+import { appId } from '@src/constants';
 
 export const scheduledEmailsQueryKeys = {
   all: [appId, 'scheduledEmails'],

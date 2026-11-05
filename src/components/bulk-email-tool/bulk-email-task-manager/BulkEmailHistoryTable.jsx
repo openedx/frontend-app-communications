@@ -1,6 +1,5 @@
 import { Alert, DataTable } from '@openedx/paragon';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 export default function BulkEmailTaskManagerTable(props) {
   const {

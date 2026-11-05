@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { createQueryWrapper } from '../../../../setupTest';
+import { createQueryWrapper } from '@src/setupTest';
 import { useEmailTaskHistory, usePendingInstructorTasks, useSentEmailHistory } from './apiHook';
 import { getEmailTaskHistory, getInstructorTasks, getSentEmailHistory } from './api';
 
