@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { getSiteConfig } from '@openedx/frontend-base';
 import {
   initializeMockApp, render, screen, waitFor,
@@ -6,8 +7,7 @@ import Main from './Main';
 
 jest.mock('./components/page-container/PageContainer', () => ({
   __esModule: true,
-  // eslint-disable-next-line react/prop-types
-  default: ({ children }) => <main>{children}</main>,
+  default: ({ children }: { children: ReactNode }) => <main>{children}</main>,
 }));
 
 jest.mock('./components/bulk-email-tool/BulkEmailTool', () => ({

@@ -5,7 +5,7 @@ import { getEmailTaskHistory, getInstructorTasks, getSentEmailHistory } from './
 
 describe('bulk email task manager api', () => {
   const courseId = 'test-course-id';
-  let axiosMock;
+  let axiosMock: MockAdapter;
 
   beforeAll(async () => {
     await initializeMockApp();
