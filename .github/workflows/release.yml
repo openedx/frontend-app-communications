@@ -1,0 +1,35 @@
+name: Release CI
+on:
+  push:
+    branches:
+      - main
+      - stable
+      - '[0-9]+.x'
+      - '[0-9]+.[0-9]+.x'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write  # For Semantic Release tagging
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Release to npm/Github
+        run: npx semantic-release@25
+        env:
+          GITHUB_TOKEN: ${{ secrets.OPENEDX_SEMANTIC_RELEASE_GITHUB_TOKEN }}
