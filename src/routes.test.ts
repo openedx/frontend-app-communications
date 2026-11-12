@@ -2,7 +2,7 @@ import { authenticatedLoader } from '@openedx/frontend-base';
 
 import MockedMain from './Main';
 import routes from './routes';
-import { bulkEmailRole } from './constants';
+import { communicationsRole } from './constants';
 
 jest.mock('./Main', () => () => null);
 
@@ -13,7 +13,7 @@ describe('routes', () => {
       id: 'org.openedx.frontend.route.communications.bulkEmail',
       path: 'communications/courses/:courseId/bulk_email',
       loader: authenticatedLoader,
-      handle: { roles: [bulkEmailRole] },
+      handle: { roles: [communicationsRole] },
     });
   });
 

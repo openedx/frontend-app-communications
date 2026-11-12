@@ -1,14 +1,13 @@
-import { App, providesCourseBarRolesId } from '@openedx/frontend-base';
+import { App } from '@openedx/frontend-base';
 
-import { appId, bulkEmailRole } from './constants';
+import { appId } from './constants';
 import routes from './routes';
+import provides from './provides';
 
 const app: App = {
   appId,
   routes,
-  provides: {
-    [providesCourseBarRolesId]: [bulkEmailRole],
-  },
+  provides,
 };
 
 export default app;

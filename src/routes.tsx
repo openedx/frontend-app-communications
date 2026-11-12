@@ -1,6 +1,6 @@
 import { authenticatedLoader } from '@openedx/frontend-base';
 
-import { bulkEmailRole } from './constants';
+import { communicationsRole } from './constants';
 
 const routes = [
   {
@@ -8,7 +8,7 @@ const routes = [
     path: 'communications/courses/:courseId/bulk_email',
     loader: authenticatedLoader,
     handle: {
-      roles: [bulkEmailRole],
+      roles: [communicationsRole],
     },
     async lazy() {
       const module = await import(/* webpackChunkName: "communications-main" */ './Main');
