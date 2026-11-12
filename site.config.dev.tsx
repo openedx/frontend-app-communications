@@ -7,7 +7,7 @@ import '@openedx/frontend-base/shell/style';
 const siteConfig: SiteConfig = {
   siteId: 'communications-dev',
   siteName: 'Communications Dev',
-  baseUrl: 'http://apps.local.openedx.io:8080',
+  baseUrl: 'http://apps.local.openedx.io:1984',
   lmsBaseUrl: 'http://local.openedx.io:8000',
   cmsBaseUrl: 'http://studio.local.openedx.io:8001',
   loginUrl: 'http://local.openedx.io:8000/login',

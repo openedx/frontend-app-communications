@@ -45,7 +45,7 @@ export default function PageContainer(props) {
     return (
       <CourseMetadataContext.Provider value={courseMetadata}>
         <div className="pb-3 container">
-          <main id="main-content">
+          <main>
             {children}
           </main>
         </div>

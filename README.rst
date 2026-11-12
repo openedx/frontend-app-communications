@@ -31,7 +31,7 @@ Cloning and Startup
 
 .. code-block:: bash
 
-git clone https://github.com/openedx/frontend-app-communications.git
+   git clone https://github.com/openedx/frontend-app-communications.git
 
 2. Use the version of Node specified in the ``.nvmrc`` file.
 
@@ -44,7 +44,7 @@ git clone https://github.com/openedx/frontend-app-communications.git
 
 .. code-block:: bash
 
-cd frontend-app-communications && npm install
+   cd frontend-app-communications && npm install
 
 4. Update the application port to use for local development:
 
@@ -110,12 +110,6 @@ Production Build
 
 This frontend app is published as a library to be consumed by a frontend-base
 site.  The build is created in ``dist/`` with ``npm run build``.
-
-Slots
-=======
-
-This frontend app can be customized through the frontend-base slot mechanism
-(``<Slot />``).
 
 Internationalization
 ====================

@@ -4,6 +4,7 @@ import {
 
 export const communicationsQueryOptions = {
   refetchOnWindowFocus: false,
+  retry: false,
 } as const;
 
 /**
