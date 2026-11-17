@@ -1,6 +1,6 @@
 {
   "name": "@openedx/frontend-app-communications",
-  "version": "1.0.0",
+  "version": "0.0.0-dev",
   "packageManager": "npm@11.12.1",
   "description": "Frontend app communications",
   "repository": {
