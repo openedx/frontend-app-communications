@@ -22,7 +22,8 @@ const siteConfig: SiteConfig = {
       ...communicationsApp,
       config: {
         ...communicationsApp.config,
-        scheduleEmailSection: true,
+        SCHEDULE_EMAIL_SECTION: true,
+        SUPPORT_URL: 'https://docs.openedx.org/en/latest/educators/index.html',
       },
     },
   ],
