@@ -1,21 +1,19 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import MockAdapter from 'axios-mock-adapter';
 import {
   render, screen, cleanup, fireEvent, initializeMockApp, waitFor,
-} from '../../../../setupTest';
-import BulkEmailForm from '../BulkEmailForm';
-import * as bulkEmailFormApi from '../data/api';
-import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '../../bulk-email-context/BulkEmailProvider';
-import { formatDate } from '../../../../utils/formatDateAndTime';
-import cohortFactory from '../data/__factories__/bulkEmailFormCohort.factory';
-import courseModeFactory from '../data/__factories__/bulkEmailFormCourseMode.factory';
+} from '@src/setupTest';
+import BulkEmailForm from '@src/components/bulk-email-tool/bulk-email-form/BulkEmailForm';
+import * as bulkEmailFormApi from '@src/components/bulk-email-tool/bulk-email-form/data/api';
+import BulkEmailProvider, { BulkEmailContext, editorInitialState } from '@src/components/bulk-email-tool/bulk-email-context/BulkEmailProvider';
+import { formatDate } from '@src/utils/formatDateAndTime';
+import cohortFactory from '@src/components/bulk-email-tool/bulk-email-form/data/__factories__/bulkEmailFormCohort.factory';
+import courseModeFactory from '@src/components/bulk-email-tool/bulk-email-form/data/__factories__/bulkEmailFormCourseMode.factory';
 
-jest.mock('../../text-editor/TextEditor');
+jest.mock('@src/components/bulk-email-tool/text-editor/TextEditor');
 
 const appendMock = jest.spyOn(FormData.prototype, 'append');
 
@@ -106,7 +104,7 @@ describe('bulk-email-form', () => {
   });
   test('Shows Error on failed POST', async () => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(500);
+    axiosMock.onPost(`${getSiteConfig().lmsBaseUrl}/courses/test/instructor/api/send_email`).reply(500);
     render(renderBulkEmailForm());
     const subjectLine = screen.getByRole('textbox', { name: 'Subject' });
     const recipient = screen.getByRole('checkbox', { name: 'Myself' });
@@ -133,7 +131,7 @@ describe('bulk-email-form', () => {
     { status: 500, buttonLabel: 'Error', preservesEditor: true },
   ])('Automatically resets after a $status POST response', async ({ status, buttonLabel, preservesEditor }) => {
     const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/courses/test/instructor/api/send_email`).reply(status, {
+    axiosMock.onPost(`${getSiteConfig().lmsBaseUrl}/courses/test/instructor/api/send_email`).reply(status, {
       course_id: 'test',
       success: status === 200,
     });

@@ -1,7 +1,6 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import { usePendingInstructorTasks } from './data/apiHook';
 import messages from './messages';
 import BulkEmailTaskManagerTable from './BulkEmailHistoryTable';

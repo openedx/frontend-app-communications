@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
 
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import {
   Button, Collapsible, Icon,

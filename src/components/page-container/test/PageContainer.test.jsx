@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import { Factory } from 'rosie';
 import {
   cleanup, initializeMockApp, render, screen,
-} from '../../../setupTest';
+} from '@src/setupTest';
 
-import PageContainer from '../PageContainer';
-import { getCohorts, getCourseHomeCourseMetadata } from '../data/api';
-import '../data/__factories__/cohort.factory';
-import '../data/__factories__/courseMetadata.factory';
+import PageContainer, { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import { getCohorts, getCourseHomeCourseMetadata } from '@src/components/page-container/data/api';
+import '@src/components/page-container/data/__factories__/cohort.factory';
+import '@src/components/page-container/data/__factories__/courseMetadata.factory';
 
-jest.mock('../data/api', () => ({
+jest.mock('@src/components/page-container/data/api', () => ({
   __esModule: true,
   getCohorts: jest.fn(() => {}),
   getCourseHomeCourseMetadata: jest.fn(() => {}),
@@ -25,6 +24,14 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('PageContainer', () => {
+  const renderWithMetadataConsumer = () => render(
+    <PageContainer>
+      <CourseMetadataContext.Consumer>
+        {({ org, number, title }) => <span>{`${org} ${number} ${title}`}</span>}
+      </CourseMetadataContext.Consumer>
+    </PageContainer>,
+  );
+
   beforeEach(() => jest.resetModules());
   beforeAll(async () => {
     await initializeMockApp();
@@ -38,11 +45,11 @@ describe('PageContainer', () => {
     getCohorts.mockResolvedValue(cohorts);
     getCourseHomeCourseMetadata.mockResolvedValue(courseMetadata);
 
-    render(<PageContainer />);
+    renderWithMetadataConsumer();
 
-    // Look for the org, title, and number of the course, which should be displayed in the Header.
-    expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
-    expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
+    expect(
+      await screen.findByText(`${courseMetadata.org} ${courseMetadata.number} ${courseMetadata.title}`),
+    ).toBeTruthy();
     expect(getCourseHomeCourseMetadata).toHaveBeenCalledWith('test-course-id');
     expect(getCohorts).toHaveBeenCalledWith('test-course-id');
   });
@@ -69,10 +76,11 @@ describe('PageContainer', () => {
     getCohorts.mockRejectedValue(new Error('API Error'));
     getCourseHomeCourseMetadata.mockResolvedValue(courseMetadata);
 
-    render(<PageContainer />);
+    renderWithMetadataConsumer();
 
-    expect(await screen.findByText(`${courseMetadata.org} ${courseMetadata.number}`)).toBeTruthy();
-    expect(await screen.findByText(courseMetadata.title)).toBeTruthy();
+    expect(
+      await screen.findByText(`${courseMetadata.org} ${courseMetadata.number} ${courseMetadata.title}`),
+    ).toBeTruthy();
   });
 
   test('PageContainer still renders children when the API calls fail', async () => {

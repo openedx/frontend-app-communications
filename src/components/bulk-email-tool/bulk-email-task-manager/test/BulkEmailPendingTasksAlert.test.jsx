@@ -1,9 +1,7 @@
-import React from 'react';
-
-import BulkEmailPendingTasksAlert from '../BulkEmailPendingTasksAlert';
+import BulkEmailPendingTasksAlert from '@src/components/bulk-email-tool/bulk-email-task-manager/BulkEmailPendingTasksAlert';
 import {
   initializeMockApp, render, screen,
-} from '../../../../setupTest';
+} from '@src/setupTest';
 
 describe('Testing BulkEmailPendingTasksAlert Component', () => {
   beforeAll(async () => {
@@ -14,7 +12,7 @@ describe('Testing BulkEmailPendingTasksAlert Component', () => {
     render(<BulkEmailPendingTasksAlert courseId="test-course-id" />);
 
     const linkEl = await screen.findByText('Course Info');
-    expect(linkEl.href).toEqual('http://localhost:18000/courses/test-course-id/instructor#view-course-info');
+    expect(linkEl.href).toEqual('http://localhost:8000/courses/test-course-id/instructor#view-course-info');
   });
 
   test('Render with Public path', async () => {
@@ -27,7 +25,7 @@ describe('Testing BulkEmailPendingTasksAlert Component', () => {
     render(<BulkEmailPendingTasksAlert courseId="test-course-id" />);
 
     const linkEl = await screen.findByText('Course Info');
-    expect(linkEl.href).toEqual('http://localhost:18000/courses/test-course-id/instructor#view-course-info');
+    expect(linkEl.href).toEqual('http://localhost:8000/courses/test-course-id/instructor#view-course-info');
     expect(window.location.pathname).toEqual('/communications/courses/test-course-id/bulk-email');
   });
 });

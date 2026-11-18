@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import { Factory } from 'rosie';
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject } from '@openedx/frontend-base';
 import {
   render, screen, cleanup, initializeMockApp,
-} from '../../../setupTest';
-import BulkEmailTool from '../BulkEmailTool';
-import { CourseMetadataContext } from '../../page-container/PageContainer';
-import '../../page-container/data/__factories__/cohort.factory';
-import '../../page-container/data/__factories__/courseMetadata.factory';
+} from '@src/setupTest';
+import BulkEmailTool from '@src/components/bulk-email-tool/BulkEmailTool';
+import { CourseMetadataContext } from '@src/components/page-container/PageContainer';
+import '@src/components/page-container/data/__factories__/cohort.factory';
+import '@src/components/page-container/data/__factories__/courseMetadata.factory';
 
-jest.mock('../text-editor/TextEditor');
+jest.mock('@src/components/bulk-email-tool/text-editor/TextEditor');
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({
@@ -33,7 +32,7 @@ describe('BulkEmailTool', () => {
    */
   function buildCourseMetadata(cohortData, courseData) {
     const {
-      org, number, title, tabs, originalUserIsStaff,
+      org, number, title, originalUserIsStaff,
     } = camelCaseObject(courseData);
     const { cohorts } = cohortData;
 
@@ -42,7 +41,6 @@ describe('BulkEmailTool', () => {
       number,
       title,
       originalUserIsStaff,
-      tabs: [...tabs],
       cohorts: cohorts.map(({ name }) => name),
     };
   }
@@ -64,13 +62,8 @@ describe('BulkEmailTool', () => {
     const courseInfo = Factory.build('courseMetadata');
     const courseMetadata = buildCourseMetadata(cohorts, courseInfo);
     renderBulkEmailTool(courseMetadata);
-    // verify all tab data expected is displayed within our component
-    expect(await screen.findByText('Course')).toBeTruthy();
-    expect(await screen.findByText('Discussion')).toBeTruthy();
-    expect(await screen.findByText('Wiki')).toBeTruthy();
-    expect(await screen.findByText('Progress')).toBeTruthy();
-    expect(await screen.findByText('Instructor')).toBeTruthy();
-    expect(await screen.findByText('Dates')).toBeTruthy();
+    expect(await screen.findByText('Send an email')).toBeTruthy();
+    expect(await screen.findByText('Back to Instructor Dashboard')).toBeTruthy();
   });
 
   test('BulkEmailTool renders error page on no staff user', async () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import PropTypes from 'prop-types';
 import 'tinymce';
@@ -17,8 +16,7 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/codesample';
 import '@edx/tinymce-language-selector';
 
-import contentUiCss from 'tinymce/skins/ui/oxide/content.css?raw';
-import contentCss from 'tinymce/skins/content/default/content.css?raw';
+import tinyMCEStyles from './tinyMCEStyles';
 
 export default function TextEditor(props) {
   const {
@@ -38,7 +36,7 @@ export default function TextEditor(props) {
           'formatselect fontselect bold italic underline forecolor | codesample bullist numlist alignleft aligncenter alignright alignjustify indent | blockquote link image code ',
         skin: false,
         content_css: false,
-        content_style: `${contentUiCss.toString()}\n${contentCss.toString()}`,
+        content_style: tinyMCEStyles,
         extended_valid_elements: 'span[lang|id] -span',
         block_unsupported_drop: false,
         image_advtab: true,

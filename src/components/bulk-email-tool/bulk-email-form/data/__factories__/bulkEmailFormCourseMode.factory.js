@@ -1,4 +1,4 @@
-import { Factory } from 'rosie'; // eslint-disable-line import/no-extraneous-dependencies
+import { Factory } from 'rosie';
 
 /**
  * Generates an array of course mode objects using Rosie Factory.

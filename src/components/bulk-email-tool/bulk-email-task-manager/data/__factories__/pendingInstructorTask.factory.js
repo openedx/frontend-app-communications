@@ -1,4 +1,4 @@
-import { Factory } from 'rosie'; // eslint-disable-line import/no-extraneous-dependencies
+import { Factory } from 'rosie';
 
 export default function buildPendingInstructorTaskData(numTasks) {
   const taskList = [];

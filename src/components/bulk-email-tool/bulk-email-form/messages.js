@@ -1,30 +1,36 @@
-import { defineMessages } from '@edx/frontend-platform/i18n';
+import { defineMessages } from '@openedx/frontend-base';
 
 const messages = defineMessages({
   /* BulkEmailForm.jsx Messages */
   bulkEmailSubmitButtonDefault: {
     id: 'bulk.email.submit.button.default',
     defaultMessage: 'Send email',
+    description: 'Label for the submit button that sends the email immediately',
   },
   bulkEmailSubmitButtonSchedule: {
     id: 'bulk.email.submit.button.schedule',
     defaultMessage: 'Schedule Email',
+    description: 'Label for the submit button when the email is set to be scheduled for a future date',
   },
   bulkEmailSubmitButtonPending: {
     id: 'bulk.email.submit.button.pending',
     defaultMessage: 'Submitting',
+    description: 'Label for the submit button while the email form is being submitted',
   },
   bulkEmailSubmitButtonComplete: {
     id: 'bulk.email.submit.button.send.complete',
     defaultMessage: 'Email Created',
+    description: 'Label for the submit button after the email was successfully created',
   },
   bulkEmailSubmitButtonError: {
     id: 'bulk.email.submit.button.error',
     defaultMessage: 'Error',
+    description: 'Label for the submit button when submitting the email form failed',
   },
   bulkEmailSubmitButtonCompleteSchedule: {
     id: 'bulk.email.submit.button.schedule.complete',
     defaultMessage: 'Scheduling Done',
+    description: 'Label for the submit button after the email was successfully scheduled',
   },
   bulkEmailTaskAlertRecipients: {
     id: 'bulk.email.task.alert.recipients',
@@ -66,7 +72,11 @@ const messages = defineMessages({
     defaultMessage: 'We recommend sending learners no more than one email message per week. Before you send your email, review the text carefully and send it to yourself first, so that you can preview the formatting and make sure embedded images and links work correctly.',
     description: 'A set of instructions to give users a heads up about the formatting of the email they are about to send',
   },
-  bulkEmailInstructionsCaution: { id: 'bulk.email.instructions.caution', defaultMessage: 'Caution!' },
+  bulkEmailInstructionsCaution: {
+    id: 'bulk.email.instructions.caution',
+    defaultMessage: 'Caution!',
+    description: 'Bold prefix shown before the warning about how emails are sent out',
+  },
 
   bulkEmailInstructionsCautionMessage: {
     id: 'bulk.email.instructions.caution.message.new.email',
@@ -92,14 +102,17 @@ const messages = defineMessages({
   bulkEmailFormSuccess: {
     id: 'bilk.email.form.success',
     defaultMessage: 'Email successfully created',
+    description: 'Success message shown under the submit button after the email was created',
   },
   bulkEmailFormScheduledSuccess: {
     id: 'bulk.email.form.scheduled.success',
     defaultMessage: 'Email successfully scheduled',
+    description: 'Success message shown under the submit button after the email was scheduled',
   },
   bulkEmailSubmitButtonReschedule: {
     id: 'bulk.email.submit.button.reschedule',
     defaultMessage: 'Reschedule Email',
+    description: 'Label for the submit button when editing an already scheduled email',
   },
   bulkEmailTaskAlertEditingDate: {
     id: 'bulk.email.task.alert.editing',
@@ -109,10 +122,12 @@ const messages = defineMessages({
   bulkEmailTaskAlertEditingSubject: {
     id: 'bulk.email.task.alert.subject',
     defaultMessage: 'with the subject: {subject}',
+    description: 'Part of the confirmation alert when editing a scheduled email, showing its subject',
   },
   bulkEmailTaskAlertEditingTo: {
     id: 'bulk.email.task.alert.to',
     defaultMessage: 'to recipients:',
+    description: 'Part of the confirmation alert when editing a scheduled email, introducing the list of recipients',
   },
   bulkEmailTaskAlertEditingWarning: {
     id: 'bulk.email.task.alert.warning',

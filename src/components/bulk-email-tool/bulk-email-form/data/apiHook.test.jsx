@@ -1,10 +1,10 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { QueryClient } from '@tanstack/react-query';
-import { createQueryWrapper } from '../../../../setupTest';
+import { createQueryWrapper } from '@src/setupTest';
+import { scheduledEmailsQueryKeys } from '@src/components/bulk-email-tool/bulk-email-task-manager/bulk-email-scheduled-emails-table/data/queryKeys';
+import { instructorTasksQueryKeys } from '@src/components/bulk-email-tool/bulk-email-task-manager/data/queryKeys';
 import { useEditScheduledEmail, usePostBulkEmail } from './apiHook';
 import { patchScheduledBulkEmailInstructorTask, postBulkEmailInstructorTask } from './api';
-import { scheduledEmailsQueryKeys } from '../../bulk-email-task-manager/bulk-email-scheduled-emails-table/data/queryKeys';
-import { instructorTasksQueryKeys } from '../../bulk-email-task-manager/data/queryKeys';
 
 jest.mock('./api');
 

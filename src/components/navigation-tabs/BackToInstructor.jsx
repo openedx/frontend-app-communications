@@ -1,8 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, getSiteConfig } from '@openedx/frontend-base';
 import { Button, Icon } from '@openedx/paragon';
 import { ArrowBack } from '@openedx/paragon/icons';
 
@@ -13,7 +11,7 @@ export default function BackToInstructor(props) {
     <Button
       variant="tertiary"
       className="mb-4.5 ml-n4.5 text-primary-500"
-      href={`${getConfig().LMS_BASE_URL}/courses/${courseId}/instructor#view-course-info`}
+      href={`${getSiteConfig().lmsBaseUrl}/courses/${courseId}/instructor#view-course-info`}
     >
       <Icon
         src={ArrowBack}

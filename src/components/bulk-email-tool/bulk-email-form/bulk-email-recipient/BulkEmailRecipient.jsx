@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Form } from '@openedx/paragon';
-import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { getDisplayTextFromRecipient } from '../../utils';
-import { DEFAULT_RECIPIENTS_GROUPS } from '../../constants';
+import { FormattedMessage, useIntl } from '@openedx/frontend-base';
+import { getDisplayTextFromRecipient } from '@src/components/bulk-email-tool/utils';
+import { DEFAULT_RECIPIENTS_GROUPS } from '@src/components/bulk-email-tool/constants';
 
 import './bulkEmailRecepient.scss';
 
